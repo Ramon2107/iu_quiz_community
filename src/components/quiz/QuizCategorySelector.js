@@ -4,9 +4,10 @@
  * Diese Komponente zeigt verfügbare Quiz-Kategorien an und ermöglicht
  * die Auswahl einer Kategorie für das Quiz.
  *
- * KORRIGIERT: Integration mit DataManager für konsistente Datenverwendung
+ * UPDATE: Integration mit DataManager für konsistente Datenverwendung
+ * UPDATE: Verbesserte Card-Darstellung für gleichmäßige Proportionen
  *
- * ÄNDERUNG: Verwendet jetzt den zentralen DataManager statt
+ * UPDATE: Verwendet jetzt den zentralen DataManager statt
  * direktem Import von mockData für konsistente Datenverwendung.
  */
 
@@ -18,7 +19,7 @@ function QuizCategorySelector({ gameMode, onCategorySelect, onBackToModeSelectio
   const [isLoading, setIsLoading] = useState(true);
 
   /**
-   * KORRIGIERT: Lädt Kategorien über DataManager
+   * UPDATE: Lädt Kategorien über DataManager
    *
    * Der DataManager stellt sicher, dass Mock-Daten verfügbar sind
    * und bietet eine konsistente Schnittstelle für alle Komponenten.
@@ -30,14 +31,14 @@ function QuizCategorySelector({ gameMode, onCategorySelect, onBackToModeSelectio
   /**
    * Lädt alle verfügbaren Kategorien über DataManager
    *
-   * KORRIGIERT: Verwendet DataManager.getCategoriesForQuiz() für
+   * UPDATE: Verwendet DataManager.getCategoriesForQuiz() für
    * Quiz-kompatible Kategorienobjekte
    */
   const loadCategories = () => {
     setIsLoading(true);
 
     try {
-      // KORRIGIERT: Verwendet DataManager statt direkten Import
+      // Verwendet DataManager statt direkten Import
       const loadedCategories = dataManager.getCategoriesForQuiz();
       console.log('QuizCategorySelector: Geladene Kategorien:', loadedCategories);
 
@@ -74,7 +75,7 @@ function QuizCategorySelector({ gameMode, onCategorySelect, onBackToModeSelectio
       return;
     }
 
-    // KORRIGIERT: Nur Kategorie übergeben, QuizMain filtert die Fragen
+    // Nur Kategorie übergeben, QuizMain filtert die Fragen
     onCategorySelect(category);
   };
 
@@ -174,9 +175,10 @@ function QuizCategorySelector({ gameMode, onCategorySelect, onBackToModeSelectio
                       über den Frageneditor.
                     </div>
                 ) : (
-                    <div className="row">
+                    // Verbesserte Card-Darstellung für gleichmäßige Proportionen
+                    <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
                       {categories.map((category) => (
-                          <div key={category.id} className="col-md-6 col-lg-4 mb-4">
+                          <div key={category.id} className="col">
                             <div className={`card h-100 ${category.questionCount === 0 ? 'border-secondary' : `border-${category.color}`}`}>
                               <div className={`card-header ${category.questionCount === 0 ? 'bg-secondary' : `bg-${category.color}`} text-white`}>
                                 <h5 className="mb-0">
@@ -184,9 +186,9 @@ function QuizCategorySelector({ gameMode, onCategorySelect, onBackToModeSelectio
                                   {category.name}
                                 </h5>
                               </div>
-                              <div className="card-body">
-                                <p className="card-text">{category.description}</p>
-                                <div className="d-flex justify-content-between align-items-center">
+                              <div className="card-body d-flex flex-column">
+                                <p className="card-text flex-grow-1">{category.description}</p>
+                                <div className="d-flex justify-content-between align-items-center mt-auto">
                                   <div>
                                     <small className="text-muted">
                                       <i className="fas fa-question-circle me-1"></i>
@@ -251,13 +253,13 @@ function QuizCategorySelector({ gameMode, onCategorySelect, onBackToModeSelectio
                       <div className="col-md-6">
                         <small className="text-muted">
                           <i className="fas fa-lightbulb me-1"></i>
-                          Tipp: Erstellen Sie zunächst eine Kategorie, bevor Sie Fragen hinzufügen.
+                          <strong>Tipp:</strong> Erstellen Sie eigene Fragen, um Ihr Wissen zu vertiefen.
                         </small>
                       </div>
                       <div className="col-md-6">
                         <small className="text-muted">
                           <i className="fas fa-users me-1"></i>
-                          Kollaborativ: Arbeiten Sie mit anderen an Fragenkatalogen.
+                          <strong>Community:</strong> Teilen Sie Ihr Wissen mit anderen Studierenden.
                         </small>
                       </div>
                     </div>

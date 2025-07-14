@@ -4,7 +4,11 @@
  * Diese Komponente verwaltet den gesamten Quiz-Ablauf und stellt
  * verschiedene Spielmodi bereit (kooperativ, kompetitiv und single-player).
  *
- * KORRIGIERT: Integration mit DataManager statt direktem Import von mockData
+ * UPDATE: Konfigurierbare Anzahl von Fragen (4-20)
+ * UPDATE: Verbesserte Benutzeroberfläche für Kartenanzahl-Auswahl
+ * UPDATE: "Andere Kategorie wählen" Funktion implementiert
+ *
+ * UPDATE: Integration mit DataManager statt direktem Import von mockData
  *
  * WICHTIGE ÄNDERUNG: Diese Komponente verwendet jetzt den zentralen DataManager,
  * um konsistente Datenverwendung in der gesamten Anwendung zu gewährleisten.
@@ -27,6 +31,7 @@ function QuizMain({ user }) {
   const [currentStep, setCurrentStep] = useState('mode');
   const [gameMode, setGameMode] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [questionCount, setQuestionCount] = useState(10); // NEU: Konfigurierbare Anzahl
 
   // Zustandsverwaltung für Quiz-Durchführung
   const [questions, setQuestions] = useState([]);
@@ -36,7 +41,7 @@ function QuizMain({ user }) {
   const [isLoading, setIsLoading] = useState(false);
 
   /**
-   * KORRIGIERT: Lädt Daten über DataManager beim Component-Mount
+   * UPDATE: Lädt Daten über DataManager beim Component-Mount
    *
    * Der DataManager stellt automatisch sicher, dass Mock-Daten geladen werden,
    * wenn localStorage leer ist. Dies gewährleistet eine konsistente Datenquelle.
@@ -70,7 +75,8 @@ function QuizMain({ user }) {
   /**
    * Behandelt die Kategorieauswahl - Schritt 2
    *
-   * KORRIGIERT: Verwendet DataManager für Fragenfilterung
+   * UPDATE: Verwendet DataManager für Fragenfilterung
+   * UPDATE: Berücksichtigt konfigurierbare Anzahl von Fragen
    *
    * @param {Object} category - Ausgewählte Kategorie
    */
@@ -78,13 +84,17 @@ function QuizMain({ user }) {
     console.log('Kategorie ausgewählt:', category.name);
     setSelectedCategory(category);
 
-    // KORRIGIERT: Fragen über DataManager laden
-    const filteredQuestions = dataManager.getQuestionsForQuiz().filter(
+    // Fragen über DataManager laden
+    const allQuestions = dataManager.getQuestionsForQuiz().filter(
         question => question.category === category.name
     );
 
-    console.log('Gefilterte Fragen:', filteredQuestions.length);
-    setQuestions(filteredQuestions);
+    // Begrenze die Anzahl der Fragen basierend auf Benutzerauswahl
+    const selectedQuestions = allQuestions.slice(0, questionCount);
+
+    console.log('Verfügbare Fragen:', allQuestions.length);
+    console.log('Ausgewählte Fragen:', selectedQuestions.length);
+    setQuestions(selectedQuestions);
     setCurrentQuestionIndex(0);
     setAnswers([]);
     setShowResults(false);
@@ -98,11 +108,13 @@ function QuizMain({ user }) {
     setCurrentStep('mode');
     setGameMode(null);
     setSelectedCategory(null);
+    setQuestionCount(10); // Reset question count
     resetQuizState();
   };
 
   /**
    * Behandelt die Rückkehr zur Kategorie-Auswahl
+   * Funktion für "Andere Kategorie wählen" Button
    */
   const handleBackToCategorySelection = () => {
     setCurrentStep('category');
@@ -153,24 +165,29 @@ function QuizMain({ user }) {
     setCurrentStep('mode');
     setGameMode(null);
     setSelectedCategory(null);
+    setQuestionCount(10); // Reset question count
     resetQuizState();
   };
 
   /**
    * Startet ein neues Quiz mit der gleichen Kategorie
    *
-   * KORRIGIERT: Verwendet DataManager für Fragenfilterung
+   * UPDATE: Verwendet DataManager für Fragenfilterung
+   * UPDATE: Berücksichtigt konfigurierbare Anzahl von Fragen
    */
   const restartWithSameCategory = () => {
     if (selectedCategory) {
       console.log('Quiz wird mit gleicher Kategorie neu gestartet');
 
-      // KORRIGIERT: Fragen über DataManager laden
-      const filteredQuestions = dataManager.getQuestionsForQuiz().filter(
+      // Fragen über DataManager laden
+      const allQuestions = dataManager.getQuestionsForQuiz().filter(
           question => question.category === selectedCategory.name
       );
 
-      setQuestions(filteredQuestions);
+      // Begrenze die Anzahl der Fragen basierend auf Benutzerauswahl
+      const selectedQuestions = allQuestions.slice(0, questionCount);
+
+      setQuestions(selectedQuestions);
       setCurrentQuestionIndex(0);
       setAnswers([]);
       setShowResults(false);
@@ -212,7 +229,7 @@ function QuizMain({ user }) {
                 <div className="card-body">
                   <p className="card-text mb-4">
                     Wählen Sie Ihren bevorzugten Spielmodus aus. Im nächsten Schritt können Sie
-                    dann die gewünschte Fragensammlung auswählen.
+                    dann die gewünschte Fragensammlung und Anzahl der Fragen auswählen.
                   </p>
 
                   <div className="row">
@@ -368,11 +385,100 @@ function QuizMain({ user }) {
   // Schritt 2: Kategorie-Auswahl anzeigen
   if (currentStep === 'category') {
     return (
-        <QuizCategorySelector
-            gameMode={gameMode}
-            onCategorySelect={handleCategorySelect}
-            onBackToModeSelection={handleBackToModeSelection}
-        />
+        <div className="container mt-4">
+          <div className="row justify-content-center">
+            <div className="col-md-10">
+              <div className="card">
+                <div className="card-header">
+                  <div className="d-flex justify-content-between align-items-center">
+                    <h3 className="mb-0">
+                      <i className="fas fa-layer-group me-2"></i>
+                      Kategorie und Einstellungen auswählen
+                    </h3>
+                    <button
+                        className="btn btn-outline-secondary"
+                        onClick={handleBackToModeSelection}
+                    >
+                      <i className="fas fa-arrow-left me-2"></i>
+                      Zurück
+                    </button>
+                  </div>
+                </div>
+                <div className="card-body">
+                  <div className="row">
+                    <div className="col-md-8">
+                      <QuizCategorySelector
+                          gameMode={gameMode}
+                          onCategorySelect={handleCategorySelect}
+                          onBackToModeSelection={handleBackToModeSelection}
+                      />
+                    </div>
+                    <div className="col-md-4">
+                      {/* Kartenanzahl-Konfiguration */}
+                      <div className="card">
+                        <div className="card-header">
+                          <h5 className="mb-0">
+                            <i className="fas fa-cogs me-2"></i>
+                            Quiz-Einstellungen
+                          </h5>
+                        </div>
+                        <div className="card-body">
+                          <div className="mb-3">
+                            <label htmlFor="questionCount" className="form-label">
+                              Anzahl der Fragen: <strong>{questionCount}</strong>
+                            </label>
+                            <input
+                                type="range"
+                                className="form-range"
+                                id="questionCount"
+                                min="4"
+                                max="20"
+                                value={questionCount}
+                                onChange={(e) => setQuestionCount(parseInt(e.target.value))}
+                            />
+                            <div className="d-flex justify-content-between">
+                              <small className="text-muted">4</small>
+                              <small className="text-muted">20</small>
+                            </div>
+                          </div>
+
+                          {/* Modus-spezifische Einstellungen */}
+                          <div className="alert alert-info">
+                            <h6>
+                              <i className="fas fa-info-circle me-2"></i>
+                              {getGameModeDisplayName()} Modus
+                            </h6>
+                            {gameMode === 'single-player' && (
+                                <small>
+                                  • Keine Zeitbegrenzung<br/>
+                                  • Entspanntes Lernen<br/>
+                                  • Fokus auf Verstehen
+                                </small>
+                            )}
+                            {gameMode === 'cooperative' && (
+                                <small>
+                                  • Teamarbeit möglich<br/>
+                                  • Diskussion erlaubt<br/>
+                                  • Weniger Zeitdruck
+                                </small>
+                            )}
+                            {gameMode === 'competitive' && (
+                                <small>
+                                  • Zeitdruck vorhanden<br/>
+                                  • Direkter Wettkampf<br/>
+                                  • Schnelligkeit zählt
+                                </small>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
     );
   }
 
@@ -393,7 +499,9 @@ function QuizMain({ user }) {
                         <i className="fas fa-gamepad me-2"></i>
                         {getGameModeDisplayName()} Quiz
                       </h3>
-                      <small className="text-muted">Kategorie: {selectedCategory?.name}</small>
+                      <small className="text-muted">
+                        Kategorie: {selectedCategory?.name} • {questions.length} Fragen
+                      </small>
                     </div>
                     <div>
                       <button
@@ -444,6 +552,7 @@ function QuizMain({ user }) {
             categoryName={selectedCategory?.name}
             onRestart={resetQuiz}
             onRestartSameCategory={restartWithSameCategory}
+            onBackToCategories={handleBackToCategorySelection}
         />
     );
   }

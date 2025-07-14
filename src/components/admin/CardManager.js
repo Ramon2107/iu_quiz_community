@@ -1,7 +1,22 @@
 /**
- * CardManager-Komponente für kollaborative Kartenverwaltung
+ * CardManager-Komponente
  *
+ * Diese Komponente verwaltet alle Karten (Fragen) und Kategorien im System.
+ * Sie bietet erweiterte Such-, Filter- und Verwaltungsfunktionen.
  *
+ * NEU: Kategorien-basierte Navigation - Karten werden in Kategorien organisiert
+ * NEU: Drill-Down-Funktionalität - Klick auf Kategorie zeigt zugehörige Karten
+ * NEU: Erweiterte Mock-Daten mit 10-20 Karten pro Kategorie
+ * NEU: Bessere Suchfunktion mit Kategorie-Anzeige
+ *
+ * Hauptfunktionen:
+ * - Hierarchische Übersicht (Kategorien → Karten)
+ * - Drill-Down Navigation in Kategorien
+ * - Erweiterte Such- und Filterfunktionen
+ * - Erstellen neuer Karten und Kategorien
+ * - Bearbeiten bestehender Einträge
+ * - Löschen von Karten und Kategorien
+ * - Kollaborative Features
  */
 
 import React, { useState, useEffect } from 'react';
@@ -17,6 +32,10 @@ function CardManager({ user, onQuestionAdded, onCategoryAdded }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [authorFilter, setAuthorFilter] = useState('all');
   const [difficultyFilter, setDifficultyFilter] = useState('all');
+
+  // NEU: Zustand für Kategorie-Navigation
+  const [viewMode, setViewMode] = useState('categories'); // 'categories' oder 'category-detail'
+  const [currentCategoryView, setCurrentCategoryView] = useState(null);
 
   // Zustandsverwaltung für Bearbeitung
   const [editingCard, setEditingCard] = useState(null);
@@ -80,26 +99,115 @@ function CardManager({ user, onQuestionAdded, onCategoryAdded }) {
 
   /**
    * Filtert Karten basierend auf Suchbegriff und Filtern
+   * NEU: Erweiterte Filterlogik mit Kategorie-Berücksichtigung
    */
   useEffect(() => {
-    let filtered = dataManager.searchCards(searchTerm, authorFilter);
+    console.log('CardManager: Filtere Karten...', {
+      searchTerm,
+      authorFilter,
+      difficultyFilter,
+      totalCards: cards.length,
+      currentCategoryView: currentCategoryView?.name
+    });
 
+    let filtered = cards;
+
+    // Filtere nach aktueller Kategorie-Ansicht
+    if (currentCategoryView) {
+      filtered = filtered.filter(card => card.categoryId === currentCategoryView.id);
+    }
+
+    // Suchfilter
+    if (searchTerm) {
+      filtered = filtered.filter(card =>
+          card.question.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          (card.tags && card.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase())))
+      );
+    }
+
+    // Autor-Filter
+    if (authorFilter !== 'all') {
+      filtered = filtered.filter(card => card.author === authorFilter);
+    }
+
+    // Schwierigkeits-Filter
     if (difficultyFilter !== 'all') {
       filtered = filtered.filter(card => card.difficulty === difficultyFilter);
     }
 
+    console.log('CardManager: Gefilterte Karten:', filtered.length);
     setFilteredCards(filtered);
-  }, [searchTerm, authorFilter, difficultyFilter, cards]);
+  }, [searchTerm, authorFilter, difficultyFilter, cards, currentCategoryView]);
 
   /**
    * Lädt alle Daten über den DataManager
    */
   const loadData = () => {
+    console.log('CardManager: Lade Daten...');
+
+    // Prüfe ob Mock-Daten geladen werden müssen
+    const existingCategories = localStorage.getItem('quiz-categories');
+    const existingCards = localStorage.getItem('quiz-cards');
+
+    console.log('CardManager: localStorage Check:', {
+      hasCategories: !!existingCategories,
+      hasCards: !!existingCards,
+      categoriesLength: existingCategories ? JSON.parse(existingCategories).length : 0,
+      cardsLength: existingCards ? JSON.parse(existingCards).length : 0
+    });
+
+    // Erzwinge Mock-Daten Reload wenn nichts vorhanden ist
+    if (!existingCategories || !existingCards ||
+        JSON.parse(existingCategories || '[]').length === 0 ||
+        JSON.parse(existingCards || '[]').length === 0) {
+      console.log('CardManager: Erzwinge Mock-Daten Reload...');
+      dataManager.reloadMockData();
+    }
+
+    // Daten über DataManager laden
     const loadedCategories = dataManager.getAllCategories();
     const loadedCards = dataManager.getAllCards();
 
+    console.log('CardManager: Geladene Daten:', {
+      categories: loadedCategories.length,
+      cards: loadedCards.length
+    });
+
+    // Debug-Ausgabe für die ersten paar Einträge
+    if (loadedCategories.length > 0) {
+      console.log('CardManager: Erste Kategorie:', loadedCategories[0]);
+    }
+    if (loadedCards.length > 0) {
+      console.log('CardManager: Erste Karte:', loadedCards[0]);
+    }
+
     setCategories(loadedCategories);
     setCards(loadedCards);
+  };
+
+  /**
+   * NEU: Wechselt zur Kategorie-Detail-Ansicht
+   */
+  const enterCategoryView = (category) => {
+    setCurrentCategoryView(category);
+    setViewMode('category-detail');
+    setSearchTerm(''); // Reset search when entering category
+  };
+
+  /**
+   * NEU: Kehrt zur Kategorien-Übersicht zurück
+   */
+  const exitCategoryView = () => {
+    setCurrentCategoryView(null);
+    setViewMode('categories');
+    setSearchTerm(''); // Reset search when exiting category
+  };
+
+  /**
+   * NEU: Gibt die Anzahl der Karten für eine Kategorie zurück
+   */
+  const getCardCountForCategory = (categoryId) => {
+    return cards.filter(card => card.categoryId === categoryId).length;
   };
 
   /**
@@ -164,6 +272,7 @@ function CardManager({ user, onQuestionAdded, onCategoryAdded }) {
     };
 
     const savedCategory = dataManager.saveCategory(categoryData);
+    console.log('CardManager: Neue Kategorie erstellt:', savedCategory);
 
     // Daten neu laden
     loadData();
@@ -202,6 +311,7 @@ function CardManager({ user, onQuestionAdded, onCategoryAdded }) {
     };
 
     const savedCard = dataManager.saveCard(cardData);
+    console.log('CardManager: Neue Karte erstellt:', savedCard);
 
     // Daten neu laden
     loadData();
@@ -235,6 +345,7 @@ function CardManager({ user, onQuestionAdded, onCategoryAdded }) {
   const deleteCard = (cardId) => {
     if (window.confirm('Möchten Sie diese Karte wirklich löschen?')) {
       dataManager.deleteCard(cardId);
+      console.log('CardManager: Karte gelöscht:', cardId);
       loadData();
       alert('Karte wurde gelöscht.');
     }
@@ -247,10 +358,12 @@ function CardManager({ user, onQuestionAdded, onCategoryAdded }) {
     try {
       if (window.confirm('Möchten Sie diese Kategorie wirklich löschen? Dies ist nur möglich, wenn keine Karten vorhanden sind.')) {
         dataManager.deleteCategory(categoryId);
+        console.log('CardManager: Kategorie gelöscht:', categoryId);
         loadData();
         alert('Kategorie wurde gelöscht.');
       }
     } catch (error) {
+      console.error('CardManager: Fehler beim Löschen der Kategorie:', error);
       alert(error.message);
     }
   };
@@ -283,6 +396,7 @@ function CardManager({ user, onQuestionAdded, onCategoryAdded }) {
     };
 
     dataManager.updateCard(editingCard.id, updatedCard);
+    console.log('CardManager: Karte aktualisiert:', editingCard.id);
     loadData();
     setEditingCard(null);
     setCurrentView('overview');
@@ -315,16 +429,28 @@ function CardManager({ user, onQuestionAdded, onCategoryAdded }) {
   };
 
   /**
-   * Rendert die Übersicht mit erweiterten Such- und Filterfunktionen
+   * NEU: Rendert die Kategorien-Übersicht
    */
-  const renderOverview = () => (
+  const renderCategoriesOverview = () => (
       <div>
         <div className="d-flex justify-content-between align-items-center mb-4">
           <h2>
             <i className="fas fa-layer-group me-2"></i>
-            Kartenverwaltung
+            Kategorien-Übersicht
           </h2>
           <div className="d-flex gap-2">
+            <button
+                className="btn btn-sm btn-outline-secondary"
+                onClick={() => {
+                  console.log('Mock-Daten werden neu geladen...');
+                  dataManager.reloadMockData();
+                  loadData();
+                }}
+                title="Mock-Daten neu laden"
+            >
+              <i className="fas fa-sync me-1"></i>
+              Mock-Daten laden
+            </button>
             <button
                 className="btn btn-success"
                 onClick={() => setCurrentView('add-category')}
@@ -332,9 +458,143 @@ function CardManager({ user, onQuestionAdded, onCategoryAdded }) {
               <i className="fas fa-plus me-2"></i>
               Neue Kategorie
             </button>
+          </div>
+        </div>
+
+        {/* Statusanzeige */}
+        <div className="alert alert-info d-flex justify-content-between align-items-center">
+          <div>
+            <i className="fas fa-info-circle me-2"></i>
+            <strong>Status:</strong> {categories.length} Kategorien, {cards.length} Karten insgesamt
+          </div>
+          <small className="text-muted">
+            Klicken Sie auf eine Kategorie, um die zugehörigen Karten zu sehen
+          </small>
+        </div>
+
+        {/* Kategorien-Grid */}
+        <div className="row">
+          {categories.length === 0 ? (
+              <div className="col-12">
+                <div className="alert alert-warning">
+                  <i className="fas fa-exclamation-triangle me-2"></i>
+                  Keine Kategorien vorhanden. Erstellen Sie eine neue Kategorie, um zu beginnen.
+                </div>
+              </div>
+          ) : (
+              categories.map(category => (
+                  <div key={category.id} className="col-lg-4 col-md-6 mb-4">
+                    <div
+                        className={`card border-${category.color} h-100 category-card`}
+                        style={{ cursor: 'pointer' }}
+                        onClick={() => enterCategoryView(category)}
+                    >
+                      <div className={`card-header bg-${category.color} text-white`}>
+                        <div className="d-flex justify-content-between align-items-center">
+                          <h5 className="mb-0">
+                            <i className={`${category.icon} me-2`}></i>
+                            {category.name}
+                          </h5>
+                          <div className="dropdown" onClick={(e) => e.stopPropagation()}>
+                            <button
+                                className="btn btn-sm btn-outline-light dropdown-toggle"
+                                type="button"
+                                data-bs-toggle="dropdown"
+                            >
+                              <i className="fas fa-ellipsis-v"></i>
+                            </button>
+                            <ul className="dropdown-menu">
+                              <li>
+                                <button
+                                    className="dropdown-item"
+                                    onClick={() => deleteCategory(category.id)}
+                                >
+                                  <i className="fas fa-trash me-2"></i>
+                                  Löschen
+                                </button>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="card-body">
+                        <p className="card-text">{category.description}</p>
+                        <div className="d-flex justify-content-between align-items-center">
+                    <span className="badge bg-primary">
+                      <i className="fas fa-cards me-1"></i>
+                      {getCardCountForCategory(category.id)} Karten
+                    </span>
+                          <small className="text-muted">
+                            <i className="fas fa-user me-1"></i>
+                            {category.author}
+                          </small>
+                        </div>
+                      </div>
+                      <div className="card-footer">
+                        <div className="d-flex justify-content-between align-items-center">
+                          <small className="text-muted">
+                            Erstellt: {new Date(category.created).toLocaleDateString()}
+                          </small>
+                          <div className="btn-group btn-group-sm">
+                            <button
+                                className="btn btn-outline-primary"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  enterCategoryView(category);
+                                }}
+                            >
+                              <i className="fas fa-eye me-1"></i>
+                              Anzeigen
+                            </button>
+                            <button
+                                className="btn btn-outline-success"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setNewCard(prev => ({ ...prev, categoryId: category.id }));
+                                  setCurrentView('add-card');
+                                }}
+                            >
+                              <i className="fas fa-plus me-1"></i>
+                              Karte hinzufügen
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+              ))
+          )}
+        </div>
+      </div>
+  );
+
+  /**
+   * NEU: Rendert die Karten einer bestimmten Kategorie
+   */
+  const renderCategoryDetail = () => (
+      <div>
+        <div className="d-flex justify-content-between align-items-center mb-4">
+          <div>
+            <h2>
+              <i className={`${currentCategoryView.icon} me-2`}></i>
+              {currentCategoryView.name}
+            </h2>
+            <p className="text-muted mb-0">{currentCategoryView.description}</p>
+          </div>
+          <div className="d-flex gap-2">
+            <button
+                className="btn btn-outline-secondary"
+                onClick={exitCategoryView}
+            >
+              <i className="fas fa-arrow-left me-2"></i>
+              Zurück zu Kategorien
+            </button>
             <button
                 className="btn btn-primary"
-                onClick={() => setCurrentView('add-card')}
+                onClick={() => {
+                  setNewCard(prev => ({ ...prev, categoryId: currentCategoryView.id }));
+                  setCurrentView('add-card');
+                }}
             >
               <i className="fas fa-plus me-2"></i>
               Neue Karte
@@ -343,37 +603,52 @@ function CardManager({ user, onQuestionAdded, onCategoryAdded }) {
         </div>
 
         {/* Erweiterte Such- und Filterbereich */}
-        <div className="card search-container">
+        <div className="card mb-4">
+          <div className="card-header">
+            <h5 className="mb-0">
+              <i className="fas fa-search me-2"></i>
+              Suche und Filter
+            </h5>
+          </div>
           <div className="card-body">
             <div className="row">
-              <div className="col-md-6">
-                <div className="input-group mb-3">
-                <span className="input-group-text">
-                  <i className="fas fa-search"></i>
-                </span>
-                  <input
-                      type="text"
-                      className="form-control"
-                      placeholder="Suche nach Fragen, Tags oder Kategorien..."
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                  />
-                </div>
+              <div className="col-md-4">
+                <label htmlFor="searchTerm" className="form-label">
+                  Suchbegriff
+                </label>
+                <input
+                    type="text"
+                    id="searchTerm"
+                    className="form-control"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    placeholder="Suche in Fragen und Tags..."
+                />
               </div>
-              <div className="col-md-3">
+              <div className="col-md-4">
+                <label htmlFor="authorFilter" className="form-label">
+                  Autor
+                </label>
                 <select
+                    id="authorFilter"
                     className="form-select"
                     value={authorFilter}
                     onChange={(e) => setAuthorFilter(e.target.value)}
                 >
                   <option value="all">Alle Autoren</option>
                   {getUniqueAuthors().map(author => (
-                      <option key={author} value={author}>{author}</option>
+                      <option key={author} value={author}>
+                        {author}
+                      </option>
                   ))}
                 </select>
               </div>
-              <div className="col-md-3">
+              <div className="col-md-4">
+                <label htmlFor="difficultyFilter" className="form-label">
+                  Schwierigkeit
+                </label>
                 <select
+                    id="difficultyFilter"
                     className="form-select"
                     value={difficultyFilter}
                     onChange={(e) => setDifficultyFilter(e.target.value)}
@@ -385,588 +660,365 @@ function CardManager({ user, onQuestionAdded, onCategoryAdded }) {
                 </select>
               </div>
             </div>
-
-            {/* Suchstatistiken */}
-            <div className="row">
-              <div className="col-12">
-                <small className="text-muted">
-                  <i className="fas fa-info-circle me-1"></i>
-                  Zeige {filteredCards.length} von {cards.length} Karten
-                  {searchTerm && ` für "${searchTerm}"`}
-                  {authorFilter !== 'all' && ` von ${authorFilter}`}
-                  {difficultyFilter !== 'all' && ` (${difficultyFilter})`}
-                </small>
-              </div>
-            </div>
           </div>
         </div>
 
-        {/* Kategorien-Übersicht */}
+        {/* Statusanzeige */}
+        <div className="alert alert-info d-flex justify-content-between align-items-center">
+          <div>
+            <i className="fas fa-info-circle me-2"></i>
+            <strong>Karten in {currentCategoryView.name}:</strong> {filteredCards.length} von {getCardCountForCategory(currentCategoryView.id)} angezeigt
+          </div>
+          <small className="text-muted">
+            Kategorie: {currentCategoryView.name} • Autor: {currentCategoryView.author}
+          </small>
+        </div>
+
+        {/* Karten-Grid */}
         <div className="row">
-          <div className="col-12">
-            <h3>Verfügbare Kategorien ({categories.length})</h3>
-            <div className="row">
-              {categories.map(category => (
-                  <div key={category.id} className="col-md-4 mb-3">
-                    <div className="card h-100 category-card">
-                      <div className="card-header d-flex justify-content-between align-items-center">
-                        <h6 className="mb-0">
-                          <i className={`${category.icon} text-${category.color} me-2 category-icon`}></i>
-                          {category.name}
-                        </h6>
-                        <small className="text-muted">
-                          {category.cardCount || 0} Karten
-                        </small>
+          {filteredCards.length === 0 ? (
+              <div className="col-12">
+                <div className="alert alert-warning">
+                  <i className="fas fa-exclamation-triangle me-2"></i>
+                  {getCardCountForCategory(currentCategoryView.id) === 0 ?
+                      'Keine Karten in dieser Kategorie vorhanden. Erstellen Sie eine neue Karte.' :
+                      'Keine Karten entsprechen den aktuellen Filterkriterien.'
+                  }
+                </div>
+              </div>
+          ) : (
+              filteredCards.map(card => (
+                  <div key={card.id} className="col-lg-6 col-md-12 mb-4">
+                    <div className="card h-100">
+                      <div className="card-header">
+                        <div className="d-flex justify-content-between align-items-start">
+                          <div className="flex-grow-1">
+                            <h6 className="mb-1">{card.question}</h6>
+                            <small className="text-muted">
+                              <i className="fas fa-tag me-1"></i>
+                              {card.tags && card.tags.length > 0 ? card.tags.join(', ') : 'Keine Tags'}
+                            </small>
+                          </div>
+                          <div className="dropdown">
+                            <button
+                                className="btn btn-sm btn-outline-secondary dropdown-toggle"
+                                type="button"
+                                data-bs-toggle="dropdown"
+                            >
+                              <i className="fas fa-ellipsis-v"></i>
+                            </button>
+                            <ul className="dropdown-menu">
+                              <li>
+                                <button
+                                    className="dropdown-item"
+                                    onClick={() => startEditCard(card)}
+                                >
+                                  <i className="fas fa-edit me-2"></i>
+                                  Bearbeiten
+                                </button>
+                              </li>
+                              <li>
+                                <button
+                                    className="dropdown-item"
+                                    onClick={() => deleteCard(card.id)}
+                                >
+                                  <i className="fas fa-trash me-2"></i>
+                                  Löschen
+                                </button>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
                       </div>
                       <div className="card-body">
-                        <p className="card-text small">{category.description}</p>
-                        <div className="author-info">
-                          <small className="text-muted">
-                            <i className="fas fa-user me-1"></i>
-                            Erstellt von: {category.author}
-                          </small>
-                          <br />
-                          <small className="text-muted">
-                            <i className="fas fa-calendar me-1"></i>
-                            {new Date(category.created).toLocaleDateString('de-DE')}
-                          </small>
+                        <div className="mb-3">
+                          {card.answers.map((answer, index) => (
+                              <div key={index} className={`form-check ${card.correctAnswer === index ? 'bg-success bg-opacity-10' : ''}`}>
+                                <input
+                                    className="form-check-input"
+                                    type="radio"
+                                    disabled
+                                    checked={card.correctAnswer === index}
+                                />
+                                <label className="form-check-label">
+                                  <strong>{String.fromCharCode(65 + index)}:</strong> {answer}
+                                  {card.correctAnswer === index && (
+                                      <i className="fas fa-check text-success ms-2"></i>
+                                  )}
+                                </label>
+                              </div>
+                          ))}
                         </div>
+                        {card.explanation && (
+                            <div className="alert alert-info">
+                              <strong>Erklärung:</strong> {card.explanation}
+                            </div>
+                        )}
                       </div>
                       <div className="card-footer">
-                        <div className="d-flex gap-2">
-                          <button
-                              className="btn btn-sm btn-outline-primary"
-                              onClick={() => {
-                                setSelectedCategory(category);
-                                setCurrentView('add-card');
-                                setNewCard(prev => ({ ...prev, categoryId: category.id }));
-                              }}
-                          >
-                            <i className="fas fa-plus me-1"></i>
-                            Karte hinzufügen
-                          </button>
-                          <button
-                              className="btn btn-sm btn-outline-danger"
-                              onClick={() => deleteCategory(category.id)}
-                              disabled={category.cardCount > 0}
-                          >
-                            <i className="fas fa-trash me-1"></i>
-                            Löschen
-                          </button>
+                        <div className="d-flex justify-content-between align-items-center">
+                          <div className="d-flex gap-2">
+                      <span className={`badge bg-${card.difficulty === 'Leicht' ? 'success' : card.difficulty === 'Mittel' ? 'warning' : 'danger'}`}>
+                        <i className="fas fa-signal me-1"></i>
+                        {card.difficulty}
+                      </span>
+                            <small className="text-muted">
+                              <i className="fas fa-user me-1"></i>
+                              {card.author}
+                            </small>
+                          </div>
+                          <small className="text-muted">
+                            {new Date(card.created).toLocaleDateString()}
+                          </small>
                         </div>
                       </div>
+                    </div>
+                  </div>
+              ))
+          )}
+        </div>
+      </div>
+  );
+
+  /**
+   * Rendert die Übersicht basierend auf dem aktuellen Anzeigemodus
+   */
+  const renderOverview = () => {
+    if (viewMode === 'categories') {
+      return renderCategoriesOverview();
+    } else if (viewMode === 'category-detail') {
+      return renderCategoryDetail();
+    }
+    return renderCategoriesOverview(); // Fallback
+  };
+
+  /**
+   * Rendert das Formular zum Erstellen einer neuen Kategorie
+   */
+  const renderAddCategory = () => (
+      <div className="card">
+        <div className="card-header">
+          <div className="d-flex justify-content-between align-items-center">
+            <h3 className="mb-0">
+              <i className="fas fa-plus me-2"></i>
+              Neue Kategorie erstellen
+            </h3>
+            <button
+                className="btn btn-outline-secondary"
+                onClick={() => setCurrentView('overview')}
+            >
+              <i className="fas fa-arrow-left me-2"></i>
+              Zurück
+            </button>
+          </div>
+        </div>
+        <div className="card-body">
+          <form>
+            <div className="mb-3">
+              <label htmlFor="categoryName" className="form-label">
+                Kategoriename *
+              </label>
+              <input
+                  type="text"
+                  id="categoryName"
+                  className={`form-control ${errors.categoryName ? 'is-invalid' : ''}`}
+                  value={newCategory.name}
+                  onChange={(e) => setNewCategory(prev => ({ ...prev, name: e.target.value }))}
+                  placeholder="Name der Kategorie"
+              />
+              {errors.categoryName && (
+                  <div className="invalid-feedback">{errors.categoryName}</div>
+              )}
+            </div>
+
+            <div className="mb-3">
+              <label htmlFor="categoryDescription" className="form-label">
+                Beschreibung *
+              </label>
+              <textarea
+                  id="categoryDescription"
+                  className={`form-control ${errors.categoryDescription ? 'is-invalid' : ''}`}
+                  rows="3"
+                  value={newCategory.description}
+                  onChange={(e) => setNewCategory(prev => ({ ...prev, description: e.target.value }))}
+                  placeholder="Beschreibung der Kategorie"
+              />
+              {errors.categoryDescription && (
+                  <div className="invalid-feedback">{errors.categoryDescription}</div>
+              )}
+            </div>
+
+            <div className="row mb-3">
+              <div className="col-md-6">
+                <label htmlFor="categoryIcon" className="form-label">
+                  Icon
+                </label>
+                <select
+                    id="categoryIcon"
+                    className="form-select"
+                    value={newCategory.icon}
+                    onChange={(e) => setNewCategory(prev => ({ ...prev, icon: e.target.value }))}
+                >
+                  {categoryIcons.map(icon => (
+                      <option key={icon.value} value={icon.value}>
+                        {icon.label}
+                      </option>
+                  ))}
+                </select>
+              </div>
+              <div className="col-md-6">
+                <label htmlFor="categoryColor" className="form-label">
+                  Farbe
+                </label>
+                <select
+                    id="categoryColor"
+                    className="form-select"
+                    value={newCategory.color}
+                    onChange={(e) => setNewCategory(prev => ({ ...prev, color: e.target.value }))}
+                >
+                  {categoryColors.map(color => (
+                      <option key={color.value} value={color.value}>
+                        {color.label}
+                      </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <div className="mb-3">
+              <div className="form-check">
+                <input
+                    type="checkbox"
+                    id="categoryPublic"
+                    className="form-check-input"
+                    checked={newCategory.isPublic}
+                    onChange={(e) => setNewCategory(prev => ({ ...prev, isPublic: e.target.checked }))}
+                />
+                <label htmlFor="categoryPublic" className="form-check-label">
+                  Öffentlich (andere Benutzer können Fragen hinzufügen)
+                </label>
+              </div>
+            </div>
+
+            <div className="d-flex gap-2">
+              <button
+                  type="button"
+                  className="btn btn-success"
+                  onClick={createCategory}
+              >
+                <i className="fas fa-save me-2"></i>
+                Kategorie erstellen
+              </button>
+              <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={() => setCurrentView('overview')}
+              >
+                <i className="fas fa-times me-2"></i>
+                Abbrechen
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+  );
+
+  /**
+   * Rendert das Formular zum Erstellen einer neuen Karte
+   */
+  const renderAddCard = () => (
+      <div className="card">
+        <div className="card-header">
+          <div className="d-flex justify-content-between align-items-center">
+            <h3 className="mb-0">
+              <i className="fas fa-plus me-2"></i>
+              Neue Karte erstellen
+            </h3>
+            <button
+                className="btn btn-outline-secondary"
+                onClick={() => setCurrentView('overview')}
+            >
+              <i className="fas fa-arrow-left me-2"></i>
+              Zurück
+            </button>
+          </div>
+        </div>
+        <div className="card-body">
+          <form>
+            <div className="mb-3">
+              <label htmlFor="cardCategory" className="form-label">
+                Kategorie *
+              </label>
+              <select
+                  id="cardCategory"
+                  className={`form-select ${errors.categoryId ? 'is-invalid' : ''}`}
+                  value={newCard.categoryId}
+                  onChange={(e) => setNewCard(prev => ({ ...prev, categoryId: e.target.value }))}
+              >
+                <option value="">Kategorie auswählen</option>
+                {categories.map(category => (
+                    <option key={category.id} value={category.id}>
+                      {category.name}
+                    </option>
+                ))}
+              </select>
+              {errors.categoryId && (
+                  <div className="invalid-feedback">{errors.categoryId}</div>
+              )}
+            </div>
+
+            <div className="mb-3">
+              <label htmlFor="cardQuestion" className="form-label">
+                Frage *
+              </label>
+              <textarea
+                  id="cardQuestion"
+                  className={`form-control ${errors.question ? 'is-invalid' : ''}`}
+                  rows="3"
+                  value={newCard.question}
+                  onChange={(e) => setNewCard(prev => ({ ...prev, question: e.target.value }))}
+                  placeholder="Geben Sie hier Ihre Frage ein..."
+              />
+              {errors.question && (
+                  <div className="invalid-feedback">{errors.question}</div>
+              )}
+            </div>
+
+            <div className="mb-3">
+              <label className="form-label">Antwortmöglichkeiten *</label>
+              {newCard.answers.map((answer, index) => (
+                  <div key={index} className="input-group mb-2">
+                <span className="input-group-text">
+                  {String.fromCharCode(65 + index)}
+                </span>
+                    <input
+                        type="text"
+                        className="form-control"
+                        value={answer}
+                        onChange={(e) => updateCardAnswer(index, e.target.value)}
+                        placeholder={`Antwort ${String.fromCharCode(65 + index)}`}
+                    />
+                    <div className="input-group-text">
+                      <input
+                          type="radio"
+                          name="correctAnswer"
+                          checked={newCard.correctAnswer === index}
+                          onChange={() => setNewCard(prev => ({ ...prev, correctAnswer: index }))}
+                          disabled={!answer.trim()}
+                      />
                     </div>
                   </div>
               ))}
+              {errors.answers && (
+                  <div className="text-danger small">{errors.answers}</div>
+              )}
+              {errors.correctAnswer && (
+                  <div className="text-danger small">{errors.correctAnswer}</div>
+              )}
             </div>
-          </div>
-        </div>
 
-        {/* Karten-Übersicht mit erweiterten Funktionen */}
-        <div className="row mt-4">
-          <div className="col-12">
-            <h3>
-              Karten-Übersicht
-              <span className="badge bg-secondary ms-2">{filteredCards.length}</span>
-            </h3>
-
-            {filteredCards.length === 0 ? (
-                <div className="alert alert-info">
-                  <i className="fas fa-info-circle me-2"></i>
-                  {searchTerm || authorFilter !== 'all' || difficultyFilter !== 'all'
-                      ? 'Keine Karten gefunden, die den Filterkriterien entsprechen.'
-                      : 'Noch keine Karten vorhanden. Erstellen Sie die erste Karte!'}
-                </div>
-            ) : (
-                <div className="card-grid">
-                  {filteredCards.map(card => {
-                    const category = categories.find(cat => cat.id === card.categoryId);
-                    return (
-                        <div key={card.id} className="card mb-3">
-                          <div className="card-body">
-                            <div className="d-flex justify-content-between align-items-start mb-2">
-                              <h6 className="card-title">{card.question}</h6>
-                              <span className={`badge difficulty-${card.difficulty.toLowerCase()}`}>
-                          {card.difficulty}
-                        </span>
-                            </div>
-
-                            <div className="card-preview">
-                              <small className="text-muted">
-                                <strong>Antworten:</strong> {card.answers.filter(a => a.trim()).length} Optionen
-                              </small>
-                              <br />
-                              <small className="text-muted">
-                                <strong>Richtige Antwort:</strong> {String.fromCharCode(65 + card.correctAnswer)} - {card.answers[card.correctAnswer]}
-                              </small>
-                              {card.explanation && (
-                                  <>
-                                    <br />
-                                    <small className="text-muted">
-                                      <strong>Erklärung:</strong> {card.explanation.substring(0, 100)}...
-                                    </small>
-                                  </>
-                              )}
-                            </div>
-
-                            <div className="d-flex justify-content-between align-items-center mt-3">
-                              <div>
-                                <small className="text-muted">
-                                  <i className="fas fa-folder me-1"></i>
-                                  {category?.name || 'Unbekannte Kategorie'}
-                                </small>
-                                <br />
-                                <small className="text-muted">
-                                  <i className="fas fa-user me-1"></i>
-                                  {card.author}
-                                </small>
-                              </div>
-
-                              <div className="d-flex gap-2">
-                                <button
-                                    className="btn btn-sm btn-outline-primary"
-                                    onClick={() => startEditCard(card)}
-                                >
-                                  <i className="fas fa-edit me-1"></i>
-                                  Bearbeiten
-                                </button>
-                                <button
-                                    className="btn btn-sm btn-outline-danger"
-                                    onClick={() => deleteCard(card.id)}
-                                >
-                                  <i className="fas fa-trash me-1"></i>
-                                  Löschen
-                                </button>
-                              </div>
-                            </div>
-
-                            {card.tags && card.tags.length > 0 && (
-                                <div className="mt-2">
-                                  {card.tags.map(tag => (
-                                      <span key={tag} className="filter-tag">
-                              {tag}
-                            </span>
-                                  ))}
-                                </div>
-                            )}
-                          </div>
-                        </div>
-                    );
-                  })}
-                </div>
-            )}
-          </div>
-        </div>
-      </div>
-  );
-
-  // Andere Render-Methoden bleiben gleich wie zuvor, aber ich füge die Bearbeitung hinzu
-  const renderEditCard = () => (
-      <div>
-        <div className="d-flex justify-content-between align-items-center mb-4">
-          <h2>
-            <i className="fas fa-edit me-2"></i>
-            Karte bearbeiten
-          </h2>
-          <button
-              className="btn btn-outline-secondary"
-              onClick={() => setCurrentView('overview')}
-          >
-            <i className="fas fa-arrow-left me-2"></i>
-            Zurück zur Übersicht
-          </button>
-        </div>
-
-        <div className="card">
-          <div className="card-body">
-            <form>
-              <div className="mb-3">
-                <label htmlFor="editCardCategory" className="form-label">
-                  Kategorie *
-                </label>
-                <select
-                    id="editCardCategory"
-                    className="form-select"
-                    value={editingCard.categoryId}
-                    onChange={(e) => setEditingCard(prev => ({ ...prev, categoryId: e.target.value }))}
-                >
-                  <option value="">Kategorie auswählen</option>
-                  {categories.map(category => (
-                      <option key={category.id} value={category.id}>
-                        {category.name}
-                      </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="mb-3">
-                <label htmlFor="editCardQuestion" className="form-label">
-                  Frage *
-                </label>
-                <textarea
-                    id="editCardQuestion"
-                    className="form-control"
-                    rows="3"
-                    value={editingCard.question}
-                    onChange={(e) => setEditingCard(prev => ({ ...prev, question: e.target.value }))}
-                    placeholder="Geben Sie hier Ihre Frage ein..."
-                />
-              </div>
-
-              <div className="mb-3">
-                <label className="form-label">Antwortmöglichkeiten *</label>
-                {editingCard.answers.map((answer, index) => (
-                    <div key={index} className="input-group mb-2">
-                  <span className="input-group-text">
-                    {String.fromCharCode(65 + index)}
-                  </span>
-                      <input
-                          type="text"
-                          className="form-control"
-                          value={answer}
-                          onChange={(e) => updateEditCardAnswer(index, e.target.value)}
-                          placeholder={`Antwort ${String.fromCharCode(65 + index)}`}
-                      />
-                      <div className="input-group-text">
-                        <input
-                            type="radio"
-                            name="editCorrectAnswer"
-                            checked={editingCard.correctAnswer === index}
-                            onChange={() => setEditingCard(prev => ({ ...prev, correctAnswer: index }))}
-                            disabled={!answer.trim()}
-                        />
-                      </div>
-                    </div>
-                ))}
-              </div>
-
-              <div className="mb-3">
-                <label htmlFor="editCardDifficulty" className="form-label">
-                  Schwierigkeit
-                </label>
-                <select
-                    id="editCardDifficulty"
-                    className="form-select"
-                    value={editingCard.difficulty}
-                    onChange={(e) => setEditingCard(prev => ({ ...prev, difficulty: e.target.value }))}
-                >
-                  <option value="Leicht">Leicht</option>
-                  <option value="Mittel">Mittel</option>
-                  <option value="Schwer">Schwer</option>
-                </select>
-              </div>
-
-              <div className="mb-3">
-                <label htmlFor="editCardExplanation" className="form-label">
-                  Erklärung (optional)
-                </label>
-                <textarea
-                    id="editCardExplanation"
-                    className="form-control"
-                    rows="2"
-                    value={editingCard.explanation}
-                    onChange={(e) => setEditingCard(prev => ({ ...prev, explanation: e.target.value }))}
-                    placeholder="Erklärung der richtigen Antwort..."
-                />
-              </div>
-
-              <div className="mb-3">
-                <label htmlFor="editCardTags" className="form-label">
-                  Tags (optional)
-                </label>
-                <input
-                    type="text"
-                    id="editCardTags"
-                    className="form-control"
-                    value={editingCard.tags}
-                    onChange={(e) => setEditingCard(prev => ({ ...prev, tags: e.target.value }))}
-                    placeholder="Tag1, Tag2, Tag3..."
-                />
-              </div>
-
-              <div className="d-flex gap-2">
-                <button
-                    type="button"
-                    className="btn btn-success"
-                    onClick={saveEditedCard}
-                >
-                  <i className="fas fa-save me-2"></i>
-                  Änderungen speichern
-                </button>
-                <button
-                    type="button"
-                    className="btn btn-outline-secondary"
-                    onClick={() => setCurrentView('overview')}
-                >
-                  Abbrechen
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-  );
-
-  // Andere Render-Methoden bleiben unverändert von der vorherigen Version
-  const renderAddCategory = () => (
-      <div>
-        <div className="d-flex justify-content-between align-items-center mb-4">
-          <h2>
-            <i className="fas fa-plus-circle me-2"></i>
-            Neue Kategorie erstellen
-          </h2>
-          <button
-              className="btn btn-outline-secondary"
-              onClick={() => setCurrentView('overview')}
-          >
-            <i className="fas fa-arrow-left me-2"></i>
-            Zurück zur Übersicht
-          </button>
-        </div>
-
-        <div className="row">
-          <div className="col-md-8">
-            <div className="card">
-              <div className="card-body">
-                <form>
-                  <div className="mb-3">
-                    <label htmlFor="categoryName" className="form-label">
-                      Kategoriename *
-                    </label>
-                    <input
-                        type="text"
-                        id="categoryName"
-                        className={`form-control ${errors.categoryName ? 'is-invalid' : ''}`}
-                        value={newCategory.name}
-                        onChange={(e) => setNewCategory(prev => ({ ...prev, name: e.target.value }))}
-                        placeholder="z.B. Datenbanken, Algorithmen, ..."
-                    />
-                    {errors.categoryName && (
-                        <div className="invalid-feedback">{errors.categoryName}</div>
-                    )}
-                  </div>
-
-                  <div className="mb-3">
-                    <label htmlFor="categoryDescription" className="form-label">
-                      Beschreibung *
-                    </label>
-                    <textarea
-                        id="categoryDescription"
-                        className={`form-control ${errors.categoryDescription ? 'is-invalid' : ''}`}
-                        rows="3"
-                        value={newCategory.description}
-                        onChange={(e) => setNewCategory(prev => ({ ...prev, description: e.target.value }))}
-                        placeholder="Kurze Beschreibung der Kategorie..."
-                    />
-                    {errors.categoryDescription && (
-                        <div className="invalid-feedback">{errors.categoryDescription}</div>
-                    )}
-                  </div>
-
-                  <div className="row mb-3">
-                    <div className="col-md-6">
-                      <label htmlFor="categoryIcon" className="form-label">
-                        Icon
-                      </label>
-                      <select
-                          id="categoryIcon"
-                          className="form-select"
-                          value={newCategory.icon}
-                          onChange={(e) => setNewCategory(prev => ({ ...prev, icon: e.target.value }))}
-                      >
-                        {categoryIcons.map(icon => (
-                            <option key={icon.value} value={icon.value}>
-                              {icon.label}
-                            </option>
-                        ))}
-                      </select>
-                    </div>
-                    <div className="col-md-6">
-                      <label htmlFor="categoryColor" className="form-label">
-                        Farbe
-                      </label>
-                      <select
-                          id="categoryColor"
-                          className="form-select"
-                          value={newCategory.color}
-                          onChange={(e) => setNewCategory(prev => ({ ...prev, color: e.target.value }))}
-                      >
-                        {categoryColors.map(color => (
-                            <option key={color.value} value={color.value}>
-                              {color.label}
-                            </option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-
-                  <div className="mb-3">
-                    <div className="form-check">
-                      <input
-                          className="form-check-input"
-                          type="checkbox"
-                          id="categoryPublic"
-                          checked={newCategory.isPublic}
-                          onChange={(e) => setNewCategory(prev => ({ ...prev, isPublic: e.target.checked }))}
-                      />
-                      <label className="form-check-label" htmlFor="categoryPublic">
-                        Öffentlich verfügbar für alle Nutzer
-                      </label>
-                    </div>
-                  </div>
-
-                  <div className="d-flex gap-2">
-                    <button
-                        type="button"
-                        className="btn btn-success"
-                        onClick={createCategory}
-                    >
-                      <i className="fas fa-save me-2"></i>
-                      Kategorie erstellen
-                    </button>
-                    <button
-                        type="button"
-                        className="btn btn-outline-secondary"
-                        onClick={() => setCurrentView('overview')}
-                    >
-                      Abbrechen
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
-
-          <div className="col-md-4">
-            <div className="card">
-              <div className="card-header">
-                <h5>Vorschau</h5>
-              </div>
-              <div className="card-body">
-                <div className="card h-100">
-                  <div className="card-header d-flex justify-content-between align-items-center">
-                    <h6 className="mb-0">
-                      <i className={`${newCategory.icon} text-${newCategory.color} me-2`}></i>
-                      {newCategory.name || 'Kategoriename'}
-                    </h6>
-                    <small className="text-muted">0 Karten</small>
-                  </div>
-                  <div className="card-body">
-                    <p className="card-text small">
-                      {newCategory.description || 'Beschreibung der Kategorie...'}
-                    </p>
-                    <div className="mt-2">
-                      <small className="text-muted">
-                        <i className="fas fa-user me-1"></i>
-                        Erstellt von: {user.name}
-                      </small>
-                      <br />
-                      <small className="text-muted">
-                        <i className="fas fa-calendar me-1"></i>
-                        {new Date().toLocaleDateString('de-DE')}
-                      </small>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-  );
-
-  const renderAddCard = () => (
-      <div>
-        <div className="d-flex justify-content-between align-items-center mb-4">
-          <h2>
-            <i className="fas fa-plus-circle me-2"></i>
-            Neue Karte erstellen
-          </h2>
-          <button
-              className="btn btn-outline-secondary"
-              onClick={() => setCurrentView('overview')}
-          >
-            <i className="fas fa-arrow-left me-2"></i>
-            Zurück zur Übersicht
-          </button>
-        </div>
-
-        <div className="card">
-          <div className="card-body">
-            <form>
-              <div className="mb-3">
-                <label htmlFor="cardCategory" className="form-label">
-                  Kategorie *
-                </label>
-                <select
-                    id="cardCategory"
-                    className={`form-select ${errors.categoryId ? 'is-invalid' : ''}`}
-                    value={newCard.categoryId}
-                    onChange={(e) => setNewCard(prev => ({ ...prev, categoryId: e.target.value }))}
-                >
-                  <option value="">Kategorie auswählen</option>
-                  {categories.map(category => (
-                      <option key={category.id} value={category.id}>
-                        {category.name}
-                      </option>
-                  ))}
-                </select>
-                {errors.categoryId && (
-                    <div className="invalid-feedback">{errors.categoryId}</div>
-                )}
-              </div>
-
-              <div className="mb-3">
-                <label htmlFor="cardQuestion" className="form-label">
-                  Frage *
-                </label>
-                <textarea
-                    id="cardQuestion"
-                    className={`form-control ${errors.question ? 'is-invalid' : ''}`}
-                    rows="3"
-                    value={newCard.question}
-                    onChange={(e) => setNewCard(prev => ({ ...prev, question: e.target.value }))}
-                    placeholder="Geben Sie hier Ihre Frage ein..."
-                />
-                {errors.question && (
-                    <div className="invalid-feedback">{errors.question}</div>
-                )}
-              </div>
-
-              <div className="mb-3">
-                <label className="form-label">Antwortmöglichkeiten *</label>
-                {newCard.answers.map((answer, index) => (
-                    <div key={index} className="input-group mb-2">
-                  <span className="input-group-text">
-                    {String.fromCharCode(65 + index)}
-                  </span>
-                      <input
-                          type="text"
-                          className="form-control"
-                          value={answer}
-                          onChange={(e) => updateCardAnswer(index, e.target.value)}
-                          placeholder={`Antwort ${String.fromCharCode(65 + index)}`}
-                      />
-                      <div className="input-group-text">
-                        <input
-                            type="radio"
-                            name="correctAnswer"
-                            checked={newCard.correctAnswer === index}
-                            onChange={() => setNewCard(prev => ({ ...prev, correctAnswer: index }))}
-                            disabled={!answer.trim()}
-                        />
-                      </div>
-                    </div>
-                ))}
-                {errors.answers && (
-                    <div className="text-danger small">{errors.answers}</div>
-                )}
-                {errors.correctAnswer && (
-                    <div className="text-danger small">{errors.correctAnswer}</div>
-                )}
-              </div>
-
-              <div className="mb-3">
+            <div className="row mb-3">
+              <div className="col-md-6">
                 <label htmlFor="cardDifficulty" className="form-label">
                   Schwierigkeit
                 </label>
@@ -981,22 +1033,7 @@ function CardManager({ user, onQuestionAdded, onCategoryAdded }) {
                   <option value="Schwer">Schwer</option>
                 </select>
               </div>
-
-              <div className="mb-3">
-                <label htmlFor="cardExplanation" className="form-label">
-                  Erklärung (optional)
-                </label>
-                <textarea
-                    id="cardExplanation"
-                    className="form-control"
-                    rows="2"
-                    value={newCard.explanation}
-                    onChange={(e) => setNewCard(prev => ({ ...prev, explanation: e.target.value }))}
-                    placeholder="Erklärung der richtigen Antwort..."
-                />
-              </div>
-
-              <div className="mb-3">
+              <div className="col-md-6">
                 <label htmlFor="cardTags" className="form-label">
                   Tags (optional)
                 </label>
@@ -1009,51 +1046,214 @@ function CardManager({ user, onQuestionAdded, onCategoryAdded }) {
                     placeholder="Tag1, Tag2, Tag3..."
                 />
               </div>
+            </div>
 
-              <div className="mb-3">
-                <div className="form-check">
-                  <input
-                      className="form-check-input"
-                      type="checkbox"
-                      id="cardPublic"
-                      checked={newCard.isPublic}
-                      onChange={(e) => setNewCard(prev => ({ ...prev, isPublic: e.target.checked }))}
-                  />
-                  <label className="form-check-label" htmlFor="cardPublic">
-                    Öffentlich verfügbar für alle Nutzer
-                  </label>
-                </div>
-              </div>
+            <div className="mb-3">
+              <label htmlFor="cardExplanation" className="form-label">
+                Erklärung (optional)
+              </label>
+              <textarea
+                  id="cardExplanation"
+                  className="form-control"
+                  rows="2"
+                  value={newCard.explanation}
+                  onChange={(e) => setNewCard(prev => ({ ...prev, explanation: e.target.value }))}
+                  placeholder="Erklärung der richtigen Antwort..."
+              />
+            </div>
 
-              <div className="d-flex gap-2">
-                <button
-                    type="button"
-                    className="btn btn-primary"
-                    onClick={createCard}
-                >
-                  <i className="fas fa-save me-2"></i>
-                  Karte erstellen
-                </button>
-                <button
-                    type="button"
-                    className="btn btn-outline-secondary"
-                    onClick={() => setCurrentView('overview')}
-                >
-                  Abbrechen
-                </button>
+            <div className="mb-3">
+              <div className="form-check">
+                <input
+                    type="checkbox"
+                    id="cardPublic"
+                    className="form-check-input"
+                    checked={newCard.isPublic}
+                    onChange={(e) => setNewCard(prev => ({ ...prev, isPublic: e.target.checked }))}
+                />
+                <label htmlFor="cardPublic" className="form-check-label">
+                  Öffentlich (andere Benutzer können diese Karte verwenden)
+                </label>
               </div>
-            </form>
-          </div>
+            </div>
+
+            <div className="d-flex gap-2">
+              <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={createCard}
+              >
+                <i className="fas fa-save me-2"></i>
+                Karte erstellen
+              </button>
+              <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={() => setCurrentView('overview')}
+              >
+                <i className="fas fa-times me-2"></i>
+                Abbrechen
+              </button>
+            </div>
+          </form>
         </div>
       </div>
   );
 
+  /**
+   * Rendert das Formular zum Bearbeiten einer Karte
+   */
+  const renderEditCard = () => (
+      <div className="card">
+        <div className="card-header">
+          <div className="d-flex justify-content-between align-items-center">
+            <h3 className="mb-0">
+              <i className="fas fa-edit me-2"></i>
+              Karte bearbeiten
+            </h3>
+            <button
+                className="btn btn-outline-secondary"
+                onClick={() => setCurrentView('overview')}
+            >
+              <i className="fas fa-arrow-left me-2"></i>
+              Zurück
+            </button>
+          </div>
+        </div>
+        <div className="card-body">
+          {editingCard && (
+              <form>
+                <div className="mb-3">
+                  <label htmlFor="editCardCategory" className="form-label">
+                    Kategorie
+                  </label>
+                  <select
+                      id="editCardCategory"
+                      className="form-select"
+                      value={editingCard.categoryId}
+                      onChange={(e) => setEditingCard(prev => ({ ...prev, categoryId: e.target.value }))}
+                  >
+                    {categories.map(category => (
+                        <option key={category.id} value={category.id}>
+                          {category.name}
+                        </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="mb-3">
+                  <label htmlFor="editCardQuestion" className="form-label">
+                    Frage
+                  </label>
+                  <textarea
+                      id="editCardQuestion"
+                      className="form-control"
+                      rows="3"
+                      value={editingCard.question}
+                      onChange={(e) => setEditingCard(prev => ({ ...prev, question: e.target.value }))}
+                  />
+                </div>
+
+                <div className="mb-3">
+                  <label className="form-label">Antwortmöglichkeiten</label>
+                  {editingCard.answers.map((answer, index) => (
+                      <div key={index} className="input-group mb-2">
+                    <span className="input-group-text">
+                      {String.fromCharCode(65 + index)}
+                    </span>
+                        <input
+                            type="text"
+                            className="form-control"
+                            value={answer}
+                            onChange={(e) => updateEditCardAnswer(index, e.target.value)}
+                        />
+                        <div className="input-group-text">
+                          <input
+                              type="radio"
+                              name="editCorrectAnswer"
+                              checked={editingCard.correctAnswer === index}
+                              onChange={() => setEditingCard(prev => ({ ...prev, correctAnswer: index }))}
+                          />
+                        </div>
+                      </div>
+                  ))}
+                </div>
+
+                <div className="row mb-3">
+                  <div className="col-md-6">
+                    <label htmlFor="editCardDifficulty" className="form-label">
+                      Schwierigkeit
+                    </label>
+                    <select
+                        id="editCardDifficulty"
+                        className="form-select"
+                        value={editingCard.difficulty}
+                        onChange={(e) => setEditingCard(prev => ({ ...prev, difficulty: e.target.value }))}
+                    >
+                      <option value="Leicht">Leicht</option>
+                      <option value="Mittel">Mittel</option>
+                      <option value="Schwer">Schwer</option>
+                    </select>
+                  </div>
+                  <div className="col-md-6">
+                    <label htmlFor="editCardTags" className="form-label">
+                      Tags
+                    </label>
+                    <input
+                        type="text"
+                        id="editCardTags"
+                        className="form-control"
+                        value={editingCard.tags}
+                        onChange={(e) => setEditingCard(prev => ({ ...prev, tags: e.target.value }))}
+                        placeholder="Tag1, Tag2, Tag3..."
+                    />
+                  </div>
+                </div>
+
+                <div className="mb-3">
+                  <label htmlFor="editCardExplanation" className="form-label">
+                    Erklärung
+                  </label>
+                  <textarea
+                      id="editCardExplanation"
+                      className="form-control"
+                      rows="2"
+                      value={editingCard.explanation}
+                      onChange={(e) => setEditingCard(prev => ({ ...prev, explanation: e.target.value }))}
+                  />
+                </div>
+
+                <div className="d-flex gap-2">
+                  <button
+                      type="button"
+                      className="btn btn-primary"
+                      onClick={saveEditedCard}
+                  >
+                    <i className="fas fa-save me-2"></i>
+                    Änderungen speichern
+                  </button>
+                  <button
+                      type="button"
+                      className="btn btn-secondary"
+                      onClick={() => setCurrentView('overview')}
+                  >
+                    <i className="fas fa-times me-2"></i>
+                    Abbrechen
+                  </button>
+                </div>
+              </form>
+          )}
+        </div>
+      </div>
+  );
+
+  // Hauptrender-Logik
   return (
       <div className="container mt-4">
         {currentView === 'overview' && renderOverview()}
         {currentView === 'add-category' && renderAddCategory()}
         {currentView === 'add-card' && renderAddCard()}
-        {currentView === 'edit-card' && editingCard && renderEditCard()}
+        {currentView === 'edit-card' && renderEditCard()}
       </div>
   );
 }

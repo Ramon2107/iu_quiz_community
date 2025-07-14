@@ -1,7 +1,7 @@
-# IUBH Quiz System - README
+# IU Community Quiz - README
 ## 📋 Überblick
 
-Das **IUBH Quiz System** ist eine moderne, responsive Webanwendung für kooperatives und kollaboratives Online-Lernen. Die Anwendung wurde speziell für Studierende des Fernstudiums der IUBH entwickelt und unterstützt sowohl kooperative als auch kompetitive Quiz-Modi zur Klausurvorbereitung.
+Das **IU Community Quiz ** ist eine moderne, responsive Webanwendung für kooperatives und kollaboratives Online-Lernen. Die Anwendung wurde speziell für Studierende des Fernstudiums der IUBH entwickelt und unterstützt sowohl kooperative als auch kompetitive Quiz-Modi zur Klausurvorbereitung.
 
 ## 🎯 Projektziel
 Konzeption und prototypische Umsetzung eines Online-Quizsystems, das Studierende bei der Festigung der Lerninhalte zur Vorbereitung auf Klausuren unterstützt. Das System ermöglicht es Studierenden, kooperativ und kollaborativ Antworten zu fachlichen Fragen zu finden, wobei das gemeinsame Lernen und Erarbeiten im Fokus steht.

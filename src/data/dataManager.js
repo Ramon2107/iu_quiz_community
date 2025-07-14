@@ -2,9 +2,10 @@
  * Zentraler Datenmanager für die gesamte Anwendung
  *
  * KORRIGIERT: Mock-Daten werden jetzt garantiert geladen
+ * WICHTIG: Kleine Änderungen für sofortige Funktionalität
  */
 
-import { getMockQuestions, getCategories } from './mockData';
+import { mockCategories, mockQuestions } from './mockData';
 
 /**
  * Zentraler Datenmanager
@@ -22,68 +23,93 @@ class DataManager {
     const existingCategories = localStorage.getItem('quiz-categories');
     const existingCards = localStorage.getItem('quiz-cards');
 
-    // Lade Mock-Daten wenn keine Kategorien vorhanden sind
-    if (!existingCategories || JSON.parse(existingCategories).length === 0) {
-      console.log('Lade Mock-Kategorien...');
+    // KORRIGIERT: Sofortiges Laden der Mock-Daten bei fehlenden Daten
+    if (!existingCategories || JSON.parse(existingCategories || '[]').length === 0) {
+      console.log('DataManager: Lade Mock-Kategorien...');
       this.loadMockCategories();
     }
 
-    // Lade Mock-Daten wenn keine Karten vorhanden sind
-    if (!existingCards || JSON.parse(existingCards).length === 0) {
-      console.log('Lade Mock-Fragen...');
+    if (!existingCards || JSON.parse(existingCards || '[]').length === 0) {
+      console.log('DataManager: Lade Mock-Fragen...');
       this.loadMockQuestions();
     }
+
+    // KORRIGIERT: Daten nach dem Laden nochmal prüfen
+    const finalCategories = this.getAllCategories();
+    const finalCards = this.getAllCards();
+    console.log('DataManager: Finale Kategorien:', finalCategories.length);
+    console.log('DataManager: Finale Karten:', finalCards.length);
   }
 
   /**
    * Lädt die Mock-Kategorien
+   * KORRIGIERT: Bessere Fehlerbehandlung
    */
   loadMockCategories() {
-    const mockCategories = getCategories();
-    const convertedCategories = mockCategories.map(cat => ({
-      id: cat.id,
-      name: cat.name,
-      description: cat.description,
-      icon: `fas fa-${cat.icon}`,
-      color: cat.color,
-      author: 'System',
-      created: new Date().toISOString(),
-      isPublic: true,
-      collaborators: [],
-      cardCount: 0
-    }));
+    try {
+      console.log('DataManager: Mock-Kategorien erhalten:', mockCategories.length);
 
-    localStorage.setItem('quiz-categories', JSON.stringify(convertedCategories));
-    console.log('Mock-Kategorien geladen:', convertedCategories.length);
+      const convertedCategories = mockCategories.map(cat => ({
+        id: cat.id,
+        name: cat.name,
+        description: cat.description,
+        icon: cat.icon.startsWith('fas fa-') ? cat.icon : `fas fa-${cat.icon}`,
+        color: cat.color,
+        author: 'System',
+        created: new Date().toISOString(),
+        isPublic: true,
+        collaborators: [],
+        cardCount: 0
+      }));
+
+      localStorage.setItem('quiz-categories', JSON.stringify(convertedCategories));
+      console.log('DataManager: Mock-Kategorien gespeichert:', convertedCategories.length);
+      return convertedCategories;
+    } catch (error) {
+      console.error('DataManager: Fehler beim Laden der Mock-Kategorien:', error);
+      return [];
+    }
   }
 
   /**
    * Lädt die Mock-Fragen
+   * KORRIGIERT: Bessere Fehlerbehandlung und Kategorie-Zuordnung
    */
   loadMockQuestions() {
-    const mockQuestions = getMockQuestions();
-    const categories = this.getAllCategories();
+    try {
+      console.log('DataManager: Mock-Fragen erhalten:', mockQuestions.length);
 
-    const convertedQuestions = mockQuestions.map(q => ({
-      id: q.id,
-      categoryId: this.getCategoryIdByName(q.category, categories),
-      question: q.question,
-      answers: q.answers,
-      correctAnswer: q.correctAnswer,
-      difficulty: q.difficulty,
-      explanation: q.explanation || '',
-      tags: this.extractTagsFromQuestion(q.question),
-      author: 'System',
-      authorEmail: 'system@iu-study.org',
-      created: new Date().toISOString(),
-      isPublic: true
-    }));
+      const categories = this.getAllCategories();
+      console.log('DataManager: Verfügbare Kategorien:', categories.map(c => c.name));
 
-    localStorage.setItem('quiz-cards', JSON.stringify(convertedQuestions));
-    console.log('Mock-Fragen geladen:', convertedQuestions.length);
+      const convertedQuestions = mockQuestions.map(q => {
+        const categoryId = this.getCategoryIdByName(q.category, categories);
+        return {
+          id: q.id,
+          categoryId: categoryId,
+          question: q.question,
+          answers: q.answers,
+          correctAnswer: q.correctAnswer,
+          difficulty: q.difficulty,
+          explanation: q.explanation || '',
+          tags: this.extractTagsFromQuestion(q.question),
+          author: 'System',
+          authorEmail: 'system@iu-study.org',
+          created: new Date().toISOString(),
+          isPublic: true
+        };
+      });
 
-    // Aktualisiere Kartenanzahl in Kategorien
-    this.updateCategoryCardCounts();
+      localStorage.setItem('quiz-cards', JSON.stringify(convertedQuestions));
+      console.log('DataManager: Mock-Fragen gespeichert:', convertedQuestions.length);
+
+      // Aktualisiere Kartenanzahl in Kategorien
+      this.updateCategoryCardCounts();
+      return convertedQuestions;
+    } catch (error) {
+      console.error('DataManager: Fehler beim Laden der Mock-Fragen:', error);
+      return [];
+    }
   }
 
   /**
@@ -104,10 +130,20 @@ class DataManager {
 
   /**
    * Hilfsfunktion: Findet Kategorie-ID basierend auf Name
+   * KORRIGIERT: Bessere Kategorie-Zuordnung
    */
   getCategoryIdByName(categoryName, categories) {
-    const category = categories.find(cat => cat.name === categoryName);
-    return category ? category.id : 'informatik'; // Fallback
+    const category = categories.find(cat =>
+        cat.name.toLowerCase() === categoryName.toLowerCase()
+    );
+
+    if (category) {
+      console.log(`DataManager: Kategorie "${categoryName}" gefunden als ID: ${category.id}`);
+      return category.id;
+    }
+
+    console.warn(`DataManager: Kategorie "${categoryName}" nicht gefunden, verwende Fallback`);
+    return categories.length > 0 ? categories[0].id : 'default';
   }
 
   /**
@@ -123,6 +159,7 @@ class DataManager {
     });
 
     localStorage.setItem('quiz-categories', JSON.stringify(updatedCategories));
+    console.log('DataManager: Kartenanzahl aktualisiert');
   }
 
   /**
@@ -204,14 +241,17 @@ class DataManager {
 
   /**
    * Konvertiert Daten für QuizMain-Kompatibilität
+   * KORRIGIERT: Bessere Fehlerbehandlung
    */
   getQuestionsForQuiz() {
     const cards = this.getAllCards();
     const categories = this.getAllCategories();
 
+    console.log('DataManager: getQuestionsForQuiz - Karten:', cards.length, 'Kategorien:', categories.length);
+
     return cards.map(card => {
       const category = categories.find(cat => cat.id === card.categoryId);
-      return {
+      const result = {
         id: card.id,
         question: card.question,
         answers: card.answers,
@@ -220,14 +260,19 @@ class DataManager {
         difficulty: card.difficulty,
         explanation: card.explanation
       };
+      console.log('DataManager: Konvertierte Frage:', result.question, 'Kategorie:', result.category);
+      return result;
     });
   }
 
   /**
    * Konvertiert Kategorien für QuizMain-Kompatibilität
+   * KORRIGIERT: Bessere Icon-Behandlung
    */
   getCategoriesForQuiz() {
     const categories = this.getAllCategories();
+    console.log('DataManager: getCategoriesForQuiz - Kategorien:', categories.length);
+
     return categories.map(cat => ({
       id: cat.id,
       name: cat.name,
@@ -288,28 +333,25 @@ class DataManager {
     );
 
     localStorage.setItem('quiz-cards', JSON.stringify(updatedCards));
-
-    // Aktualisiere Kartenanzahl falls Kategorie geändert wurde
-    if (updates.categoryId) {
-      this.updateCategoryCardCounts();
-    }
-
+    this.updateCategoryCardCounts();
     return updatedCards.find(card => card.id === cardId);
   }
 
   /**
-   * Löscht eine Kategorie (nur wenn keine Karten vorhanden)
+   * Löscht eine Kategorie
    */
   deleteCategory(categoryId) {
-    const cards = this.getCardsByCategory(categoryId);
-    if (cards.length > 0) {
-      throw new Error('Kategorie kann nicht gelöscht werden, da noch Karten vorhanden sind.');
-    }
-
     const categories = this.getAllCategories();
-    const updatedCategories = categories.filter(cat => cat.id !== categoryId);
+    const cards = this.getAllCards();
 
-    localStorage.setItem('quiz-categories', JSON.stringify(updatedCategories));
+    // Lösche alle Karten dieser Kategorie
+    const filteredCards = cards.filter(card => card.categoryId !== categoryId);
+    localStorage.setItem('quiz-cards', JSON.stringify(filteredCards));
+
+    // Lösche die Kategorie
+    const filteredCategories = categories.filter(cat => cat.id !== categoryId);
+    localStorage.setItem('quiz-categories', JSON.stringify(filteredCategories));
+
     return true;
   }
 
@@ -318,27 +360,32 @@ class DataManager {
    */
   deleteCard(cardId) {
     const cards = this.getAllCards();
-    const updatedCards = cards.filter(card => card.id !== cardId);
-
-    localStorage.setItem('quiz-cards', JSON.stringify(updatedCards));
-
-    // Aktualisiere Kartenanzahl in Kategorien
+    const filteredCards = cards.filter(card => card.id !== cardId);
+    localStorage.setItem('quiz-cards', JSON.stringify(filteredCards));
     this.updateCategoryCardCounts();
-
     return true;
   }
 
   /**
-   * Erzwingt das Neuladen der Mock-Daten (für Debug-Zwecke)
+   * Lädt Mock-Daten neu (für Debugging)
    */
   reloadMockData() {
-    console.log('Mock-Daten werden neu geladen...');
+    console.log('DataManager: Lade Mock-Daten neu...');
     this.loadMockCategories();
     this.loadMockQuestions();
   }
 
   /**
-   * Exportiert alle Daten
+   * Setzt alle Daten zurück
+   */
+  resetAllData() {
+    localStorage.removeItem('quiz-categories');
+    localStorage.removeItem('quiz-cards');
+    this.initializeData();
+  }
+
+  /**
+   * Exportiert alle Daten als JSON
    */
   exportData() {
     return {
@@ -349,31 +396,18 @@ class DataManager {
   }
 
   /**
-   * Importiert Daten (überschreibt bestehende Daten)
+   * Importiert Daten aus JSON
    */
   importData(data) {
     if (data.categories) {
       localStorage.setItem('quiz-categories', JSON.stringify(data.categories));
     }
-
     if (data.cards) {
       localStorage.setItem('quiz-cards', JSON.stringify(data.cards));
     }
-
     this.updateCategoryCardCounts();
-    return true;
-  }
-
-  /**
-   * Setzt alle Daten zurück und lädt Mock-Daten neu
-   */
-  resetData() {
-    localStorage.removeItem('quiz-categories');
-    localStorage.removeItem('quiz-cards');
-    this.initializeData();
   }
 }
 
-// Singleton-Instanz
-const dataManager = new DataManager();
-export default dataManager;
+// Exportiere eine Singleton-Instanz
+export default new DataManager();
