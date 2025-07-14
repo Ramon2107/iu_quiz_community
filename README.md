@@ -1,70 +1,55 @@
-# Getting Started with Create React App
+# IUBH Quiz System - README
+## 📋 Überblick
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Das **IUBH Quiz System** ist eine moderne, responsive Webanwendung für kooperatives und kollaboratives Online-Lernen. Die Anwendung wurde speziell für Studierende des Fernstudiums der IUBH entwickelt und unterstützt sowohl kooperative als auch kompetitive Quiz-Modi zur Klausurvorbereitung.
 
-## Available Scripts
+## 🎯 Projektziel
+Konzeption und prototypische Umsetzung eines Online-Quizsystems, das Studierende bei der Festigung der Lerninhalte zur Vorbereitung auf Klausuren unterstützt. Das System ermöglicht es Studierenden, kooperativ und kollaborativ Antworten zu fachlichen Fragen zu finden, wobei das gemeinsame Lernen und Erarbeiten im Fokus steht.
 
-In the project directory, you can run:
+## ✨ Hauptfunktionalitäten
+### 🤝 Kooperativer Modus
+- Gemeinsames Bearbeiten von Fragen mit anderen Studierenden
+- Diskussion von Lösungsansätzen
+- Weniger Zeitdruck für tieferes Verständnis
+- Kollaboratives Lernen im Fokus
 
-### `npm start`
+### 🏆 Kompetitiver Modus
+- Zeitbasierte Einzelspiele
+- Direkter Wettkampf zwischen Studierenden
+- Ranglisten und Leistungsvergleiche
+- Schnelligkeit und Genauigkeit entscheiden
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### 📝 Frageneditor
+- Kollaborative Erstellung von Fragenkatalogen
+- Verschiedene Schwierigkeitsgrade
+- Kategorisierung nach Fachbereichen
+- Erklärungen und Begründungen für Antworten
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### 👤 Benutzerprofile
+- Individuelle Lernstatistiken
+- Fortschrittsanzeige nach Kategorien
+- Errungenschaften und Achievements
+- Lernzeiterfassung
 
-### `npm test`
+## 🛠️ Technologie-Stack
+### Frontend
+- **React**: 19.1.0 - Moderne Komponentenarchitektur
+- **React DOM**: 19.1.0 - DOM-Rendering
+- **Bootstrap**: 5.3.0 - Responsive Design Framework
+- **Font Awesome**: 6.0.0 - Icons und Symbole
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Build & Development
+- **React Scripts**: 5.0.1 - Build-Tool und Entwicklungsserver
+- **npm** - Paketmanager für Node.js
 
-### `npm run build`
+### Testing
+- **@testing-library/react**: 16.3.0
+- **@testing-library/dom**: 10.4.0
+- **@testing-library/user-event**: 13.5.0
+- **@testing-library/jest-dom**: 6.6.3
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## 🚀 Installation und Setup
+### Voraussetzungen
+- Node.js (Version 16 oder höher)
+- npm (Node Package Manager)
+- Windows 10 oder höher (für die bereitgestellten Befehle)
