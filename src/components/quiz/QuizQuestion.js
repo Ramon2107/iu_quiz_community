@@ -1,348 +1,428 @@
 /**
- * QuizQuestion-Komponente
+ * QuizQuestion-Komponente - Einzelne Frage mit Antwortmöglichkeiten
  *
- * Diese Komponente zeigt eine einzelne Quiz-Frage mit ihren Antwortmöglichkeiten
- * an und verwaltet die Benutzerinteraktion.
+ * Diese Komponente zeigt eine einzelne Quiz-Frage mit allen Antwortmöglichkeiten an
+ * und behandelt die Benutzerinteraktion für verschiedene Spielmodi.
  *
- * ERWEITERT: Single-Player-Modus hinzugefügt
+ * Features:
+ * - Unterstützung für alle Spielmodi (single-player, cooperative, competitive)
+ * - Zeitmessung und Fortschrittsanzeige
+ * - Responsive Design mit Bootstrap
+ * - Benutzerfreundliche Antwort-Auswahl
+ * - Sofortiges Feedback nach Antwort
  *
- * Unterstützte Spielmodi:
- * - 'cooperative': Kooperatives Lernen ohne Zeitdruck
- * - 'competitive': Kompetitiver Modus mit 30 Sekunden Timer
- * - 'single-player': Individuelles Lernen ohne Zeitdruck, fokussiert auf Verstehen
+ * UPDATE: Multiplayer-Simulation für kooperative und kompetitive Modi
+ * UPDATE: Live-Updates und Mitspieler-Antworten anzeigen
  */
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
+import simulatedPlayersService from '../../services/SimulatedPlayersService'; // UPDATE: Import für Multiplayer-Simulation
 
-function QuizQuestion({ question, questionNumber, totalQuestions, onAnswer, gameMode }) {
-  // WICHTIG: Sicherheitsprüfung für undefined question
-  if (!question) {
-    return (
-        <div className="card">
-          <div className="card-body">
-            <div className="alert alert-danger">
-              <h5>Fehler beim Laden der Frage</h5>
-              <p>Die Frage konnte nicht geladen werden. Bitte versuchen Sie es erneut.</p>
-            </div>
-          </div>
-        </div>
-    );
-  }
-
+/**
+ * QuizQuestion-Komponente
+ *
+ * @param {Object} props - Komponenteneigenschaften
+ * @param {Object} props.question - Die aktuelle Frage
+ * @param {number} props.questionNumber - Fragenummer (1-basiert)
+ * @param {number} props.totalQuestions - Gesamtanzahl der Fragen
+ * @param {string} props.gameMode - Spielmodus ('single-player', 'cooperative', 'competitive')
+ * @param {Function} props.onAnswer - Callback-Funktion für Antwort
+ * @param {Function} props.onBackToCategorySelection - Callback für Rückkehr zur Kategorieauswahl
+ * @param {Object} props.user - Benutzerdaten
+ * @param {Object} props.multiplayerData - UPDATE: Multiplayer-Daten mit simulierten Spielern
+ */
+function QuizQuestion({
+                        question,
+                        questionNumber,
+                        totalQuestions,
+                        gameMode,
+                        onAnswer,
+                        onBackToCategorySelection,
+                        user,
+                        multiplayerData // UPDATE: Neue Prop für Multiplayer-Daten
+                      }) {
   const [selectedAnswer, setSelectedAnswer] = useState(null);
-  const [timeLeft, setTimeLeft] = useState(30);
+  const [showExplanation, setShowExplanation] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(null);
+  const [startTime, setStartTime] = useState(null);
   const [isAnswered, setIsAnswered] = useState(false);
-  const [startTime] = useState(Date.now());
-  const [autoAdvanceTimer, setAutoAdvanceTimer] = useState(null);
 
-  // useCallback für stabile Referenz der handleTimeUp Funktion
-  const handleTimeUp = useCallback(() => {
-    if (!isAnswered) {
-      console.log('Zeit ist abgelaufen - automatische Weiterleitung');
-      setIsAnswered(true);
-      const timeTaken = Math.round((Date.now() - startTime) / 1000);
+  // UPDATE: Zustand für Multiplayer-Funktionen
+  const [cooperativeMessages, setCooperativeMessages] = useState([]);
+  const [competitiveUpdates, setCompetitiveUpdates] = useState([]);
+  const [showMultiplayerInfo, setShowMultiplayerInfo] = useState(false);
 
-      // Antwort senden
-      onAnswer({
-        selectedAnswer: null,
-        isCorrect: false,
-        timeTaken: timeTaken,
-        questionId: question.id
-      });
-    }
-  }, [isAnswered, startTime, onAnswer, question.id]);
-
-  // Effekt zum Zurücksetzen des Zustands bei neuer Frage
+  // Zeitmessung und Timer-Setup
   useEffect(() => {
-    console.log('Neue Frage geladen:', question.id, 'Spielmodus:', gameMode);
+    setStartTime(Date.now());
     setSelectedAnswer(null);
-    setTimeLeft(30);
+    setShowExplanation(false);
     setIsAnswered(false);
 
-    // Timer für automatischen Fortschritt zurücksetzen
-    if (autoAdvanceTimer) {
-      clearTimeout(autoAdvanceTimer);
-    }
-  }, [question.id, gameMode, autoAdvanceTimer]);
+    // UPDATE: Reset Multiplayer-Daten für neue Frage
+    setCooperativeMessages([]);
+    setCompetitiveUpdates([]);
+    setShowMultiplayerInfo(false);
 
-  // Timer-Effekt nur für kompetitiven Modus
-  useEffect(() => {
-    if (gameMode === 'competitive' && !isAnswered) {
-      console.log('Timer gestartet für kompetitiven Modus');
+    // Timer nur für competitive Mode
+    if (gameMode === 'competitive') {
+      setTimeLeft(30); // 30 Sekunden für competitive Mode
       const timer = setInterval(() => {
         setTimeLeft(prev => {
           if (prev <= 1) {
-            handleTimeUp();
+            clearInterval(timer);
+            if (!isAnswered) {
+              handleTimeUp();
+            }
             return 0;
           }
           return prev - 1;
         });
       }, 1000);
 
-      return () => {
-        console.log('Timer gestoppt');
-        clearInterval(timer);
-      };
+      return () => clearInterval(timer);
+    } else {
+      setTimeLeft(null);
     }
-  }, [gameMode, isAnswered, handleTimeUp]);
+  }, [question, gameMode]);
 
-  // Effekt für automatische Weiterleitung nach Antwort
+  // UPDATE: Effekt für Multiplayer-Nachrichten und Updates
   useEffect(() => {
-    if (isAnswered && question.explanation) {
-      const delayTime = gameMode === 'single-player' ? 4000 : 3000; // Längere Anzeigezeit für Single-Player
-      console.log(`Antwort gegeben - starte automatische Weiterleitung in ${delayTime/1000} Sekunden`);
+    if (multiplayerData?.isMultiplayer && multiplayerData.currentPlayerAnswers.length > 0) {
+      if (gameMode === 'cooperative') {
+        const messages = simulatedPlayersService.generateCooperativeMessages(
+            question,
+            multiplayerData.currentPlayerAnswers
+        );
+        setCooperativeMessages(messages);
+      } else if (gameMode === 'competitive') {
+        const updates = simulatedPlayersService.generateCompetitiveUpdates(
+            multiplayerData.currentPlayerAnswers
+        );
+        setCompetitiveUpdates(updates);
+      }
 
-      const timer = setTimeout(() => {
-        console.log('Automatische Weiterleitung zur nächsten Frage');
-        // Hier wird nicht nochmal onAnswer aufgerufen, da das bereits geschehen ist
-      }, delayTime);
-
-      setAutoAdvanceTimer(timer);
-
-      return () => clearTimeout(timer);
+      // Zeige Multiplayer-Info nach kurzer Verzögerung
+      setTimeout(() => {
+        setShowMultiplayerInfo(true);
+      }, 1000);
     }
-  }, [isAnswered, question.explanation, gameMode]);
+  }, [multiplayerData?.currentPlayerAnswers, gameMode, question]);
 
-  const handleAnswerSelect = (answerIndex) => {
-    if (isAnswered) return;
-    console.log('Antwort ausgewählt:', answerIndex);
-    setSelectedAnswer(answerIndex);
-  };
+  /**
+   * Behandelt Zeit-Ablauf im competitive Mode
+   */
+  const handleTimeUp = () => {
+    if (!isAnswered) {
+      setIsAnswered(true);
+      setShowExplanation(true);
 
-  const handleAnswerSubmit = () => {
-    if (selectedAnswer === null || isAnswered) return;
+      const timeTaken = Math.round((Date.now() - startTime) / 1000);
 
-    console.log('Antwort wird gesendet:', selectedAnswer);
-    setIsAnswered(true);
-    const timeTaken = Math.round((Date.now() - startTime) / 1000);
-    const isCorrect = selectedAnswer === question.correctAnswer;
-
-    // Antwort an übergeordnete Komponente senden
-    onAnswer({
-      selectedAnswer: selectedAnswer,
-      isCorrect: isCorrect,
-      timeTaken: timeTaken,
-      questionId: question.id
-    });
-  };
-
-  const getAnswerClass = (index) => {
-    let baseClass = 'list-group-item list-group-item-action';
-    if (selectedAnswer === index) {
-      baseClass += ' active';
+      onAnswer({
+        selectedAnswer: null,
+        isCorrect: false,
+        timeTaken,
+        questionId: question.id,
+        timedOut: true
+      });
     }
-    if (isAnswered && index === question.correctAnswer) {
-      baseClass += ' list-group-item-success';
-    }
-    if (isAnswered && index === selectedAnswer && selectedAnswer !== question.correctAnswer) {
-      baseClass += ' list-group-item-danger';
-    }
-    return baseClass;
-  };
-
-  const formatTime = (seconds) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
   /**
-   * Gibt die passende Spielmodus-Nachricht zurück
+   * Behandelt Antwort-Auswahl
    */
-  const getGameModeMessage = () => {
+  const handleAnswerSelect = (answerIndex) => {
+    if (isAnswered) return;
+
+    setSelectedAnswer(answerIndex);
+    setIsAnswered(true);
+    setShowExplanation(true);
+
+    const timeTaken = Math.round((Date.now() - startTime) / 1000);
+    const isCorrect = answerIndex === question.correctAnswer;
+
+    onAnswer({
+      selectedAnswer: answerIndex,
+      isCorrect,
+      timeTaken,
+      questionId: question.id,
+      timedOut: false
+    });
+  };
+
+  /**
+   * Gibt CSS-Klasse für Antwort-Button zurück
+   */
+  const getAnswerButtonClass = (index) => {
+    if (!showExplanation) {
+      return 'btn btn-outline-primary btn-lg w-100 mb-2';
+    }
+
+    if (index === question.correctAnswer) {
+      return 'btn btn-success btn-lg w-100 mb-2';
+    }
+
+    if (index === selectedAnswer && selectedAnswer !== question.correctAnswer) {
+      return 'btn btn-danger btn-lg w-100 mb-2';
+    }
+
+    return 'btn btn-outline-secondary btn-lg w-100 mb-2';
+  };
+
+  /**
+   * Berechnet Fortschritt in Prozent
+   */
+  const getProgressPercentage = () => {
+    return Math.round((questionNumber / totalQuestions) * 100);
+  };
+
+  /**
+   * Gibt Spielmodus-spezifische CSS-Klasse zurück
+   */
+  const getGameModeClass = () => {
     switch (gameMode) {
-      case 'single-player':
-        return {
-          icon: 'fas fa-user',
-          color: 'primary',
-          title: 'Single-Player-Modus:',
-          message: 'Nehmen Sie sich alle Zeit, die Sie brauchen. Fokussieren Sie sich auf das Verstehen der Inhalte.'
-        };
       case 'cooperative':
-        return {
-          icon: 'fas fa-users',
-          color: 'info',
-          title: 'Kooperativer Modus:',
-          message: 'Diskutieren Sie mit anderen Studierenden und finden Sie gemeinsam die richtige Antwort.'
-        };
+        return 'bg-success';
       case 'competitive':
-        return {
-          icon: 'fas fa-stopwatch',
-          color: 'warning',
-          title: 'Kompetitiver Modus:',
-          message: `Sie haben ${timeLeft} Sekunden Zeit! Schnelligkeit und Genauigkeit sind gefragt.`
-        };
+        return 'bg-warning';
       default:
-        return {
-          icon: 'fas fa-question',
-          color: 'secondary',
-          title: 'Quiz-Modus:',
-          message: 'Beantworten Sie die Fragen nach bestem Wissen und Gewissen.'
-        };
+        return 'bg-primary';
     }
   };
 
-  const modeMessage = getGameModeMessage();
+  /**
+   * Gibt Spielmodus-spezifisches Icon zurück
+   */
+  const getGameModeIcon = () => {
+    switch (gameMode) {
+      case 'cooperative':
+        return 'fas fa-users';
+      case 'competitive':
+        return 'fas fa-trophy';
+      default:
+        return 'fas fa-user';
+    }
+  };
+
+  if (!question) {
+    return (
+        <div className="container mt-4">
+          <div className="alert alert-warning">
+            <i className="fas fa-exclamation-triangle me-2"></i>
+            Keine Frage verfügbar. Bitte kehren Sie zur Kategorieauswahl zurück.
+          </div>
+        </div>
+    );
+  }
 
   return (
-      <div className="card">
-        <div className="card-header">
-          <div className="d-flex justify-content-between align-items-center">
-            <h5 className="mb-0">
-              <i className="fas fa-question-circle me-2"></i>
-              Frage {questionNumber} von {totalQuestions}
-            </h5>
-
-            {/* Timer nur für kompetitiven Modus */}
-            {gameMode === 'competitive' && (
-                <div className="d-flex align-items-center">
-                  <i className="fas fa-clock me-2"></i>
-                  <span className={`badge ${timeLeft <= 10 ? 'bg-danger' : 'bg-primary'}`}>
-                    {formatTime(timeLeft)}
-                  </span>
-                </div>
-            )}
-
-            {/* Spielmodus-Anzeige für Single-Player */}
-            {gameMode === 'single-player' && (
-                <div className="d-flex align-items-center">
-                  <i className="fas fa-user me-2 text-primary"></i>
-                  <span className="badge bg-primary">
-                    Single-Player
-                  </span>
-                </div>
-            )}
-          </div>
-        </div>
-
-        <div className="card-body">
-          <div className="mb-3">
-            <span className="badge bg-secondary me-2">
-              <i className="fas fa-tag me-1"></i>
-              {question.category}
-            </span>
-            <span className={`badge ${
-                question.difficulty === 'Leicht' ? 'bg-success' :
-                    question.difficulty === 'Mittel' ? 'bg-warning' : 'bg-danger'
-            }`}>
-              <i className="fas fa-chart-line me-1"></i>
-              {question.difficulty}
-            </span>
-          </div>
-
-          <h4 className="card-title mb-4">{question.question}</h4>
-
-          <div className="mb-4">
-            <div className="list-group">
-              {question.answers.map((answer, index) => (
-                  <button
-                      key={index}
-                      type="button"
-                      className={getAnswerClass(index)}
-                      onClick={() => handleAnswerSelect(index)}
-                      disabled={isAnswered}
-                      style={{ cursor: isAnswered ? 'not-allowed' : 'pointer' }}
-                  >
-                    <div className="d-flex align-items-center">
-                      <span className="badge bg-light text-dark me-3">
-                        {String.fromCharCode(65 + index)}
-                      </span>
-                      <span className="flex-grow-1 text-start">{answer}</span>
-                      {selectedAnswer === index && !isAnswered && (
-                          <i className="fas fa-check text-white"></i>
-                      )}
-                      {isAnswered && index === question.correctAnswer && (
-                          <i className="fas fa-check-circle text-success"></i>
-                      )}
-                      {isAnswered && index === selectedAnswer && selectedAnswer !== question.correctAnswer && (
-                          <i className="fas fa-times-circle text-danger"></i>
-                      )}
-                    </div>
-                  </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Spielmodus-spezifische Nachrichten */}
-          <div className="mb-3">
-            {!isAnswered && (
-                <div className={`alert alert-${modeMessage.color}`}>
-                  <i className={`${modeMessage.icon} me-2`}></i>
-                  <strong>{modeMessage.title}</strong> {modeMessage.message}
-                </div>
-            )}
-
-            {isAnswered && (
-                <div className={`alert ${selectedAnswer === question.correctAnswer ? 'alert-success' : 'alert-danger'}`}>
-                  <i className={`fas ${selectedAnswer === question.correctAnswer ? 'fa-check-circle' : 'fa-times-circle'} me-2`}></i>
-                  <strong>
-                    {selectedAnswer === question.correctAnswer ? 'Richtig!' : 'Falsch!'}
-                  </strong>
-                  {selectedAnswer !== question.correctAnswer && (
-                      <span> Die richtige Antwort war: {question.answers[question.correctAnswer]}</span>
+      <div className="container mt-4">
+        <div className="row">
+          <div className="col-md-8">
+            {/* Hauptfrage-Bereich */}
+            <div className="card shadow-lg">
+              <div className={`card-header ${getGameModeClass()} text-white`}>
+                <div className="d-flex justify-content-between align-items-center">
+                  <h3 className="mb-0">
+                    <i className={`${getGameModeIcon()} me-2`}></i>
+                    Frage {questionNumber} von {totalQuestions}
+                  </h3>
+                  {timeLeft !== null && (
+                      <div className="d-flex align-items-center">
+                        <i className="fas fa-clock me-2"></i>
+                        <span className="badge bg-light text-dark fs-6">
+                      {timeLeft}s
+                    </span>
+                      </div>
                   )}
                 </div>
+              </div>
+
+              <div className="card-body">
+                {/* Fortschrittsbalken */}
+                <div className="progress mb-4">
+                  <div
+                      className={`progress-bar ${getGameModeClass()}`}
+                      role="progressbar"
+                      style={{ width: `${getProgressPercentage()}%` }}
+                      aria-valuenow={getProgressPercentage()}
+                      aria-valuemin="0"
+                      aria-valuemax="100"
+                  >
+                    {getProgressPercentage()}%
+                  </div>
+                </div>
+
+                {/* Frage */}
+                <div className="mb-4">
+                  <h4 className="question-text">{question.question}</h4>
+                  {question.category && (
+                      <small className="text-muted">
+                        <i className="fas fa-tag me-1"></i>
+                        Kategorie: {question.category}
+                      </small>
+                  )}
+                </div>
+
+                {/* Antwortmöglichkeiten */}
+                <div className="answers-container">
+                  {question.answers.map((answer, index) => (
+                      <button
+                          key={index}
+                          className={getAnswerButtonClass(index)}
+                          onClick={() => handleAnswerSelect(index)}
+                          disabled={isAnswered}
+                      >
+                        <div className="d-flex align-items-center">
+                      <span className="me-3 fw-bold">
+                        {String.fromCharCode(65 + index)}.
+                      </span>
+                          <span className="text-start flex-grow-1">{answer}</span>
+                          {showExplanation && index === question.correctAnswer && (
+                              <i className="fas fa-check text-white ms-2"></i>
+                          )}
+                          {showExplanation && index === selectedAnswer && selectedAnswer !== question.correctAnswer && (
+                              <i className="fas fa-times text-white ms-2"></i>
+                          )}
+                        </div>
+                      </button>
+                  ))}
+                </div>
+
+                {/* Erklärung */}
+                {showExplanation && question.explanation && (
+                    <div className="mt-4 p-3 bg-light rounded">
+                      <h6>
+                        <i className="fas fa-lightbulb me-2 text-warning"></i>
+                        Erklärung:
+                      </h6>
+                      <p className="mb-0">{question.explanation}</p>
+                    </div>
+                )}
+              </div>
+
+              <div className="card-footer">
+                <div className="d-flex justify-content-between align-items-center">
+                  <button
+                      className="btn btn-secondary"
+                      onClick={onBackToCategorySelection}
+                  >
+                    <i className="fas fa-arrow-left me-2"></i>
+                    Andere Kategorie wählen
+                  </button>
+
+                  <div className="d-flex align-items-center">
+                    <i className="fas fa-user-circle me-2"></i>
+                    <span>{user.name}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* UPDATE: Multiplayer-Sidebar */}
+          <div className="col-md-4">
+            {multiplayerData?.isMultiplayer && (
+                <div className="card">
+                  <div className={`card-header ${getGameModeClass()} text-white`}>
+                    <h5 className="mb-0">
+                      <i className="fas fa-users me-2"></i>
+                      Mitspieler
+                    </h5>
+                  </div>
+                  <div className="card-body">
+                    {/* Spieler-Liste */}
+                    <div className="mb-3">
+                      <h6>Teilnehmer:</h6>
+                      <div className="list-group list-group-flush">
+                        <div className="list-group-item d-flex justify-content-between align-items-center">
+                      <span>
+                        <i className="fas fa-user-circle me-2 text-primary"></i>
+                        {user.name} <small className="text-muted">(Sie)</small>
+                      </span>
+                          <span className="badge bg-primary rounded-pill">Mensch</span>
+                        </div>
+                        {multiplayerData.players.map(player => (
+                            <div key={player.id} className="list-group-item d-flex justify-content-between align-items-center">
+                        <span>
+                          <i className={`${player.avatar} me-2 text-${player.color}`}></i>
+                          {player.name}
+                        </span>
+                              <span className={`badge bg-${player.color} rounded-pill`}>
+                          {player.semester}. Sem
+                        </span>
+                            </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Kooperative Nachrichten */}
+                    {gameMode === 'cooperative' && cooperativeMessages.length > 0 && showMultiplayerInfo && (
+                        <div className="mb-3">
+                          <h6>
+                            <i className="fas fa-comments me-2"></i>
+                            Diskussion:
+                          </h6>
+                          <div className="alert alert-info">
+                            {cooperativeMessages.map((msg, index) => (
+                                <div key={index} className="mb-2">
+                                  <strong>{msg.playerName}:</strong>
+                                  <br />
+                                  <small className={msg.isHelpful ? 'text-success' : 'text-muted'}>
+                                    {msg.message}
+                                  </small>
+                                </div>
+                            ))}
+                          </div>
+                        </div>
+                    )}
+
+                    {/* Kompetitive Updates */}
+                    {gameMode === 'competitive' && competitiveUpdates.length > 0 && showMultiplayerInfo && (
+                        <div className="mb-3">
+                          <h6>
+                            <i className="fas fa-tachometer-alt me-2"></i>
+                            Live-Updates:
+                          </h6>
+                          <div className="alert alert-warning">
+                            {competitiveUpdates.map((update, index) => (
+                                <div key={index} className="mb-2">
+                                  <div className="d-flex justify-content-between">
+                                    <strong>{update.playerName}:</strong>
+                                    <small>{update.time}s</small>
+                                  </div>
+                                  <small className={update.isCorrect ? 'text-success' : 'text-danger'}>
+                                    {update.status}
+                                  </small>
+                                </div>
+                            ))}
+                          </div>
+                        </div>
+                    )}
+
+                    {/* Aktuelle Punkte */}
+                    {multiplayerData.isMultiplayer && (
+                        <div>
+                          <h6>
+                            <i className="fas fa-chart-bar me-2"></i>
+                            Aktuelle Punkte:
+                          </h6>
+                          <div className="list-group list-group-flush">
+                            {simulatedPlayersService.getPlayerStats().map((stat, index) => (
+                                <div key={stat.id} className="list-group-item d-flex justify-content-between">
+                                  <span>{stat.name}</span>
+                                  <span className="badge bg-secondary rounded-pill">{stat.score}</span>
+                                </div>
+                            ))}
+                          </div>
+                        </div>
+                    )}
+                  </div>
+                </div>
             )}
           </div>
-
-          <div className="d-flex justify-content-between align-items-center">
-            <div>
-              {selectedAnswer !== null && !isAnswered && (
-                  <small className="text-muted">
-                    <i className="fas fa-info-circle me-1"></i>
-                    Antwort {String.fromCharCode(65 + selectedAnswer)} ausgewählt
-                  </small>
-              )}
-              {isAnswered && (
-                  <small className="text-muted">
-                    <i className="fas fa-clock me-1"></i>
-                    Benötigte Zeit: {formatTime(Math.round((Date.now() - startTime) / 1000))}
-                  </small>
-              )}
-            </div>
-            <button
-                type="button"
-                className="btn btn-primary"
-                onClick={handleAnswerSubmit}
-                disabled={selectedAnswer === null || isAnswered}
-            >
-              {isAnswered ? (
-                  <>
-                    <i className="fas fa-check me-2"></i>
-                    Antwort gesendet
-                  </>
-              ) : (
-                  <>
-                    <i className="fas fa-paper-plane me-2"></i>
-                    Antwort bestätigen
-                  </>
-              )}
-            </button>
-          </div>
         </div>
-
-        {isAnswered && question.explanation && (
-            <div className="card-footer">
-              <div className="alert alert-info mb-3">
-                <h6 className="alert-heading">
-                  <i className="fas fa-lightbulb me-2"></i>
-                  Erklärung
-                </h6>
-                <p className="mb-0">{question.explanation}</p>
-              </div>
-
-              <div className="text-center">
-                <div className="spinner-border spinner-border-sm me-2" role="status">
-                  <span className="visually-hidden">Laden...</span>
-                </div>
-                <small className="text-muted">
-                  {gameMode === 'single-player'
-                      ? 'Nächste Frage wird automatisch geladen... (4 Sekunden)'
-                      : 'Nächste Frage wird automatisch geladen... (3 Sekunden)'}
-                </small>
-              </div>
-            </div>
-        )}
       </div>
   );
 }
