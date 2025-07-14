@@ -1,29 +1,41 @@
 /**
- * QuestionEditor-Komponente
- * 
+ * QuestionEditor-Komponente - Erweitert für kollaborative Kartenverwaltung
+ *
  * Diese Komponente ermöglicht es Benutzern, neue Quiz-Fragen zu erstellen
  * und bestehende Fragen zu bearbeiten. Sie unterstützt kollaboratives
- * Erstellen von Fragenkatalogen.
- * 
+ * Erstellen von Fragenkatalogen und ist vollständig in die neue
+ * Kartenverwaltung integriert.
+ *
+ * ERWEITERT:
+ * - Integration mit CardManager-Komponente
+ * - Unterstützung für dynamische Kategorien
+ * - Kollaborative Features mit Autorenzuordnung
+ * - Verwaltung von Karten und Kategorien
+ *
  * Features:
  * - Intuitive Formularerstellung
  * - Validierung der Eingaben
  * - Vorschau der Fragen
- * - Kategorisierung
+ * - Dynamische Kategorisierung
  * - Schwierigkeitsgrade
  * - Erklärungen für Antworten
+ * - Kollaborative Kartenverwaltung
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import CardManager from './CardManager';
 
 /**
- * QuestionEditor-Komponente
- * 
+ * QuestionEditor-Komponente mit erweiterter Kartenverwaltung
+ *
  * @param {Object} props - Komponenteneigenschaften
  * @param {Object} props.user - Benutzerdaten
  */
 function QuestionEditor({ user }) {
-  // Zustandsverwaltung für Formular
+  // Zustandsverwaltung für aktuelle Ansicht
+  const [currentView, setCurrentView] = useState('card-manager'); // 'card-manager' oder 'question-form'
+
+  // Zustandsverwaltung für Formular (Legacy-Support)
   const [formData, setFormData] = useState({
     question: '',
     answers: ['', '', '', ''],
@@ -33,26 +45,46 @@ function QuestionEditor({ user }) {
     explanation: '',
     tags: ''
   });
-  
+
   const [errors, setErrors] = useState({});
   const [showPreview, setShowPreview] = useState(false);
   const [savedQuestions, setSavedQuestions] = useState([]);
-
-  // Verfügbare Kategorien
-  const categories = [
-    'Informatik',
-    'Mathematik',
-    'Betriebswirtschaft',
-    'Projektmanagement',
-    'Softwareentwicklung',
-    'Datenbanken',
-    'Netzwerke',
-    'Sicherheit'
-  ];
+  const [categories, setCategories] = useState([]);
 
   /**
-   * Aktualisiert die Formulardaten
-   * 
+   * Lädt verfügbare Kategorien beim Component Mount
+   */
+  useEffect(() => {
+    loadCategories();
+  }, []);
+
+  /**
+   * Lädt Kategorien aus localStorage
+   */
+  const loadCategories = () => {
+    const storedCategories = JSON.parse(localStorage.getItem('quiz-categories') || '[]');
+    setCategories(storedCategories);
+  };
+
+  /**
+   * Callback-Funktion für neue Fragen aus CardManager
+   */
+  const handleQuestionAdded = (newQuestion) => {
+    console.log('Neue Frage hinzugefügt:', newQuestion);
+    setSavedQuestions(prev => [...prev, newQuestion]);
+  };
+
+  /**
+   * Callback-Funktion für neue Kategorien aus CardManager
+   */
+  const handleCategoryAdded = (newCategory) => {
+    console.log('Neue Kategorie hinzugefügt:', newCategory);
+    setCategories(prev => [...prev, newCategory]);
+  };
+
+  /**
+   * Aktualisiert die Formulardaten (Legacy-Support)
+   *
    * @param {string} field - Feldname
    * @param {any} value - Neuer Wert
    */
@@ -61,7 +93,7 @@ function QuestionEditor({ user }) {
       ...prev,
       [field]: value
     }));
-    
+
     // Fehler für dieses Feld entfernen
     if (errors[field]) {
       setErrors(prev => ({
@@ -72,8 +104,8 @@ function QuestionEditor({ user }) {
   };
 
   /**
-   * Aktualisiert eine Antwort
-   * 
+   * Aktualisiert eine Antwort (Legacy-Support)
+   *
    * @param {number} index - Index der Antwort
    * @param {string} value - Neuer Wert
    */
@@ -84,8 +116,8 @@ function QuestionEditor({ user }) {
   };
 
   /**
-   * Validiert das Formular
-   * 
+   * Validiert das Formular (Legacy-Support)
+   *
    * @returns {boolean} True wenn valide, false wenn Fehler vorhanden
    */
   const validateForm = () => {
@@ -117,7 +149,7 @@ function QuestionEditor({ user }) {
   };
 
   /**
-   * Speichert die Frage
+   * Speichert die Frage (Legacy-Support)
    */
   const saveQuestion = () => {
     if (!validateForm()) {
@@ -128,12 +160,18 @@ function QuestionEditor({ user }) {
       id: Date.now(),
       ...formData,
       author: user.name,
+      authorEmail: user.email,
       created: new Date().toISOString(),
       tags: formData.tags.split(',').map(tag => tag.trim()).filter(tag => tag)
     };
 
     setSavedQuestions(prev => [...prev, newQuestion]);
-    
+
+    // Auch zu localStorage hinzufügen
+    const existingCards = JSON.parse(localStorage.getItem('quiz-cards') || '[]');
+    const updatedCards = [...existingCards, newQuestion];
+    localStorage.setItem('quiz-cards', JSON.stringify(updatedCards));
+
     // Formular zurücksetzen
     setFormData({
       question: '',
@@ -144,329 +182,318 @@ function QuestionEditor({ user }) {
       explanation: '',
       tags: ''
     });
-    
+
     setShowPreview(false);
-    
-    // Erfolgsmeldung (könnte durch Toast-Notification ersetzt werden)
+
+    // Erfolgsmeldung
     alert('Frage erfolgreich gespeichert!');
   };
 
-  return (
-    <div className="container mt-4">
-      <div className="row">
-        {/* Formular */}
-        <div className="col-md-8">
-          <div className="card">
-            <div className="card-header">
-              <h3 className="mb-0">
-                <i className="fas fa-plus-circle me-2"></i>
-                Neue Frage erstellen
-              </h3>
+  /**
+   * Rendert das Legacy-Formular (als Fallback)
+   */
+  const renderLegacyForm = () => (
+      <div className="card">
+        <div className="card-header">
+          <div className="d-flex justify-content-between align-items-center">
+            <h3 className="mb-0">
+              <i className="fas fa-plus-circle me-2"></i>
+              Neue Frage erstellen (Legacy)
+            </h3>
+            <button
+                className="btn btn-outline-primary"
+                onClick={() => setCurrentView('card-manager')}
+            >
+              <i className="fas fa-layer-group me-2"></i>
+              Zur Kartenverwaltung
+            </button>
+          </div>
+        </div>
+        <div className="card-body">
+          <form>
+            {/* Frage */}
+            <div className="mb-3">
+              <label htmlFor="question" className="form-label">
+                Frage *
+              </label>
+              <textarea
+                  id="question"
+                  className={`form-control ${errors.question ? 'is-invalid' : ''}`}
+                  rows="3"
+                  value={formData.question}
+                  onChange={(e) => updateFormData('question', e.target.value)}
+                  placeholder="Geben Sie hier Ihre Frage ein..."
+              />
+              {errors.question && (
+                  <div className="invalid-feedback">{errors.question}</div>
+              )}
             </div>
-            <div className="card-body">
-              <form>
-                {/* Frage */}
-                <div className="mb-3">
-                  <label htmlFor="question" className="form-label">
-                    Frage *
-                  </label>
-                  <textarea
-                    id="question"
-                    className={`form-control ${errors.question ? 'is-invalid' : ''}`}
-                    rows="3"
-                    value={formData.question}
-                    onChange={(e) => updateFormData('question', e.target.value)}
-                    placeholder="Geben Sie hier Ihre Frage ein..."
-                  />
-                  {errors.question && (
-                    <div className="invalid-feedback">{errors.question}</div>
-                  )}
-                </div>
 
-                {/* Antworten */}
-                <div className="mb-3">
-                  <label className="form-label">Antwortmöglichkeiten *</label>
-                  {formData.answers.map((answer, index) => (
-                    <div key={index} className="input-group mb-2">
-                      <span className="input-group-text">
-                        {String.fromCharCode(65 + index)}
-                      </span>
-                      <input
+            {/* Antworten */}
+            <div className="mb-3">
+              <label className="form-label">Antwortmöglichkeiten *</label>
+              {formData.answers.map((answer, index) => (
+                  <div key={index} className="input-group mb-2">
+                <span className="input-group-text">
+                  {String.fromCharCode(65 + index)}
+                </span>
+                    <input
                         type="text"
                         className="form-control"
                         value={answer}
                         onChange={(e) => updateAnswer(index, e.target.value)}
                         placeholder={`Antwort ${String.fromCharCode(65 + index)}`}
-                      />
-                      <div className="input-group-text">
-                        <input
+                    />
+                    <div className="input-group-text">
+                      <input
                           type="radio"
                           name="correctAnswer"
                           checked={formData.correctAnswer === index}
                           onChange={() => updateFormData('correctAnswer', index)}
                           disabled={!answer.trim()}
-                        />
-                      </div>
+                      />
                     </div>
+                  </div>
+              ))}
+              {errors.answers && (
+                  <div className="text-danger small">{errors.answers}</div>
+              )}
+              {errors.correctAnswer && (
+                  <div className="text-danger small">{errors.correctAnswer}</div>
+              )}
+            </div>
+
+            {/* Kategorie und Schwierigkeit */}
+            <div className="row mb-3">
+              <div className="col-md-6">
+                <label htmlFor="category" className="form-label">
+                  Kategorie *
+                </label>
+                <select
+                    id="category"
+                    className={`form-select ${errors.category ? 'is-invalid' : ''}`}
+                    value={formData.category}
+                    onChange={(e) => updateFormData('category', e.target.value)}
+                >
+                  <option value="">Kategorie auswählen</option>
+                  {categories.map(category => (
+                      <option key={category.id} value={category.name}>
+                        {category.name}
+                      </option>
                   ))}
-                  {errors.answers && (
-                    <div className="text-danger small">{errors.answers}</div>
-                  )}
-                  {errors.correctAnswer && (
-                    <div className="text-danger small">{errors.correctAnswer}</div>
-                  )}
-                  <small className="form-text text-muted">
-                    Wählen Sie die richtige Antwort durch Klicken auf den entsprechenden Radio-Button aus.
-                  </small>
-                </div>
+                </select>
+                {errors.category && (
+                    <div className="invalid-feedback">{errors.category}</div>
+                )}
+              </div>
+              <div className="col-md-6">
+                <label htmlFor="difficulty" className="form-label">
+                  Schwierigkeit
+                </label>
+                <select
+                    id="difficulty"
+                    className="form-select"
+                    value={formData.difficulty}
+                    onChange={(e) => updateFormData('difficulty', e.target.value)}
+                >
+                  <option value="Leicht">Leicht</option>
+                  <option value="Mittel">Mittel</option>
+                  <option value="Schwer">Schwer</option>
+                </select>
+              </div>
+            </div>
 
-                {/* Kategorie und Schwierigkeit */}
-                <div className="row mb-3">
-                  <div className="col-md-6">
-                    <label htmlFor="category" className="form-label">
-                      Kategorie *
-                    </label>
-                    <select
-                      id="category"
-                      className={`form-select ${errors.category ? 'is-invalid' : ''}`}
-                      value={formData.category}
-                      onChange={(e) => updateFormData('category', e.target.value)}
-                    >
-                      <option value="">Kategorie auswählen</option>
-                      {categories.map(category => (
-                        <option key={category} value={category}>
-                          {category}
-                        </option>
-                      ))}
-                    </select>
-                    {errors.category && (
-                      <div className="invalid-feedback">{errors.category}</div>
-                    )}
+            {/* Erklärung */}
+            <div className="mb-3">
+              <label htmlFor="explanation" className="form-label">
+                Erklärung (optional)
+              </label>
+              <textarea
+                  id="explanation"
+                  className="form-control"
+                  rows="2"
+                  value={formData.explanation}
+                  onChange={(e) => updateFormData('explanation', e.target.value)}
+                  placeholder="Erklärung der richtigen Antwort..."
+              />
+            </div>
+
+            {/* Tags */}
+            <div className="mb-3">
+              <label htmlFor="tags" className="form-label">
+                Tags (optional)
+              </label>
+              <input
+                  type="text"
+                  id="tags"
+                  className="form-control"
+                  value={formData.tags}
+                  onChange={(e) => updateFormData('tags', e.target.value)}
+                  placeholder="Tag1, Tag2, Tag3..."
+              />
+            </div>
+
+            {/* Aktionen */}
+            <div className="d-flex gap-2">
+              <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={saveQuestion}
+              >
+                <i className="fas fa-save me-2"></i>
+                Frage speichern
+              </button>
+              <button
+                  type="button"
+                  className="btn btn-outline-secondary"
+                  onClick={() => setShowPreview(!showPreview)}
+              >
+                <i className="fas fa-eye me-2"></i>
+                {showPreview ? 'Vorschau ausblenden' : 'Vorschau anzeigen'}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+  );
+
+  /**
+   * Rendert die Statistiken
+   */
+  const renderStats = () => (
+      <div className="row mt-4">
+        <div className="col-md-6">
+          <div className="card">
+            <div className="card-body">
+              <h5 className="card-title">
+                <i className="fas fa-chart-bar me-2"></i>
+                Ihre Statistiken
+              </h5>
+              <div className="row">
+                <div className="col-6">
+                  <div className="text-center">
+                    <h3 className="text-primary">{savedQuestions.length}</h3>
+                    <p className="text-muted">Erstellte Fragen</p>
                   </div>
-                  <div className="col-md-6">
-                    <label htmlFor="difficulty" className="form-label">
-                      Schwierigkeit
-                    </label>
-                    <select
-                      id="difficulty"
-                      className="form-select"
-                      value={formData.difficulty}
-                      onChange={(e) => updateFormData('difficulty', e.target.value)}
-                    >
-                      <option value="Leicht">Leicht</option>
-                      <option value="Mittel">Mittel</option>
-                      <option value="Schwer">Schwer</option>
-                    </select>
+                </div>
+                <div className="col-6">
+                  <div className="text-center">
+                    <h3 className="text-success">{categories.length}</h3>
+                    <p className="text-muted">Verfügbare Kategorien</p>
                   </div>
                 </div>
-
-                {/* Erklärung */}
-                <div className="mb-3">
-                  <label htmlFor="explanation" className="form-label">
-                    Erklärung (optional)
-                  </label>
-                  <textarea
-                    id="explanation"
-                    className="form-control"
-                    rows="2"
-                    value={formData.explanation}
-                    onChange={(e) => updateFormData('explanation', e.target.value)}
-                    placeholder="Erklärung der richtigen Antwort..."
-                  />
-                  <small className="form-text text-muted">
-                    Diese Erklärung wird nach der Beantwortung der Frage angezeigt.
-                  </small>
-                </div>
-
-                {/* Tags */}
-                <div className="mb-3">
-                  <label htmlFor="tags" className="form-label">
-                    Tags (optional)
-                  </label>
-                  <input
-                    type="text"
-                    id="tags"
-                    className="form-control"
-                    value={formData.tags}
-                    onChange={(e) => updateFormData('tags', e.target.value)}
-                    placeholder="Tag1, Tag2, Tag3..."
-                  />
-                  <small className="form-text text-muted">
-                    Trennen Sie Tags durch Kommas. Beispiel: Java, OOP, Vererbung
-                  </small>
-                </div>
-
-                {/* Aktionen */}
-                <div className="d-flex gap-2">
-                  <button
-                    type="button"
-                    className="btn btn-primary"
-                    onClick={saveQuestion}
-                  >
-                    <i className="fas fa-save me-2"></i>
-                    Frage speichern
-                  </button>
-                  <button
-                    type="button"
-                    className="btn btn-outline-secondary"
-                    onClick={() => setShowPreview(!showPreview)}
-                  >
-                    <i className="fas fa-eye me-2"></i>
-                    {showPreview ? 'Vorschau ausblenden' : 'Vorschau anzeigen'}
-                  </button>
-                </div>
-              </form>
+              </div>
             </div>
           </div>
         </div>
-
-        {/* Seitenleiste */}
-        <div className="col-md-4">
-          {/* Vorschau */}
-          {showPreview && (
-            <div className="card mb-3">
-              <div className="card-header">
-                <h5 className="mb-0">
-                  <i className="fas fa-eye me-2"></i>
-                  Vorschau
-                </h5>
-              </div>
-              <div className="card-body">
-                {formData.question && (
-                  <>
-                    <h6 className="card-title">{formData.question}</h6>
-                    <div className="mb-3">
-                      <span className="badge bg-secondary me-2">
-                        {formData.category || 'Keine Kategorie'}
-                      </span>
-                      <span className={`badge ${
-                        formData.difficulty === 'Leicht' ? 'bg-success' :
-                        formData.difficulty === 'Mittel' ? 'bg-warning' : 'bg-danger'
-                      }`}>
-                        {formData.difficulty}
-                      </span>
-                    </div>
-                    <div className="mb-3">
-                      {formData.answers.map((answer, index) => (
-                        answer && (
-                          <div key={index} className="form-check">
-                            <input
-                              className="form-check-input"
-                              type="radio"
-                              name="previewAnswer"
-                              disabled
-                              checked={formData.correctAnswer === index}
-                            />
-                            <label className="form-check-label">
-                              {String.fromCharCode(65 + index)}: {answer}
-                            </label>
-                          </div>
-                        )
-                      ))}
-                    </div>
-                    {formData.explanation && (
-                      <div className="alert alert-info">
-                        <small><strong>Erklärung:</strong> {formData.explanation}</small>
-                      </div>
-                    )}
-                  </>
-                )}
-              </div>
-            </div>
-          )}
-
-          {/* Hilfetexte */}
+        <div className="col-md-6">
           <div className="card">
-            <div className="card-header">
-              <h5 className="mb-0">
-                <i className="fas fa-info-circle me-2"></i>
-                Tipps
-              </h5>
-            </div>
             <div className="card-body">
+              <h5 className="card-title">
+                <i className="fas fa-info-circle me-2"></i>
+                Kollaborative Features
+              </h5>
               <ul className="list-unstyled">
-                <li className="mb-2">
-                  <i className="fas fa-check text-success me-2"></i>
-                  Formulieren Sie Fragen klar und eindeutig
-                </li>
-                <li className="mb-2">
-                  <i className="fas fa-check text-success me-2"></i>
-                  Vermeiden Sie doppelte Verneinungen
-                </li>
-                <li className="mb-2">
-                  <i className="fas fa-check text-success me-2"></i>
-                  Fügen Sie hilfreiche Erklärungen hinzu
-                </li>
-                <li className="mb-2">
-                  <i className="fas fa-check text-success me-2"></i>
-                  Verwenden Sie passende Tags für bessere Suche
-                </li>
+                <li><i className="fas fa-check text-success me-2"></i>Gemeinsame Kategorien erstellen</li>
+                <li><i className="fas fa-check text-success me-2"></i>Fragen zu bestehenden Kategorien hinzufügen</li>
+                <li><i className="fas fa-check text-success me-2"></i>Autorenzuordnung für Transparenz</li>
+                <li><i className="fas fa-check text-success me-2"></i>Öffentliche und private Sammlungen</li>
               </ul>
             </div>
           </div>
         </div>
       </div>
+  );
 
-      {/* Gespeicherte Fragen */}
-      {savedQuestions.length > 0 && (
-        <div className="row mt-4">
-          <div className="col-12">
-            <div className="card">
+  // Hauptrender-Logik
+  return (
+      <div className="container mt-4">
+        {currentView === 'card-manager' && (
+            <div>
+              <CardManager
+                  user={user}
+                  onQuestionAdded={handleQuestionAdded}
+                  onCategoryAdded={handleCategoryAdded}
+              />
+
+              {/* Schnellzugriff auf Legacy-Formular */}
+              <div className="mt-4">
+                <div className="card">
+                  <div className="card-body">
+                    <div className="d-flex justify-content-between align-items-center">
+                      <div>
+                        <h5 className="mb-1">Legacy-Formular</h5>
+                        <p className="text-muted mb-0">
+                          Verwenden Sie das klassische Formular, falls Sie es bevorzugen.
+                        </p>
+                      </div>
+                      <button
+                          className="btn btn-outline-primary"
+                          onClick={() => setCurrentView('question-form')}
+                      >
+                        <i className="fas fa-edit me-2"></i>
+                        Klassisches Formular
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {renderStats()}
+            </div>
+        )}
+
+        {currentView === 'question-form' && (
+            <div>
+              {renderLegacyForm()}
+              {renderStats()}
+            </div>
+        )}
+
+        {/* Vorschau (wenn aktiviert) */}
+        {showPreview && formData.question && (
+            <div className="card mt-4">
               <div className="card-header">
-                <h5 className="mb-0">
-                  <i className="fas fa-list me-2"></i>
-                  Ihre erstellten Fragen ({savedQuestions.length})
-                </h5>
+                <h5>Vorschau</h5>
               </div>
               <div className="card-body">
-                <div className="table-responsive">
-                  <table className="table table-striped">
-                    <thead>
-                      <tr>
-                        <th>Frage</th>
-                        <th>Kategorie</th>
-                        <th>Schwierigkeit</th>
-                        <th>Erstellt</th>
-                        <th>Aktionen</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {savedQuestions.map((question) => (
-                        <tr key={question.id}>
-                          <td>{question.question.substring(0, 50)}...</td>
-                          <td>
-                            <span className="badge bg-secondary">
-                              {question.category}
-                            </span>
-                          </td>
-                          <td>
-                            <span className={`badge ${
-                              question.difficulty === 'Leicht' ? 'bg-success' :
-                              question.difficulty === 'Mittel' ? 'bg-warning' : 'bg-danger'
-                            }`}>
-                              {question.difficulty}
-                            </span>
-                          </td>
-                          <td>{new Date(question.created).toLocaleDateString()}</td>
-                          <td>
-                            <button className="btn btn-sm btn-outline-primary me-1">
-                              <i className="fas fa-edit"></i>
-                            </button>
-                            <button className="btn btn-sm btn-outline-danger">
-                              <i className="fas fa-trash"></i>
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                <h6>{formData.question}</h6>
+                <div className="mt-3">
+                  {formData.answers.map((answer, index) => (
+                      answer.trim() && (
+                          <div key={index} className="form-check mb-2">
+                            <input
+                                className="form-check-input"
+                                type="radio"
+                                name="previewAnswer"
+                                disabled
+                                checked={formData.correctAnswer === index}
+                            />
+                            <label className="form-check-label">
+                              {String.fromCharCode(65 + index)}: {answer}
+                            </label>
+                          </div>
+                      )
+                  ))}
+                </div>
+                {formData.explanation && (
+                    <div className="mt-3">
+                      <small className="text-muted">
+                        <strong>Erklärung:</strong> {formData.explanation}
+                      </small>
+                    </div>
+                )}
+                <div className="mt-3">
+                  <small className="text-muted">
+                    <strong>Kategorie:</strong> {formData.category || 'Nicht ausgewählt'} |
+                    <strong> Schwierigkeit:</strong> {formData.difficulty} |
+                    <strong> Autor:</strong> {user.name}
+                  </small>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-      )}
-    </div>
+        )}
+      </div>
   );
 }
 

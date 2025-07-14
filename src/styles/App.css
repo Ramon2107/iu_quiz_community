@@ -363,3 +363,239 @@
     align-self: flex-start;
   }
 }
+/* Erweiterte CSS-Regeln für CardManager-Integration */
+
+.App {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
+}
+
+/* Navigation */
+.navbar-brand {
+  font-weight: bold;
+  font-size: 1.5rem;
+}
+
+.nav-link {
+  transition: all 0.3s ease;
+}
+
+.nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 5px;
+}
+
+.nav-link.active {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 5px;
+}
+
+/* Hero Section */
+.hero-section {
+  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+  border-radius: 15px !important;
+  box-shadow: 0 10px 30px rgba(0, 123, 255, 0.3);
+}
+
+/* Card Manager Spezifische Styles */
+.card-manager-container {
+  background-color: #f8f9fa;
+  border-radius: 10px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.category-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: none;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.category-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.category-icon {
+  font-size: 1.5rem;
+  margin-right: 0.5rem;
+}
+
+.author-info {
+  font-size: 0.875rem;
+  color: #6c757d;
+}
+
+.author-info i {
+  margin-right: 0.25rem;
+}
+
+/* Card Preview Styles */
+.card-preview {
+  background-color: #f8f9fa;
+  border-left: 4px solid #007bff;
+  padding: 1rem;
+  margin-top: 1rem;
+  border-radius: 0 5px 5px 0;
+}
+
+.difficulty-badge {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+}
+
+.difficulty-leicht {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.difficulty-mittel {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.difficulty-schwer {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+/* Search and Filter */
+.search-container {
+  background-color: white;
+  border-radius: 10px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.filter-tag {
+  background-color: #e9ecef;
+  color: #495057;
+  padding: 0.25rem 0.75rem;
+  border-radius: 15px;
+  font-size: 0.875rem;
+  margin-right: 0.5rem;
+  margin-bottom: 0.5rem;
+  display: inline-block;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .hero-section {
+    padding: 2rem 1rem !important;
+  }
+
+  .hero-section h1 {
+    font-size: 2rem;
+  }
+
+  .card-manager-container {
+    padding: 1rem;
+  }
+
+  .category-card {
+    margin-bottom: 1rem;
+  }
+}
+
+/* Animation für neue Elemente */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+/* Tooltips */
+.tooltip-inner {
+  max-width: 300px;
+  text-align: left;
+}
+
+/* Loading States */
+.loading-spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #007bff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Success/Error Messages */
+.alert-custom {
+  border-radius: 10px;
+  border: none;
+  padding: 1rem 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.alert-success-custom {
+  background-color: #d4edda;
+  color: #155724;
+  border-left: 4px solid #28a745;
+}
+
+.alert-error-custom {
+  background-color: #f8d7da;
+  color: #721c24;
+  border-left: 4px solid #dc3545;
+}
+
+/* Card Grid */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+/* Form Improvements */
+.form-group-custom {
+  margin-bottom: 1.5rem;
+}
+
+.form-control-custom {
+  border-radius: 8px;
+  border: 2px solid #e9ecef;
+  padding: 0.75rem;
+  transition: border-color 0.3s ease;
+}
+
+.form-control-custom:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.btn-custom {
+  border-radius: 8px;
+  padding: 0.75rem 1.5rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.btn-custom:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}

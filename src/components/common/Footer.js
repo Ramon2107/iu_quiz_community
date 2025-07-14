@@ -72,7 +72,7 @@ function Footer() {
         <div className="row align-items-center">
           <div className="col-md-6">
             <p className="text-muted mb-0">
-              &copy; 2024 IUBH Quiz System. Alle Rechte vorbehalten.
+              &copy; 2025 IU Quiz Community. Alle Rechte vorbehalten.
             </p>
           </div>
           <div className="col-md-6 text-md-end">

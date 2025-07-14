@@ -1,11 +1,10 @@
 /**
  * Mock-Daten für das Quiz-System
- * 
+ *
  * Diese Datei enthält Beispieldaten für Fragen, Antworten und
  * andere Inhalte, die für den Prototyp verwendet werden.
- * 
- * In einer produktiven Anwendung würden diese Daten von einer
- * API oder Datenbank stammen.
+ *
+ * ERWEITERT: Weitere Fragen hinzugefügt
  */
 
 /**
@@ -151,6 +150,147 @@ export const getMockQuestions = () => [
     category: "Softwareentwicklung",
     difficulty: "Mittel",
     explanation: "Das Spiralmodell betont iterative Entwicklung durch wiederholte Zyklen von Planung, Risikoanalyse, Entwicklung und Bewertung."
+  },
+  // Weitere Fragen hinzugefügt
+  {
+    id: 11,
+    question: "Welche Aussage über Arrays ist korrekt?",
+    answers: [
+      "Arrays haben immer eine feste Größe",
+      "Arrays können nur primitive Datentypen speichern",
+      "Arrays bieten direkten Zugriff auf Elemente über einen Index",
+      "Arrays sind immer sortiert"
+    ],
+    correctAnswer: 2,
+    category: "Informatik",
+    difficulty: "Leicht",
+    explanation: "Arrays bieten direkten Zugriff (O(1)) auf Elemente über einen numerischen Index, was sie sehr effizient für den Zugriff macht."
+  },
+  {
+    id: 12,
+    question: "Was ist ein JOIN in SQL?",
+    answers: [
+      "Eine Methode zum Löschen von Daten",
+      "Eine Methode zum Verbinden von Tabellen",
+      "Eine Methode zum Erstellen neuer Tabellen",
+      "Eine Methode zum Sortieren von Daten"
+    ],
+    correctAnswer: 1,
+    category: "Datenbanken",
+    difficulty: "Mittel",
+    explanation: "Ein JOIN ist eine SQL-Operation, die verwendet wird, um Daten aus zwei oder mehr Tabellen basierend auf einer verwandten Spalte zu kombinieren."
+  },
+  {
+    id: 13,
+    question: "Welches Protokoll wird für E-Mail-Versand verwendet?",
+    answers: [
+      "HTTP",
+      "FTP",
+      "SMTP",
+      "DNS"
+    ],
+    correctAnswer: 2,
+    category: "Netzwerke",
+    difficulty: "Leicht",
+    explanation: "SMTP (Simple Mail Transfer Protocol) ist das Standardprotokoll für das Versenden von E-Mails über das Internet."
+  },
+  {
+    id: 14,
+    question: "Was ist Scrum?",
+    answers: [
+      "Eine Programmiersprache",
+      "Ein agiles Framework für Projektmanagement",
+      "Ein Datenbank-Management-System",
+      "Ein Betriebssystem"
+    ],
+    correctAnswer: 1,
+    category: "Projektmanagement",
+    difficulty: "Leicht",
+    explanation: "Scrum ist ein agiles Framework für das Management und die Steuerung von Produktentwicklung, besonders in der Softwareentwicklung."
+  },
+  {
+    id: 15,
+    question: "Was ist ein Virus in der IT-Sicherheit?",
+    answers: [
+      "Ein nützliches Programm",
+      "Ein schädliches Programm, das sich selbst repliziert",
+      "Ein Netzwerk-Protokoll",
+      "Ein Datenbank-Backup"
+    ],
+    correctAnswer: 1,
+    category: "Sicherheit",
+    difficulty: "Leicht",
+    explanation: "Ein Computervirus ist ein schädliches Programm, das sich selbst repliziert und dabei andere Programme oder Dateien infiziert."
+  },
+  {
+    id: 16,
+    question: "Welche Aussage über Rekursion ist korrekt?",
+    answers: [
+      "Rekursion ist immer effizienter als Iteration",
+      "Rekursive Funktionen rufen sich selbst auf",
+      "Rekursion kann nur in funktionalen Sprachen verwendet werden",
+      "Rekursion benötigt keine Abbruchbedingung"
+    ],
+    correctAnswer: 1,
+    category: "Informatik",
+    difficulty: "Mittel",
+    explanation: "Rekursion ist eine Programmiertechnik, bei der eine Funktion sich selbst aufruft, um ein Problem in kleinere Teilprobleme zu zerlegen."
+  },
+  {
+    id: 17,
+    question: "Was ist eine Normalisierung in Datenbanken?",
+    answers: [
+      "Das Löschen von Daten",
+      "Die Strukturierung von Daten zur Vermeidung von Redundanz",
+      "Die Verschlüsselung von Daten",
+      "Das Backup von Daten"
+    ],
+    correctAnswer: 1,
+    category: "Datenbanken",
+    difficulty: "Mittel",
+    explanation: "Normalisierung ist der Prozess der Strukturierung einer Datenbank, um Redundanz zu minimieren und die Datenintegrität zu verbessern."
+  },
+  {
+    id: 18,
+    question: "Welche Schicht des OSI-Modells ist für die Datenübertragung verantwortlich?",
+    answers: [
+      "Anwendungsschicht",
+      "Transportschicht",
+      "Netzwerkschicht",
+      "Physikalische Schicht"
+    ],
+    correctAnswer: 3,
+    category: "Netzwerke",
+    difficulty: "Mittel",
+    explanation: "Die physikalische Schicht (Layer 1) ist für die eigentliche Übertragung von Bits über das physikalische Medium verantwortlich."
+  },
+  {
+    id: 19,
+    question: "Was ist ein Sprint in Scrum?",
+    answers: [
+      "Ein Fehler im Code",
+      "Ein Zeitrahmen für die Entwicklung",
+      "Ein Meeting-Typ",
+      "Ein Testverfahren"
+    ],
+    correctAnswer: 1,
+    category: "Projektmanagement",
+    difficulty: "Leicht",
+    explanation: "Ein Sprint ist ein fester Zeitrahmen (meist 1-4 Wochen) in Scrum, in dem das Team ein funktionsfähiges Produktinkrement erstellt."
+  },
+  {
+    id: 20,
+    question: "Was ist eine Firewall?",
+    answers: [
+      "Ein Antivirenprogramm",
+      "Ein Netzwerk-Sicherheitssystem",
+      "Ein Backup-System",
+      "Ein Betriebssystem"
+    ],
+    correctAnswer: 1,
+    category: "Sicherheit",
+    difficulty: "Leicht",
+    explanation: "Eine Firewall ist ein Netzwerk-Sicherheitssystem, das den Datenverkehr zwischen vertrauenswürdigen und nicht vertrauenswürdigen Netzwerken überwacht und filtert."
   }
 ];
 
@@ -199,6 +339,13 @@ export const getCategories = () => [
     description: 'IT-Sicherheit und Kryptographie',
     icon: 'shield-alt',
     color: 'danger'
+  },
+  {
+    id: 'softwareentwicklung',
+    name: 'Softwareentwicklung',
+    description: 'Methoden und Prozesse der Softwareentwicklung',
+    icon: 'code',
+    color: 'purple'
   }
 ];
 

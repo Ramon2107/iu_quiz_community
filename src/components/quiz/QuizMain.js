@@ -4,7 +4,11 @@
  * Diese Komponente verwaltet den gesamten Quiz-Ablauf und stellt
  * verschiedene Spielmodi bereit (kooperativ, kompetitiv und single-player).
  *
- * ERWEITERT: Single-Player-Modus für individuelles Lernen hinzugefügt
+ * KORRIGIERT: Integration mit DataManager statt direktem Import von mockData
+ *
+ * WICHTIGE ÄNDERUNG: Diese Komponente verwendet jetzt den zentralen DataManager,
+ * um konsistente Datenverwendung in der gesamten Anwendung zu gewährleisten.
+ * Mock-Daten werden automatisch geladen, wenn localStorage leer ist.
  *
  * Spielmodi:
  * - 'cooperative': Kooperatives Lernen mit anderen Studierenden
@@ -12,11 +16,11 @@
  * - 'single-player': Individuelles Lernen ohne Zeitdruck
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import QuizQuestion from './QuizQuestion';
 import QuizResults from './QuizResults';
 import QuizCategorySelector from './QuizCategorySelector';
-import { getMockQuestions } from '../../data/mockData';
+import dataManager from '../../data/dataManager'; // KORRIGIERT: Verwendet DataManager statt direkten Import
 
 function QuizMain({ user }) {
   // Zustandsverwaltung für Quiz-Navigation
@@ -32,6 +36,27 @@ function QuizMain({ user }) {
   const [isLoading, setIsLoading] = useState(false);
 
   /**
+   * KORRIGIERT: Lädt Daten über DataManager beim Component-Mount
+   *
+   * Der DataManager stellt automatisch sicher, dass Mock-Daten geladen werden,
+   * wenn localStorage leer ist. Dies gewährleistet eine konsistente Datenquelle.
+   */
+  useEffect(() => {
+    // Force Mock-Daten laden falls localStorage leer ist
+    const categories = dataManager.getAllCategories();
+    const cards = dataManager.getAllCards();
+
+    console.log('QuizMain: Geladene Kategorien:', categories.length);
+    console.log('QuizMain: Geladene Karten:', cards.length);
+
+    // Falls keine Daten vorhanden sind, Mock-Daten neu laden
+    if (categories.length === 0 || cards.length === 0) {
+      console.log('QuizMain: Lade Mock-Daten neu...');
+      dataManager.reloadMockData();
+    }
+  }, []);
+
+  /**
    * Startet die Modus-Auswahl - Schritt 1
    *
    * @param {string} mode - Spielmodus ('cooperative', 'competitive', 'single-player')
@@ -45,12 +70,20 @@ function QuizMain({ user }) {
   /**
    * Behandelt die Kategorieauswahl - Schritt 2
    *
+   * KORRIGIERT: Verwendet DataManager für Fragenfilterung
+   *
    * @param {Object} category - Ausgewählte Kategorie
-   * @param {Array} filteredQuestions - Gefilterte Fragen für diese Kategorie
    */
-  const handleCategorySelect = (category, filteredQuestions) => {
-    console.log('Kategorie ausgewählt:', category.name, 'Anzahl Fragen:', filteredQuestions.length);
+  const handleCategorySelect = (category) => {
+    console.log('Kategorie ausgewählt:', category.name);
     setSelectedCategory(category);
+
+    // KORRIGIERT: Fragen über DataManager laden
+    const filteredQuestions = dataManager.getQuestionsForQuiz().filter(
+        question => question.category === category.name
+    );
+
+    console.log('Gefilterte Fragen:', filteredQuestions.length);
     setQuestions(filteredQuestions);
     setCurrentQuestionIndex(0);
     setAnswers([]);
@@ -125,12 +158,15 @@ function QuizMain({ user }) {
 
   /**
    * Startet ein neues Quiz mit der gleichen Kategorie
+   *
+   * KORRIGIERT: Verwendet DataManager für Fragenfilterung
    */
   const restartWithSameCategory = () => {
     if (selectedCategory) {
       console.log('Quiz wird mit gleicher Kategorie neu gestartet');
-      const allQuestions = getMockQuestions();
-      const filteredQuestions = allQuestions.filter(
+
+      // KORRIGIERT: Fragen über DataManager laden
+      const filteredQuestions = dataManager.getQuestionsForQuiz().filter(
           question => question.category === selectedCategory.name
       );
 
@@ -340,102 +376,53 @@ function QuizMain({ user }) {
     );
   }
 
-  // Ladeanzeige
-  if (isLoading) {
-    return (
-        <div className="container mt-4">
-          <div className="row justify-content-center">
-            <div className="col-md-6">
-              <div className="card">
-                <div className="card-body text-center">
-                  <div className="spinner-border text-primary mb-3" role="status">
-                    <span className="visually-hidden">Laden...</span>
-                  </div>
-                  <h5>Fragen werden geladen...</h5>
-                  <p className="text-muted">
-                    Kategorie: {selectedCategory?.name}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-    );
-  }
+  // Schritt 3: Quiz-Durchführung
+  if (currentStep === 'quiz' && !showResults) {
+    const currentQuestion = questions[currentQuestionIndex];
 
-  // Schritt 4: Ergebnisse anzeigen
-  if (showResults || currentStep === 'results') {
-    return (
-        <QuizResults
-            answers={answers}
-            questions={questions}
-            gameMode={gameMode}
-            category={selectedCategory}
-            user={user}
-            onRestart={resetQuiz}
-            onRestartSameCategory={restartWithSameCategory}
-            onBackToCategories={handleBackToCategorySelection}
-        />
-    );
-  }
-
-  // Schritt 3: Quiz-Frage anzeigen
-  if (currentStep === 'quiz' && questions.length > 0) {
     return (
         <div className="container mt-4">
           <div className="row justify-content-center">
             <div className="col-md-10">
-              {/* Erweiterte Fortschrittsanzeige mit Kategorie-Info */}
-              <div className="card mb-3">
-                <div className="card-body">
-                  <div className="d-flex justify-content-between align-items-center mb-2">
-                    <h6 className="mb-0">
-                      <i className="fas fa-gamepad me-2"></i>
-                      {getGameModeDisplayName()} Modus
-                    </h6>
-                    <div className="d-flex align-items-center">
-                      {/* Kategorie-Info */}
-                      <span className={`badge bg-${selectedCategory?.color || 'secondary'} me-2`}>
-                        <i className={`fas fa-${selectedCategory?.icon || 'folder'} me-1`}></i>
-                        {selectedCategory?.name || 'Alle Kategorien'}
-                      </span>
-                      {/* Fortschritt */}
-                      <span className="badge bg-primary">
-                        Frage {currentQuestionIndex + 1} von {questions.length}
-                      </span>
+              {/* Header mit Fortschrittsanzeige */}
+              <div className="card mb-4">
+                <div className="card-header">
+                  <div className="d-flex justify-content-between align-items-center">
+                    <div>
+                      <h3 className="mb-0">
+                        <i className="fas fa-gamepad me-2"></i>
+                        {getGameModeDisplayName()} Quiz
+                      </h3>
+                      <small className="text-muted">Kategorie: {selectedCategory?.name}</small>
+                    </div>
+                    <div>
+                      <button
+                          className="btn btn-outline-secondary btn-sm"
+                          onClick={handleBackToCategorySelection}
+                      >
+                        <i className="fas fa-arrow-left me-2"></i>
+                        Zurück zur Auswahl
+                      </button>
                     </div>
                   </div>
-
-                  {/* Navigation */}
-                  <div className="d-flex justify-content-between align-items-center mb-2">
-                    <button
-                        className="btn btn-outline-secondary btn-sm"
-                        onClick={handleBackToCategorySelection}
-                    >
-                      <i className="fas fa-arrow-left me-1"></i>
-                      Andere Kategorie
-                    </button>
-                    <small className="text-muted">
-                      {selectedCategory?.description}
-                    </small>
-                  </div>
-
-                  {/* Fortschrittsbalken */}
-                  <div className="progress">
+                </div>
+                <div className="card-body">
+                  <div className="progress mb-2">
                     <div
                         className="progress-bar"
-                        role="progressbar"
-                        style={{
-                          width: `${((currentQuestionIndex + 1) / questions.length) * 100}%`
-                        }}
+                        style={{width: `${((currentQuestionIndex + 1) / questions.length) * 100}%`}}
                     ></div>
+                  </div>
+                  <div className="d-flex justify-content-between">
+                    <span>Frage {currentQuestionIndex + 1} von {questions.length}</span>
+                    <span>{Math.round(((currentQuestionIndex + 1) / questions.length) * 100)}%</span>
                   </div>
                 </div>
               </div>
 
-              {/* Quiz-Frage */}
+              {/* Aktuelle Frage */}
               <QuizQuestion
-                  question={questions[currentQuestionIndex]}
+                  question={currentQuestion}
                   questionNumber={currentQuestionIndex + 1}
                   totalQuestions={questions.length}
                   onAnswer={handleAnswer}
@@ -447,23 +434,31 @@ function QuizMain({ user }) {
     );
   }
 
-  // Fallback für den Fall, dass keine Fragen vorhanden sind
+  // Schritt 4: Ergebnisse anzeigen
+  if (currentStep === 'results') {
+    return (
+        <QuizResults
+            answers={answers}
+            questions={questions}
+            gameMode={gameMode}
+            categoryName={selectedCategory?.name}
+            onRestart={resetQuiz}
+            onRestartSameCategory={restartWithSameCategory}
+        />
+    );
+  }
+
+  // Fallback: Ladezustand
   return (
       <div className="container mt-4">
         <div className="row justify-content-center">
           <div className="col-md-6">
             <div className="card">
               <div className="card-body text-center">
-                <div className="alert alert-warning">
-                  <h5>Keine Fragen verfügbar</h5>
-                  <p>Für die ausgewählte Kategorie sind keine Fragen verfügbar.</p>
-                  <button
-                      className="btn btn-primary"
-                      onClick={handleBackToCategorySelection}
-                  >
-                    Zurück zur Kategorieauswahl
-                  </button>
+                <div className="spinner-border text-primary" role="status">
+                  <span className="visually-hidden">Laden...</span>
                 </div>
+                <p className="mt-3">Quiz wird geladen...</p>
               </div>
             </div>
           </div>
