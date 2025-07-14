@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: components/quiz/QuizResults.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: components/quiz/QuizResults.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * QuizResults-Komponente - Anzeige der Quiz-Ergebnisse
+ *
+ * Diese Komponente zeigt die Ergebnisse des abgeschlossenen Quiz an,
+ * einschließlich Statistiken, Antworten und Bewertungen.
+ *
+ * Features:
+ * - Detaillierte Ergebnisübersicht
+ * - Antworten-Review mit Erklärungen
+ * - Statistiken und Leistungsmetriken
+ * - Responsive Design
+ * - Optionen für Wiederholung
+ *
+ * UPDATE: Multiplayer-Rangliste für kooperative und kompetitive Modi
+ * UPDATE: Gewinner-Ermittlung und Gleichstände
+ */
+
+import React, { useState, useEffect } from 'react';
+import simulatedPlayersService from '../../services/SimulatedPlayersService'; // UPDATE: Import für Multiplayer-Auswertung
+
+/**
+ * QuizResults-Komponente
+ *
+ * @param {Object} props - Komponenteneigenschaften
+ * @param {Array} props.questions - Quiz-Fragen
+ * @param {Array} props.answers - Benutzerantworten
+ * @param {string} props.gameMode - Spielmodus
+ * @param {Object} props.category - Gewählte Kategorie
+ * @param {Object} props.user - Benutzerdaten
+ * @param {Function} props.onRestart - Callback für Neustart
+ * @param {Function} props.onRestartSameCategory - Callback für Neustart mit gleicher Kategorie
+ * @param {Function} props.onBackToCategorySelection - Callback für Kategorieauswahl
+ * @param {Object} props.multiplayerData - UPDATE: Multiplayer-Daten
+ */
+function QuizResults({
+                       questions,
+                       answers,
+                       gameMode,
+                       category,
+                       user,
+                       onRestart,
+                       onRestartSameCategory,
+                       onBackToCategorySelection,
+                       multiplayerData // UPDATE: Neue Prop für Multiplayer-Daten
+                     }) {
+  const [showDetailedResults, setShowDetailedResults] = useState(false);
+  const [multiplayerRanking, setMultiplayerRanking] = useState([]); // UPDATE: Rangliste für Multiplayer
+  const [gameResults, setGameResults] = useState(null); // UPDATE: Spielergebnisse
+
+  // Berechne Basis-Statistiken
+  const correctAnswers = answers.filter(answer => answer.isCorrect).length;
+  const totalQuestions = questions.length;
+  const score = Math.round((correctAnswers / totalQuestions) * 100);
+  const totalTime = answers.reduce((sum, answer) => sum + answer.timeTaken, 0);
+  const averageTime = Math.round(totalTime / totalQuestions);
+
+  // UPDATE: Berechne Multiplayer-Rangliste beim Component-Mount
+  useEffect(() => {
+    if (multiplayerData?.isMultiplayer) {
+      const humanPlayerStats = {
+        name: user.name,
+        score: calculatePlayerScore(),
+        correctAnswers,
+        averageTime,
+        isHuman: true
+      };
+
+      const ranking = simulatedPlayersService.calculateFinalRanking(humanPlayerStats);
+      setMultiplayerRanking(ranking);
+
+      // Bestimme Gewinner und Spielergebnisse
+      const results = analyzeGameResults(ranking);
+      setGameResults(results);
+
+      console.log('Multiplayer-Rangliste:', ranking);
+      console.log('Spielergebnisse:', results);
+    }
+  }, [multiplayerData, correctAnswers, averageTime, user.name]);
+
+  /**
+   * UPDATE: Berechnet Spieler-Punkte basierend auf Antworten und Zeit
+   */
+  const calculatePlayerScore = () => {
+    let totalScore = 0;
+    answers.forEach(answer => {
+      if (answer.isCorrect) {
+        const speedBonus = Math.max(0, 30 - answer.timeTaken);
+        totalScore += 100 + speedBonus;
+      }
+    });
+    return totalScore;
+  };
+
+  /**
+   * UPDATE: Analysiert Spielergebnisse für Multiplayer-Modi
+   */
+  const analyzeGameResults = (ranking) => {
+    if (!ranking || ranking.length === 0) return null;
+
+    const humanPlayer = ranking.find(p => p.isHuman);
+    const humanPosition = ranking.findIndex(p => p.isHuman) + 1;
+    const winner = ranking[0];
+    const isHumanWinner = winner.isHuman;
+
+    // Prüfe auf Gleichstand
+    const winnerScore = winner.score;
+    const winners = ranking.filter(p => p.score === winnerScore);
+    const isTie = winners.length > 1;
+
+    let resultType = '';
+    let resultMessage = '';
+    let resultColor = '';
+
+    if (isTie) {
+      if (winners.some(w => w.isHuman)) {
+        resultType = 'tie_win';
+        resultMessage = `Gleichstand! Sie teilen sich den ${winners.length > 2 ? 'Platz' : 'ersten Platz'} mit ${winners.length - 1} anderen Spielern.`;
+        resultColor = 'warning';
+      } else {
+        resultType = 'tie_lose';
+        resultMessage = `Gleichstand zwischen anderen Spielern. Sie erreichten Platz ${humanPosition}.`;
+        resultColor = 'info';
+      }
+    } else {
+      if (isHumanWinner) {
+        resultType = 'win';
+        resultMessage = 'Herzlichen Glückwunsch! Sie haben gewonnen!';
+        resultColor = 'success';
+      } else {
+        resultType = 'lose';
+        resultMessage = `Sie erreichten Platz ${humanPosition} von ${ranking.length} Spielern.`;
+        resultColor = humanPosition &lt;= 2 ? 'info' : 'secondary';
+      }
+    }
+
+    return {
+      type: resultType,
+      message: resultMessage,
+      color: resultColor,
+      humanPosition,
+      winner: winner.name,
+      isHumanWinner,
+      isTie,
+      winners,
+      totalPlayers: ranking.length
+    };
+  };
+
+  /**
+   * Gibt CSS-Klasse für Punktzahl zurück
+   */
+  const getScoreClass = () => {
+    if (score >= 80) return 'text-success';
+    if (score >= 60) return 'text-warning';
+    return 'text-danger';
+  };
+
+  /**
+   * Gibt Performance-Bewertung zurück
+   */
+  const getPerformanceRating = () => {
+    if (score >= 90) return { text: 'Hervorragend', icon: 'fas fa-star', color: 'success' };
+    if (score >= 80) return { text: 'Sehr gut', icon: 'fas fa-thumbs-up', color: 'success' };
+    if (score >= 70) return { text: 'Gut', icon: 'fas fa-smile', color: 'warning' };
+    if (score >= 60) return { text: 'Befriedigend', icon: 'fas fa-meh', color: 'warning' };
+    if (score >= 50) return { text: 'Ausreichend', icon: 'fas fa-frown', color: 'danger' };
+    return { text: 'Nicht ausreichend', icon: 'fas fa-sad-tear', color: 'danger' };
+  };
+
+  /**
+   * Gibt Spielmodus-spezifische CSS-Klasse zurück
+   */
+  const getGameModeClass = () => {
+    switch (gameMode) {
+      case 'cooperative':
+        return 'bg-success';
+      case 'competitive':
+        return 'bg-warning';
+      default:
+        return 'bg-primary';
+    }
+  };
+
+  /**
+   * Gibt Spielmodus-spezifisches Icon zurück
+   */
+  const getGameModeIcon = () => {
+    switch (gameMode) {
+      case 'cooperative':
+        return 'fas fa-users';
+      case 'competitive':
+        return 'fas fa-trophy';
+      default:
+        return 'fas fa-user';
+    }
+  };
+
+  const performance = getPerformanceRating();
+
+  return (
+      &lt;div className="container mt-4">
+        &lt;div className="row">
+          &lt;div className="col-md-8">
+            {/* Hauptergebnisse */}
+            &lt;div className="card shadow-lg">
+              &lt;div className={`card-header ${getGameModeClass()} text-white`}>
+                &lt;h2 className="mb-0">
+                  &lt;i className={`${getGameModeIcon()} me-2`}>&lt;/i>
+                  Quiz-Ergebnisse
+                &lt;/h2>
+              &lt;/div>
+              &lt;div className="card-body">
+                {/* UPDATE: Multiplayer-Ergebnisse */}
+                {multiplayerData?.isMultiplayer &amp;&amp; gameResults &amp;&amp; (
+                    &lt;div className={`alert alert-${gameResults.color} mb-4`}>
+                      &lt;div className="d-flex align-items-center">
+                        &lt;i className={`fas fa-${gameResults.type === 'win' ? 'trophy' : gameResults.type === 'tie_win' ? 'handshake' : 'medal'} fa-2x me-3`}>&lt;/i>
+                        &lt;div>
+                          &lt;h4 className="mb-1">
+                            {gameResults.type === 'win' ? 'Gewonnen!' :
+                                gameResults.type === 'tie_win' ? 'Gleichstand!' :
+                                    'Spiel beendet'}
+                          &lt;/h4>
+                          &lt;p className="mb-0">{gameResults.message}&lt;/p>
+                        &lt;/div>
+                      &lt;/div>
+                    &lt;/div>
+                )}
+
+                {/* Performance-Übersicht */}
+                &lt;div className="row mb-4">
+                  &lt;div className="col-md-3">
+                    &lt;div className="card bg-light">
+                      &lt;div className="card-body text-center">
+                        &lt;i className={`${performance.icon} fa-2x text-${performance.color} mb-2`}>&lt;/i>
+                        &lt;h4 className={getScoreClass()}>{score}%&lt;/h4>
+                        &lt;p className="mb-0">Gesamtpunktzahl&lt;/p>
+                      &lt;/div>
+                    &lt;/div>
+                  &lt;/div>
+                  &lt;div className="col-md-3">
+                    &lt;div className="card bg-light">
+                      &lt;div className="card-body text-center">
+                        &lt;i className="fas fa-check-circle fa-2x text-success mb-2">&lt;/i>
+                        &lt;h4>{correctAnswers}&lt;/h4>
+                        &lt;p className="mb-0">Richtige Antworten&lt;/p>
+                      &lt;/div>
+                    &lt;/div>
+                  &lt;/div>
+                  &lt;div className="col-md-3">
+                    &lt;div className="card bg-light">
+                      &lt;div className="card-body text-center">
+                        &lt;i className="fas fa-times-circle fa-2x text-danger mb-2">&lt;/i>
+                        &lt;h4>{totalQuestions - correctAnswers}&lt;/h4>
+                        &lt;p className="mb-0">Falsche Antworten&lt;/p>
+                      &lt;/div>
+                    &lt;/div>
+                  &lt;/div>
+                  &lt;div className="col-md-3">
+                    &lt;div className="card bg-light">
+                      &lt;div className="card-body text-center">
+                        &lt;i className="fas fa-clock fa-2x text-info mb-2">&lt;/i>
+                        &lt;h4>{averageTime}s&lt;/h4>
+                        &lt;p className="mb-0">Ø Zeit/Frage&lt;/p>
+                      &lt;/div>
+                    &lt;/div>
+                  &lt;/div>
+                &lt;/div>
+
+                {/* Performance-Bewertung */}
+                &lt;div className="text-center mb-4">
+                  &lt;h4 className={`text-${performance.color}`}>
+                    &lt;i className={`${performance.icon} me-2`}>&lt;/i>
+                    {performance.text}
+                  &lt;/h4>
+                  &lt;p className="text-muted">
+                    Sie haben {correctAnswers} von {totalQuestions} Fragen richtig beantwortet
+                    {gameMode !== 'single-player' &amp;&amp; ` im ${gameMode === 'cooperative' ? 'kooperativen' : 'kompetitiven'} Modus`}.
+                  &lt;/p>
+                &lt;/div>
+
+                {/* Detaillierte Ergebnisse Toggle */}
+                &lt;div className="text-center mb-4">
+                  &lt;button
+                      className="btn btn-outline-primary"
+                      onClick={() => setShowDetailedResults(!showDetailedResults)}
+                  >
+                    &lt;i className={`fas fa-chevron-${showDetailedResults ? 'up' : 'down'} me-2`}>&lt;/i>
+                    {showDetailedResults ? 'Detaillierte Ergebnisse ausblenden' : 'Detaillierte Ergebnisse anzeigen'}
+                  &lt;/button>
+                &lt;/div>
+
+                {/* Detaillierte Ergebnisse */}
+                {showDetailedResults &amp;&amp; (
+                    &lt;div className="mt-4">
+                      &lt;h5>Detaillierte Antworten:&lt;/h5>
+                      {questions.map((question, index) => {
+                        const answer = answers[index];
+                        return (
+                            &lt;div key={index} className="card mb-3">
+                              &lt;div className="card-body">
+                                &lt;div className="d-flex justify-content-between align-items-start mb-2">
+                                  &lt;h6>Frage {index + 1}:&lt;/h6>
+                                  &lt;span className={`badge ${answer.isCorrect ? 'bg-success' : 'bg-danger'}`}>
+                              {answer.isCorrect ? 'Richtig' : 'Falsch'}
+                            &lt;/span>
+                                &lt;/div>
+                                &lt;p className="mb-2">{question.question}&lt;/p>
+                                &lt;div className="row">
+                                  &lt;div className="col-md-6">
+                                    &lt;small className="text-muted">Ihre Antwort:&lt;/small>
+                                    &lt;p className={answer.isCorrect ? 'text-success' : 'text-danger'}>
+                                      {answer.selectedAnswer !== null ? question.answers[answer.selectedAnswer] : 'Nicht beantwortet'}
+                                    &lt;/p>
+                                  &lt;/div>
+                                  &lt;div className="col-md-6">
+                                    &lt;small className="text-muted">Richtige Antwort:&lt;/small>
+                                    &lt;p className="text-success">
+                                      {question.answers[question.correctAnswer]}
+                                    &lt;/p>
+                                  &lt;/div>
+                                &lt;/div>
+                                &lt;div className="d-flex justify-content-between text-muted">
+                                  &lt;small>Zeit: {answer.timeTaken}s&lt;/small>
+                                  &lt;small>Kategorie: {question.category}&lt;/small>
+                                &lt;/div>
+                                {question.explanation &amp;&amp; (
+                                    &lt;div className="mt-2 p-2 bg-light rounded">
+                                      &lt;small>
+                                        &lt;i className="fas fa-lightbulb me-1 text-warning">&lt;/i>
+                                        &lt;strong>Erklärung:&lt;/strong> {question.explanation}
+                                      &lt;/small>
+                                    &lt;/div>
+                                )}
+                              &lt;/div>
+                            &lt;/div>
+                        );
+                      })}
+                    &lt;/div>
+                )}
+
+                {/* Aktionen */}
+                &lt;div className="d-flex flex-wrap gap-2 justify-content-center">
+                  &lt;button
+                      className="btn btn-primary"
+                      onClick={onRestartSameCategory}
+                  >
+                    &lt;i className="fas fa-redo me-2">&lt;/i>
+                    Gleiche Kategorie wiederholen
+                  &lt;/button>
+                  &lt;button
+                      className="btn btn-success"
+                      onClick={onBackToCategorySelection}
+                  >
+                    &lt;i className="fas fa-layer-group me-2">&lt;/i>
+                    Andere Kategorie wählen
+                  &lt;/button>
+                  &lt;button
+                      className="btn btn-secondary"
+                      onClick={onRestart}
+                  >
+                    &lt;i className="fas fa-home me-2">&lt;/i>
+                    Neuen Modus wählen
+                  &lt;/button>
+                &lt;/div>
+              &lt;/div>
+            &lt;/div>
+          &lt;/div>
+
+          &lt;div className="col-md-4">
+            {/* Quiz-Informationen */}
+            &lt;div className="card mb-4">
+              &lt;div className="card-header">
+                &lt;h5 className="mb-0">
+                  &lt;i className="fas fa-info-circle me-2">&lt;/i>
+                  Quiz-Informationen
+                &lt;/h5>
+              &lt;/div>
+              &lt;div className="card-body">
+                &lt;div className="mb-2">
+                  &lt;strong>Kategorie:&lt;/strong> {category?.name || 'Unbekannt'}
+                &lt;/div>
+                &lt;div className="mb-2">
+                  &lt;strong>Spielmodus:&lt;/strong> {gameMode === 'cooperative' ? 'Kooperativ' : gameMode === 'competitive' ? 'Kompetitiv' : 'Single-Player'}
+                &lt;/div>
+                &lt;div className="mb-2">
+                  &lt;strong>Gesamtzeit:&lt;/strong> {Math.floor(totalTime / 60)}:{(totalTime % 60).toString().padStart(2, '0')} Min
+                &lt;/div>
+                &lt;div className="mb-2">
+                  &lt;strong>Gespielt von:&lt;/strong> {user.name}
+                &lt;/div>
+                &lt;div>
+                  &lt;strong>Datum:&lt;/strong> {new Date().toLocaleDateString('de-DE')}
+                &lt;/div>
+              &lt;/div>
+            &lt;/div>
+
+            {/* UPDATE: Multiplayer-Rangliste */}
+            {multiplayerData?.isMultiplayer &amp;&amp; multiplayerRanking.length > 0 &amp;&amp; (
+                &lt;div className="card">
+                  &lt;div className={`card-header ${getGameModeClass()} text-white`}>
+                    &lt;h5 className="mb-0">
+                      &lt;i className="fas fa-trophy me-2">&lt;/i>
+                      Rangliste
+                    &lt;/h5>
+                  &lt;/div>
+                  &lt;div className="card-body">
+                    &lt;div className="list-group list-group-flush">
+                      {multiplayerRanking.map((player, index) => (
+                          &lt;div key={player.id || index} className={`list-group-item ${player.isHuman ? 'bg-light' : ''}`}>
+                            &lt;div className="d-flex justify-content-between align-items-center">
+                              &lt;div className="d-flex align-items-center">
+                          &lt;span className="me-3 fw-bold fs-5">
+                            {index + 1}.
+                          &lt;/span>
+                                &lt;div>
+                                  &lt;div className="d-flex align-items-center">
+                                    &lt;i className={`fas fa-${player.isHuman ? 'user-circle' : 'robot'} me-2 text-${player.isHuman ? 'primary' : player.color}`}>&lt;/i>
+                                    &lt;span className={player.isHuman ? 'fw-bold' : ''}>
+                                {player.name}
+                                      {player.isHuman &amp;&amp; &lt;small className="text-muted ms-1">(Sie)&lt;/small>}
+                              &lt;/span>
+                                  &lt;/div>
+                                  &lt;small className="text-muted">
+                                    {player.correctAnswers} richtige Antworten • Ø {player.averageTime}s
+                                  &lt;/small>
+                                &lt;/div>
+                              &lt;/div>
+                              &lt;div className="text-end">
+                          &lt;span className="badge bg-primary fs-6">
+                            {player.score} Punkte
+                          &lt;/span>
+                                {index === 0 &amp;&amp; (
+                                    &lt;div>
+                                      &lt;i className="fas fa-crown text-warning">&lt;/i>
+                                    &lt;/div>
+                                )}
+                              &lt;/div>
+                            &lt;/div>
+                          &lt;/div>
+                      ))}
+                    &lt;/div>
+
+                    {gameResults &amp;&amp; (
+                        &lt;div className="mt-3 text-center">
+                          &lt;small className="text-muted">
+                            {gameResults.type === 'win' ? 'Herzlichen Glückwunsch zum Sieg!' :
+                                gameResults.type === 'tie_win' ? 'Geteilter Sieg - Gut gemacht!' :
+                                    `Platz ${gameResults.humanPosition} von ${gameResults.totalPlayers} - Weiter so!`}
+                          &lt;/small>
+                        &lt;/div>
+                    )}
+                  &lt;/div>
+                &lt;/div>
+            )}
+          &lt;/div>
+        &lt;/div>
+      &lt;/div>
+  );
+}
+
+export default QuizResults;</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="DataManager.html">DataManager</a></li><li><a href="SimulatedPlayersService.html">SimulatedPlayersService</a></li></ul><h3>Global</h3><ul><li><a href="global.html#App">App</a></li><li><a href="global.html#Footer">Footer</a></li><li><a href="global.html#Header">Header</a></li><li><a href="global.html#LoginForm">LoginForm</a></li><li><a href="global.html#MOCK_USERS">MOCK_USERS</a></li><li><a href="global.html#QuestionEditor">QuestionEditor</a></li><li><a href="global.html#QuizQuestion">QuizQuestion</a></li><li><a href="global.html#QuizResults">QuizResults</a></li><li><a href="global.html#SIMULATED_PLAYERS">SIMULATED_PLAYERS</a></li><li><a href="global.html#SecurityUtils">SecurityUtils</a></li><li><a href="global.html#UserProfile">UserProfile</a></li><li><a href="global.html#mockCategories">mockCategories</a></li><li><a href="global.html#root">root</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Mon Jul 14 2025 22:44:25 GMT+0200 (Mitteleuropäische Sommerzeit)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

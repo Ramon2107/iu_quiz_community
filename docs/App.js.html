@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: App.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: App.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Hauptkomponente der IU Quiz-Anwendung
+ *
+ * UPDATE: Login-System implementiert - Zugriff nur für authentifizierte Benutzer
+ * UPDATE: Sichere Authentifizierung mit Input-Validierung
+ * UPDATE: Benutzer-Session-Management
+ */
+
+import React, { useState, useEffect } from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import './App.css';
+
+// Komponenten-Imports
+import LoginForm from './components/auth/LoginForm';
+import Header from './components/common/Header';
+import HomePage from './components/home/HomePage';
+import QuizMain from './components/quiz/QuizMain';
+import CardManager from './components/admin/CardManager';
+import UserProfile from './components/user/UserProfile';
+import dataManager from './data/dataManager';
+
+/**
+ * Hauptanwendungskomponente mit Login-Schutz
+ */
+function App() {
+    const [currentView, setCurrentView] = useState('home');
+    const [user, setUser] = useState(null); // UPDATE: Benutzer-Zustand für Authentication
+    const [isAuthenticated, setIsAuthenticated] = useState(false); // UPDATE: Authentication-Status
+
+    /**
+     * UPDATE: Überprüft beim App-Start, ob Benutzer bereits angemeldet ist
+     */
+    useEffect(() => {
+        console.log('App: Initialisiere Anwendung...');
+
+        // Überprüfe lokale Session (localStorage)
+        const storedUser = localStorage.getItem('iu_quiz_user');
+        if (storedUser) {
+            try {
+                const parsedUser = JSON.parse(storedUser);
+                console.log('App: Benutzer-Session gefunden:', parsedUser.name);
+                setUser(parsedUser);
+                setIsAuthenticated(true);
+            } catch (error) {
+                console.error('App: Fehler beim Laden der Benutzer-Session:', error);
+                localStorage.removeItem('iu_quiz_user');
+            }
+        }
+
+        // Initialisiere Daten
+        const categories = dataManager.getAllCategories();
+        const cards = dataManager.getAllCards();
+        console.log('App: Geladene Kategorien:', categories.length);
+        console.log('App: Geladene Karten:', cards.length);
+
+        if (categories.length === 0 || cards.length === 0) {
+            console.log('App: Lade Mock-Daten neu...');
+            dataManager.reloadMockData();
+        }
+    }, []);
+
+    /**
+     * UPDATE: Behandelt erfolgreiche Anmeldung
+     * @param {Object} userData - Benutzerdaten
+     */
+    const handleLogin = (userData) => {
+        console.log('App: Benutzer angemeldet:', userData.name);
+        setUser(userData);
+        setIsAuthenticated(true);
+
+        // Speichere Session lokal (in echter App würde dies sicherer erfolgen)
+        localStorage.setItem('iu_quiz_user', JSON.stringify(userData));
+    };
+
+    /**
+     * UPDATE: Behandelt Abmeldung
+     */
+    const handleLogout = () => {
+        console.log('App: Benutzer abgemeldet');
+        setUser(null);
+        setIsAuthenticated(false);
+        setCurrentView('home');
+
+        // Entferne lokale Session
+        localStorage.removeItem('iu_quiz_user');
+    };
+
+    /**
+     * Behandelt Fragen-Events
+     */
+    const handleQuestionAdded = (question) => {
+        console.log('App: Neue Frage hinzugefügt:', question);
+    };
+
+    /**
+     * Behandelt Kategorie-Events
+     */
+    const handleCategoryAdded = (category) => {
+        console.log('App: Neue Kategorie hinzugefügt:', category);
+    };
+
+    /**
+     * Rendert die aktuelle Ansicht
+     */
+    const renderCurrentView = () => {
+        switch (currentView) {
+            case 'home':
+                return &lt;HomePage user={user} onNavigate={setCurrentView} />;
+            case 'quiz':
+                return &lt;QuizMain user={user} />;
+            case 'cards':
+                return (
+                    &lt;CardManager
+                        user={user}
+                        onQuestionAdded={handleQuestionAdded}
+                        onCategoryAdded={handleCategoryAdded}
+                    />
+                );
+            case 'profile':
+                return &lt;UserProfile user={user} onLogout={handleLogout} />;
+            default:
+                return &lt;HomePage user={user} onNavigate={setCurrentView} />;
+        }
+    };
+
+    // UPDATE: Zeige Login-Formular für nicht authentifizierte Benutzer
+    if (!isAuthenticated || !user) {
+        return &lt;LoginForm onLogin={handleLogin} />;
+    }
+
+    // Hauptanwendung für authentifizierte Benutzer
+    return (
+        &lt;div className="App">
+            &lt;Header
+                currentView={currentView}
+                setCurrentView={setCurrentView}
+                user={user}
+                onLogout={handleLogout}
+            />
+            &lt;main className="main-content">
+                {renderCurrentView()}
+            &lt;/main>
+        &lt;/div>
+    );
+}
+
+export default App;</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="DataManager.html">DataManager</a></li><li><a href="SimulatedPlayersService.html">SimulatedPlayersService</a></li></ul><h3>Global</h3><ul><li><a href="global.html#App">App</a></li><li><a href="global.html#Footer">Footer</a></li><li><a href="global.html#Header">Header</a></li><li><a href="global.html#LoginForm">LoginForm</a></li><li><a href="global.html#MOCK_USERS">MOCK_USERS</a></li><li><a href="global.html#QuestionEditor">QuestionEditor</a></li><li><a href="global.html#QuizQuestion">QuizQuestion</a></li><li><a href="global.html#QuizResults">QuizResults</a></li><li><a href="global.html#SIMULATED_PLAYERS">SIMULATED_PLAYERS</a></li><li><a href="global.html#SecurityUtils">SecurityUtils</a></li><li><a href="global.html#UserProfile">UserProfile</a></li><li><a href="global.html#mockCategories">mockCategories</a></li><li><a href="global.html#root">root</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Mon Jul 14 2025 22:44:25 GMT+0200 (Mitteleuropäische Sommerzeit)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

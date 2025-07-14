@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: components/user/UserProfile.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: components/user/UserProfile.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * UserProfile-Komponente - Benutzerprofil und Einstellungen
+ *
+ * Diese Komponente zeigt das Benutzerprofil mit Statistiken,
+ * Einstellungen und Verlauf der Quiz-Aktivitäten an.
+ *
+ * UPDATE: Logout-Funktion integriert
+ */
+
+import React, { useState, useEffect } from 'react';
+import dataManager from '../../data/dataManager';
+
+/**
+ * UserProfile-Komponente
+ * @param {Object} props - Komponenteneigenschaften
+ * @param {Object} props.user - Benutzerdaten
+ * @param {Function} props.onLogout - UPDATE: Logout-Funktion
+ */
+function UserProfile({ user, onLogout }) {
+  const [stats, setStats] = useState({
+    totalQuizzesPlayed: 0,
+    totalQuestionsAnswered: 0,
+    correctAnswers: 0,
+    averageScore: 0,
+    createdQuestions: 0,
+    favoriteCategory: 'Noch keine Daten'
+  });
+
+  const [editMode, setEditMode] = useState(false);
+  const [editedUser, setEditedUser] = useState({...user});
+
+  useEffect(() => {
+    loadUserStats();
+  }, [user]);
+
+  /**
+   * Lädt Benutzerstatistiken
+   */
+  const loadUserStats = () => {
+    // Simuliere Statistiken basierend auf Benutzerdaten
+    const userCards = dataManager.getAllCards().filter(card => card.author === user.name);
+
+    setStats({
+      totalQuizzesPlayed: Math.floor(Math.random() * 50) + 10,
+      totalQuestionsAnswered: Math.floor(Math.random() * 500) + 100,
+      correctAnswers: Math.floor(Math.random() * 300) + 80,
+      averageScore: Math.floor(Math.random() * 30) + 70,
+      createdQuestions: userCards.length,
+      favoriteCategory: userCards.length > 0 ? userCards[0].category : 'Noch keine Daten'
+    });
+  };
+
+  /**
+   * Behandelt Profil-Änderungen
+   */
+  const handleProfileUpdate = () => {
+    // In echter App würde dies über API erfolgen
+    console.log('Profil aktualisiert:', editedUser);
+    setEditMode(false);
+  };
+
+  /**
+   * UPDATE: Behandelt Logout mit Bestätigung
+   */
+  const handleLogout = () => {
+    if (window.confirm('Möchten Sie sich wirklich abmelden?')) {
+      onLogout();
+    }
+  };
+
+  return (
+      &lt;div className="container mt-4">
+        &lt;div className="row">
+          &lt;div className="col-md-8">
+            {/* Profil-Informationen */}
+            &lt;div className="card mb-4">
+              &lt;div className="card-header bg-primary text-white">
+                &lt;h2 className="mb-0">
+                  &lt;i className="fas fa-user-circle me-2">&lt;/i>
+                  Mein Profil
+                &lt;/h2>
+              &lt;/div>
+              &lt;div className="card-body">
+                {!editMode ? (
+                    &lt;div className="row">
+                      &lt;div className="col-md-8">
+                        &lt;div className="mb-3">
+                          &lt;strong>Name:&lt;/strong> {user.name}
+                        &lt;/div>
+                        &lt;div className="mb-3">
+                          &lt;strong>E-Mail:&lt;/strong> {user.email}
+                        &lt;/div>
+                        &lt;div className="mb-3">
+                          &lt;strong>Studiengang:&lt;/strong> {user.studyProgram}
+                        &lt;/div>
+                        &lt;div className="mb-3">
+                          &lt;strong>Semester:&lt;/strong> {user.semester}
+                        &lt;/div>
+                        &lt;div className="mb-3">
+                          &lt;strong>Mitglied seit:&lt;/strong> {new Date(user.joinDate).toLocaleDateString('de-DE')}
+                        &lt;/div>
+                      &lt;/div>
+                      &lt;div className="col-md-4 text-end">
+                        &lt;button
+                            className="btn btn-primary mb-2"
+                            onClick={() => setEditMode(true)}
+                        >
+                          &lt;i className="fas fa-edit me-2">&lt;/i>
+                          Bearbeiten
+                        &lt;/button>
+                        &lt;br />
+                        {/* UPDATE: Logout-Button */}
+                        &lt;button
+                            className="btn btn-outline-danger"
+                            onClick={handleLogout}
+                        >
+                          &lt;i className="fas fa-sign-out-alt me-2">&lt;/i>
+                          Abmelden
+                        &lt;/button>
+                      &lt;/div>
+                    &lt;/div>
+                ) : (
+                    &lt;div>
+                      &lt;div className="mb-3">
+                        &lt;label className="form-label">Name:&lt;/label>
+                        &lt;input
+                            type="text"
+                            className="form-control"
+                            value={editedUser.name}
+                            onChange={(e) => setEditedUser({...editedUser, name: e.target.value})}
+                        />
+                      &lt;/div>
+                      &lt;div className="mb-3">
+                        &lt;label className="form-label">Studiengang:&lt;/label>
+                        &lt;input
+                            type="text"
+                            className="form-control"
+                            value={editedUser.studyProgram}
+                            onChange={(e) => setEditedUser({...editedUser, studyProgram: e.target.value})}
+                        />
+                      &lt;/div>
+                      &lt;div className="mb-3">
+                        &lt;label className="form-label">Semester:&lt;/label>
+                        &lt;input
+                            type="number"
+                            className="form-control"
+                            value={editedUser.semester}
+                            onChange={(e) => setEditedUser({...editedUser, semester: parseInt(e.target.value)})}
+                        />
+                      &lt;/div>
+                      &lt;div className="d-flex gap-2">
+                        &lt;button
+                            className="btn btn-success"
+                            onClick={handleProfileUpdate}
+                        >
+                          &lt;i className="fas fa-save me-2">&lt;/i>
+                          Speichern
+                        &lt;/button>
+                        &lt;button
+                            className="btn btn-secondary"
+                            onClick={() => {
+                              setEditMode(false);
+                              setEditedUser({...user});
+                            }}
+                        >
+                          &lt;i className="fas fa-times me-2">&lt;/i>
+                          Abbrechen
+                        &lt;/button>
+                      &lt;/div>
+                    &lt;/div>
+                )}
+              &lt;/div>
+            &lt;/div>
+
+            {/* Statistiken */}
+            &lt;div className="card">
+              &lt;div className="card-header bg-info text-white">
+                &lt;h3 className="mb-0">
+                  &lt;i className="fas fa-chart-bar me-2">&lt;/i>
+                  Meine Statistiken
+                &lt;/h3>
+              &lt;/div>
+              &lt;div className="card-body">
+                &lt;div className="row">
+                  &lt;div className="col-md-6 mb-3">
+                    &lt;div className="card bg-light">
+                      &lt;div className="card-body text-center">
+                        &lt;i className="fas fa-gamepad fa-2x text-primary mb-2">&lt;/i>
+                        &lt;h4>{stats.totalQuizzesPlayed}&lt;/h4>
+                        &lt;p className="mb-0">Quiz gespielt&lt;/p>
+                      &lt;/div>
+                    &lt;/div>
+                  &lt;/div>
+                  &lt;div className="col-md-6 mb-3">
+                    &lt;div className="card bg-light">
+                      &lt;div className="card-body text-center">
+                        &lt;i className="fas fa-question-circle fa-2x text-success mb-2">&lt;/i>
+                        &lt;h4>{stats.totalQuestionsAnswered}&lt;/h4>
+                        &lt;p className="mb-0">Fragen beantwortet&lt;/p>
+                      &lt;/div>
+                    &lt;/div>
+                  &lt;/div>
+                  &lt;div className="col-md-6 mb-3">
+                    &lt;div className="card bg-light">
+                      &lt;div className="card-body text-center">
+                        &lt;i className="fas fa-check-circle fa-2x text-warning mb-2">&lt;/i>
+                        &lt;h4>{stats.correctAnswers}&lt;/h4>
+                        &lt;p className="mb-0">Richtige Antworten&lt;/p>
+                      &lt;/div>
+                    &lt;/div>
+                  &lt;/div>
+                  &lt;div className="col-md-6 mb-3">
+                    &lt;div className="card bg-light">
+                      &lt;div className="card-body text-center">
+                        &lt;i className="fas fa-trophy fa-2x text-danger mb-2">&lt;/i>
+                        &lt;h4>{stats.averageScore}%&lt;/h4>
+                        &lt;p className="mb-0">Durchschnittliche Punktzahl&lt;/p>
+                      &lt;/div>
+                    &lt;/div>
+                  &lt;/div>
+                &lt;/div>
+              &lt;/div>
+            &lt;/div>
+          &lt;/div>
+
+          &lt;div className="col-md-4">
+            {/* Aktivitäten */}
+            &lt;div className="card mb-4">
+              &lt;div className="card-header">
+                &lt;h4 className="mb-0">
+                  &lt;i className="fas fa-activity me-2">&lt;/i>
+                  Aktivitäten
+                &lt;/h4>
+              &lt;/div>
+              &lt;div className="card-body">
+                &lt;div className="mb-3">
+                  &lt;strong>Beiträge:&lt;/strong> {stats.createdQuestions} Fragen erstellt
+                &lt;/div>
+                &lt;div className="mb-3">
+                  &lt;strong>Lieblingskategorie:&lt;/strong> {stats.favoriteCategory}
+                &lt;/div>
+                &lt;div className="mb-3">
+                  &lt;strong>Genauigkeit:&lt;/strong> {Math.round((stats.correctAnswers / stats.totalQuestionsAnswered) * 100)}%
+                &lt;/div>
+              &lt;/div>
+            &lt;/div>
+
+            {/* Sicherheit */}
+            &lt;div className="card">
+              &lt;div className="card-header">
+                &lt;h4 className="mb-0">
+                  &lt;i className="fas fa-shield-alt me-2">&lt;/i>
+                  Sicherheit
+                &lt;/h4>
+              &lt;/div>
+              &lt;div className="card-body">
+                &lt;div className="mb-3">
+                  &lt;strong>Letzte Anmeldung:&lt;/strong>&lt;br />
+                  &lt;small className="text-muted">Heute um {new Date().toLocaleTimeString('de-DE')}&lt;/small>
+                &lt;/div>
+                &lt;div className="mb-3">
+                  &lt;strong>Konto-Status:&lt;/strong>&lt;br />
+                  &lt;span className="badge bg-success">Aktiv&lt;/span>
+                &lt;/div>
+                &lt;div className="d-grid">
+                  &lt;button
+                      className="btn btn-danger"
+                      onClick={handleLogout}
+                  >
+                    &lt;i className="fas fa-sign-out-alt me-2">&lt;/i>
+                    Abmelden
+                  &lt;/button>
+                &lt;/div>
+              &lt;/div>
+            &lt;/div>
+          &lt;/div>
+        &lt;/div>
+      &lt;/div>
+  );
+}
+
+export default UserProfile;</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="DataManager.html">DataManager</a></li><li><a href="SimulatedPlayersService.html">SimulatedPlayersService</a></li></ul><h3>Global</h3><ul><li><a href="global.html#App">App</a></li><li><a href="global.html#Footer">Footer</a></li><li><a href="global.html#Header">Header</a></li><li><a href="global.html#LoginForm">LoginForm</a></li><li><a href="global.html#MOCK_USERS">MOCK_USERS</a></li><li><a href="global.html#QuestionEditor">QuestionEditor</a></li><li><a href="global.html#QuizQuestion">QuizQuestion</a></li><li><a href="global.html#QuizResults">QuizResults</a></li><li><a href="global.html#SIMULATED_PLAYERS">SIMULATED_PLAYERS</a></li><li><a href="global.html#SecurityUtils">SecurityUtils</a></li><li><a href="global.html#UserProfile">UserProfile</a></li><li><a href="global.html#mockCategories">mockCategories</a></li><li><a href="global.html#root">root</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Mon Jul 14 2025 22:44:25 GMT+0200 (Mitteleuropäische Sommerzeit)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

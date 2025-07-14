@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: components/admin/QuestionEditor.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: components/admin/QuestionEditor.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * QuestionEditor-Komponente - Erweitert für kollaborative Kartenverwaltung
+ *
+ * Diese Komponente ermöglicht es Benutzern, neue Quiz-Fragen zu erstellen
+ * und bestehende Fragen zu bearbeiten. Sie unterstützt kollaboratives
+ * Erstellen von Fragenkatalogen und ist vollständig in die neue
+ * Kartenverwaltung integriert.
+ *
+ * ERWEITERT:
+ * - Integration mit CardManager-Komponente
+ * - Unterstützung für dynamische Kategorien
+ * - Kollaborative Features mit Autorenzuordnung
+ * - Verwaltung von Karten und Kategorien
+ *
+ * Features:
+ * - Intuitive Formularerstellung
+ * - Validierung der Eingaben
+ * - Vorschau der Fragen
+ * - Dynamische Kategorisierung
+ * - Schwierigkeitsgrade
+ * - Erklärungen für Antworten
+ * - Kollaborative Kartenverwaltung
+ */
+
+import React, { useState, useEffect } from 'react';
+import CardManager from './CardManager';
+
+/**
+ * QuestionEditor-Komponente mit erweiterter Kartenverwaltung
+ *
+ * @param {Object} props - Komponenteneigenschaften
+ * @param {Object} props.user - Benutzerdaten
+ */
+function QuestionEditor({ user }) {
+  // Zustandsverwaltung für aktuelle Ansicht
+  const [currentView, setCurrentView] = useState('card-manager'); // 'card-manager' oder 'question-form'
+
+  // Zustandsverwaltung für Formular (Legacy-Support)
+  const [formData, setFormData] = useState({
+    question: '',
+    answers: ['', '', '', ''],
+    correctAnswer: null,
+    category: '',
+    difficulty: 'Mittel',
+    explanation: '',
+    tags: ''
+  });
+
+  const [errors, setErrors] = useState({});
+  const [showPreview, setShowPreview] = useState(false);
+  const [savedQuestions, setSavedQuestions] = useState([]);
+  const [categories, setCategories] = useState([]);
+
+  /**
+   * Lädt verfügbare Kategorien beim Component Mount
+   */
+  useEffect(() => {
+    loadCategories();
+  }, []);
+
+  /**
+   * Lädt Kategorien aus localStorage
+   */
+  const loadCategories = () => {
+    const storedCategories = JSON.parse(localStorage.getItem('quiz-categories') || '[]');
+    setCategories(storedCategories);
+  };
+
+  /**
+   * Callback-Funktion für neue Fragen aus CardManager
+   */
+  const handleQuestionAdded = (newQuestion) => {
+    console.log('Neue Frage hinzugefügt:', newQuestion);
+    setSavedQuestions(prev => [...prev, newQuestion]);
+  };
+
+  /**
+   * Callback-Funktion für neue Kategorien aus CardManager
+   */
+  const handleCategoryAdded = (newCategory) => {
+    console.log('Neue Kategorie hinzugefügt:', newCategory);
+    setCategories(prev => [...prev, newCategory]);
+  };
+
+  /**
+   * Aktualisiert die Formulardaten (Legacy-Support)
+   *
+   * @param {string} field - Feldname
+   * @param {any} value - Neuer Wert
+   */
+  const updateFormData = (field, value) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: value
+    }));
+
+    // Fehler für dieses Feld entfernen
+    if (errors[field]) {
+      setErrors(prev => ({
+        ...prev,
+        [field]: null
+      }));
+    }
+  };
+
+  /**
+   * Aktualisiert eine Antwort (Legacy-Support)
+   *
+   * @param {number} index - Index der Antwort
+   * @param {string} value - Neuer Wert
+   */
+  const updateAnswer = (index, value) => {
+    const newAnswers = [...formData.answers];
+    newAnswers[index] = value;
+    updateFormData('answers', newAnswers);
+  };
+
+  /**
+   * Validiert das Formular (Legacy-Support)
+   *
+   * @returns {boolean} True wenn valide, false wenn Fehler vorhanden
+   */
+  const validateForm = () => {
+    const newErrors = {};
+
+    // Frage validieren
+    if (!formData.question.trim()) {
+      newErrors.question = 'Frage ist erforderlich';
+    }
+
+    // Antworten validieren
+    const filledAnswers = formData.answers.filter(answer => answer.trim());
+    if (filledAnswers.length &lt; 2) {
+      newErrors.answers = 'Mindestens 2 Antworten sind erforderlich';
+    }
+
+    // Richtige Antwort validieren
+    if (formData.correctAnswer === null) {
+      newErrors.correctAnswer = 'Richtige Antwort muss ausgewählt werden';
+    }
+
+    // Kategorie validieren
+    if (!formData.category) {
+      newErrors.category = 'Kategorie ist erforderlich';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  /**
+   * Speichert die Frage (Legacy-Support)
+   */
+  const saveQuestion = () => {
+    if (!validateForm()) {
+      return;
+    }
+
+    const newQuestion = {
+      id: Date.now(),
+      ...formData,
+      author: user.name,
+      authorEmail: user.email,
+      created: new Date().toISOString(),
+      tags: formData.tags.split(',').map(tag => tag.trim()).filter(tag => tag)
+    };
+
+    setSavedQuestions(prev => [...prev, newQuestion]);
+
+    // Auch zu localStorage hinzufügen
+    const existingCards = JSON.parse(localStorage.getItem('quiz-cards') || '[]');
+    const updatedCards = [...existingCards, newQuestion];
+    localStorage.setItem('quiz-cards', JSON.stringify(updatedCards));
+
+    // Formular zurücksetzen
+    setFormData({
+      question: '',
+      answers: ['', '', '', ''],
+      correctAnswer: null,
+      category: '',
+      difficulty: 'Mittel',
+      explanation: '',
+      tags: ''
+    });
+
+    setShowPreview(false);
+
+    // Erfolgsmeldung
+    alert('Frage erfolgreich gespeichert!');
+  };
+
+  /**
+   * Rendert das Legacy-Formular (als Fallback)
+   */
+  const renderLegacyForm = () => (
+      &lt;div className="card">
+        &lt;div className="card-header">
+          &lt;div className="d-flex justify-content-between align-items-center">
+            &lt;h3 className="mb-0">
+              &lt;i className="fas fa-plus-circle me-2">&lt;/i>
+              Neue Frage erstellen (Legacy)
+            &lt;/h3>
+            &lt;button
+                className="btn btn-outline-primary"
+                onClick={() => setCurrentView('card-manager')}
+            >
+              &lt;i className="fas fa-layer-group me-2">&lt;/i>
+              Zur Kartenverwaltung
+            &lt;/button>
+          &lt;/div>
+        &lt;/div>
+        &lt;div className="card-body">
+          &lt;form>
+            {/* Frage */}
+            &lt;div className="mb-3">
+              &lt;label htmlFor="question" className="form-label">
+                Frage *
+              &lt;/label>
+              &lt;textarea
+                  id="question"
+                  className={`form-control ${errors.question ? 'is-invalid' : ''}`}
+                  rows="3"
+                  value={formData.question}
+                  onChange={(e) => updateFormData('question', e.target.value)}
+                  placeholder="Geben Sie hier Ihre Frage ein..."
+              />
+              {errors.question &amp;&amp; (
+                  &lt;div className="invalid-feedback">{errors.question}&lt;/div>
+              )}
+            &lt;/div>
+
+            {/* Antworten */}
+            &lt;div className="mb-3">
+              &lt;label className="form-label">Antwortmöglichkeiten *&lt;/label>
+              {formData.answers.map((answer, index) => (
+                  &lt;div key={index} className="input-group mb-2">
+                &lt;span className="input-group-text">
+                  {String.fromCharCode(65 + index)}
+                &lt;/span>
+                    &lt;input
+                        type="text"
+                        className="form-control"
+                        value={answer}
+                        onChange={(e) => updateAnswer(index, e.target.value)}
+                        placeholder={`Antwort ${String.fromCharCode(65 + index)}`}
+                    />
+                    &lt;div className="input-group-text">
+                      &lt;input
+                          type="radio"
+                          name="correctAnswer"
+                          checked={formData.correctAnswer === index}
+                          onChange={() => updateFormData('correctAnswer', index)}
+                          disabled={!answer.trim()}
+                      />
+                    &lt;/div>
+                  &lt;/div>
+              ))}
+              {errors.answers &amp;&amp; (
+                  &lt;div className="text-danger small">{errors.answers}&lt;/div>
+              )}
+              {errors.correctAnswer &amp;&amp; (
+                  &lt;div className="text-danger small">{errors.correctAnswer}&lt;/div>
+              )}
+            &lt;/div>
+
+            {/* Kategorie und Schwierigkeit */}
+            &lt;div className="row mb-3">
+              &lt;div className="col-md-6">
+                &lt;label htmlFor="category" className="form-label">
+                  Kategorie *
+                &lt;/label>
+                &lt;select
+                    id="category"
+                    className={`form-select ${errors.category ? 'is-invalid' : ''}`}
+                    value={formData.category}
+                    onChange={(e) => updateFormData('category', e.target.value)}
+                >
+                  &lt;option value="">Kategorie auswählen&lt;/option>
+                  {categories.map(category => (
+                      &lt;option key={category.id} value={category.name}>
+                        {category.name}
+                      &lt;/option>
+                  ))}
+                &lt;/select>
+                {errors.category &amp;&amp; (
+                    &lt;div className="invalid-feedback">{errors.category}&lt;/div>
+                )}
+              &lt;/div>
+              &lt;div className="col-md-6">
+                &lt;label htmlFor="difficulty" className="form-label">
+                  Schwierigkeit
+                &lt;/label>
+                &lt;select
+                    id="difficulty"
+                    className="form-select"
+                    value={formData.difficulty}
+                    onChange={(e) => updateFormData('difficulty', e.target.value)}
+                >
+                  &lt;option value="Leicht">Leicht&lt;/option>
+                  &lt;option value="Mittel">Mittel&lt;/option>
+                  &lt;option value="Schwer">Schwer&lt;/option>
+                &lt;/select>
+              &lt;/div>
+            &lt;/div>
+
+            {/* Erklärung */}
+            &lt;div className="mb-3">
+              &lt;label htmlFor="explanation" className="form-label">
+                Erklärung (optional)
+              &lt;/label>
+              &lt;textarea
+                  id="explanation"
+                  className="form-control"
+                  rows="2"
+                  value={formData.explanation}
+                  onChange={(e) => updateFormData('explanation', e.target.value)}
+                  placeholder="Erklärung der richtigen Antwort..."
+              />
+            &lt;/div>
+
+            {/* Tags */}
+            &lt;div className="mb-3">
+              &lt;label htmlFor="tags" className="form-label">
+                Tags (optional)
+              &lt;/label>
+              &lt;input
+                  type="text"
+                  id="tags"
+                  className="form-control"
+                  value={formData.tags}
+                  onChange={(e) => updateFormData('tags', e.target.value)}
+                  placeholder="Tag1, Tag2, Tag3..."
+              />
+            &lt;/div>
+
+            {/* Aktionen */}
+            &lt;div className="d-flex gap-2">
+              &lt;button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={saveQuestion}
+              >
+                &lt;i className="fas fa-save me-2">&lt;/i>
+                Frage speichern
+              &lt;/button>
+              &lt;button
+                  type="button"
+                  className="btn btn-outline-secondary"
+                  onClick={() => setShowPreview(!showPreview)}
+              >
+                &lt;i className="fas fa-eye me-2">&lt;/i>
+                {showPreview ? 'Vorschau ausblenden' : 'Vorschau anzeigen'}
+              &lt;/button>
+            &lt;/div>
+          &lt;/form>
+        &lt;/div>
+      &lt;/div>
+  );
+
+  /**
+   * Rendert die Statistiken
+   */
+  const renderStats = () => (
+      &lt;div className="row mt-4">
+        &lt;div className="col-md-6">
+          &lt;div className="card">
+            &lt;div className="card-body">
+              &lt;h5 className="card-title">
+                &lt;i className="fas fa-chart-bar me-2">&lt;/i>
+                Ihre Statistiken
+              &lt;/h5>
+              &lt;div className="row">
+                &lt;div className="col-6">
+                  &lt;div className="text-center">
+                    &lt;h3 className="text-primary">{savedQuestions.length}&lt;/h3>
+                    &lt;p className="text-muted">Erstellte Fragen&lt;/p>
+                  &lt;/div>
+                &lt;/div>
+                &lt;div className="col-6">
+                  &lt;div className="text-center">
+                    &lt;h3 className="text-success">{categories.length}&lt;/h3>
+                    &lt;p className="text-muted">Verfügbare Kategorien&lt;/p>
+                  &lt;/div>
+                &lt;/div>
+              &lt;/div>
+            &lt;/div>
+          &lt;/div>
+        &lt;/div>
+        &lt;div className="col-md-6">
+          &lt;div className="card">
+            &lt;div className="card-body">
+              &lt;h5 className="card-title">
+                &lt;i className="fas fa-info-circle me-2">&lt;/i>
+                Kollaborative Features
+              &lt;/h5>
+              &lt;ul className="list-unstyled">
+                &lt;li>&lt;i className="fas fa-check text-success me-2">&lt;/i>Gemeinsame Kategorien erstellen&lt;/li>
+                &lt;li>&lt;i className="fas fa-check text-success me-2">&lt;/i>Fragen zu bestehenden Kategorien hinzufügen&lt;/li>
+                &lt;li>&lt;i className="fas fa-check text-success me-2">&lt;/i>Autorenzuordnung für Transparenz&lt;/li>
+                &lt;li>&lt;i className="fas fa-check text-success me-2">&lt;/i>Öffentliche und private Sammlungen&lt;/li>
+              &lt;/ul>
+            &lt;/div>
+          &lt;/div>
+        &lt;/div>
+      &lt;/div>
+  );
+
+  // Hauptrender-Logik
+  return (
+      &lt;div className="container mt-4">
+        {currentView === 'card-manager' &amp;&amp; (
+            &lt;div>
+              &lt;CardManager
+                  user={user}
+                  onQuestionAdded={handleQuestionAdded}
+                  onCategoryAdded={handleCategoryAdded}
+              />
+
+              {/* Schnellzugriff auf Legacy-Formular */}
+              &lt;div className="mt-4">
+                &lt;div className="card">
+                  &lt;div className="card-body">
+                    &lt;div className="d-flex justify-content-between align-items-center">
+                      &lt;div>
+                        &lt;h5 className="mb-1">Legacy-Formular&lt;/h5>
+                        &lt;p className="text-muted mb-0">
+                          Verwenden Sie das klassische Formular, falls Sie es bevorzugen.
+                        &lt;/p>
+                      &lt;/div>
+                      &lt;button
+                          className="btn btn-outline-primary"
+                          onClick={() => setCurrentView('question-form')}
+                      >
+                        &lt;i className="fas fa-edit me-2">&lt;/i>
+                        Klassisches Formular
+                      &lt;/button>
+                    &lt;/div>
+                  &lt;/div>
+                &lt;/div>
+              &lt;/div>
+
+              {renderStats()}
+            &lt;/div>
+        )}
+
+        {currentView === 'question-form' &amp;&amp; (
+            &lt;div>
+              {renderLegacyForm()}
+              {renderStats()}
+            &lt;/div>
+        )}
+
+        {/* Vorschau (wenn aktiviert) */}
+        {showPreview &amp;&amp; formData.question &amp;&amp; (
+            &lt;div className="card mt-4">
+              &lt;div className="card-header">
+                &lt;h5>Vorschau&lt;/h5>
+              &lt;/div>
+              &lt;div className="card-body">
+                &lt;h6>{formData.question}&lt;/h6>
+                &lt;div className="mt-3">
+                  {formData.answers.map((answer, index) => (
+                      answer.trim() &amp;&amp; (
+                          &lt;div key={index} className="form-check mb-2">
+                            &lt;input
+                                className="form-check-input"
+                                type="radio"
+                                name="previewAnswer"
+                                disabled
+                                checked={formData.correctAnswer === index}
+                            />
+                            &lt;label className="form-check-label">
+                              {String.fromCharCode(65 + index)}: {answer}
+                            &lt;/label>
+                          &lt;/div>
+                      )
+                  ))}
+                &lt;/div>
+                {formData.explanation &amp;&amp; (
+                    &lt;div className="mt-3">
+                      &lt;small className="text-muted">
+                        &lt;strong>Erklärung:&lt;/strong> {formData.explanation}
+                      &lt;/small>
+                    &lt;/div>
+                )}
+                &lt;div className="mt-3">
+                  &lt;small className="text-muted">
+                    &lt;strong>Kategorie:&lt;/strong> {formData.category || 'Nicht ausgewählt'} |
+                    &lt;strong> Schwierigkeit:&lt;/strong> {formData.difficulty} |
+                    &lt;strong> Autor:&lt;/strong> {user.name}
+                  &lt;/small>
+                &lt;/div>
+              &lt;/div>
+            &lt;/div>
+        )}
+      &lt;/div>
+  );
+}
+
+export default QuestionEditor;</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="DataManager.html">DataManager</a></li><li><a href="SimulatedPlayersService.html">SimulatedPlayersService</a></li></ul><h3>Global</h3><ul><li><a href="global.html#App">App</a></li><li><a href="global.html#Footer">Footer</a></li><li><a href="global.html#Header">Header</a></li><li><a href="global.html#LoginForm">LoginForm</a></li><li><a href="global.html#MOCK_USERS">MOCK_USERS</a></li><li><a href="global.html#QuestionEditor">QuestionEditor</a></li><li><a href="global.html#QuizQuestion">QuizQuestion</a></li><li><a href="global.html#QuizResults">QuizResults</a></li><li><a href="global.html#SIMULATED_PLAYERS">SIMULATED_PLAYERS</a></li><li><a href="global.html#SecurityUtils">SecurityUtils</a></li><li><a href="global.html#UserProfile">UserProfile</a></li><li><a href="global.html#mockCategories">mockCategories</a></li><li><a href="global.html#root">root</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Mon Jul 14 2025 22:44:25 GMT+0200 (Mitteleuropäische Sommerzeit)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

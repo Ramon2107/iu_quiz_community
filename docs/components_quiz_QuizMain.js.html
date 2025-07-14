@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: components/quiz/QuizMain.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: components/quiz/QuizMain.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Hauptquiz-Komponente
+ *
+ * Diese Komponente verwaltet den gesamten Quiz-Ablauf und stellt
+ * verschiedene Spielmodi bereit (kooperativ, kompetitiv und single-player).
+ *
+ * UPDATE: Konfigurierbare Anzahl von Fragen (4-20)
+ * UPDATE: Verbesserte Benutzeroberfläche für Kartenanzahl-Auswahl
+ * UPDATE: "Andere Kategorie wählen" Funktion implementiert
+ * UPDATE: Integration mit DataManager statt direktem Import von mockData
+ * UPDATE: Simulation von Mitspielern für kooperative und kompetitive Modi
+ *
+ * WICHTIGE ÄNDERUNG: Diese Komponente verwendet jetzt den zentralen DataManager,
+ * um konsistente Datenverwendung in der gesamten Anwendung zu gewährleisten.
+ * Mock-Daten werden automatisch geladen, wenn localStorage leer ist.
+ *
+ * Spielmodi:
+ * - 'cooperative': Kooperatives Lernen mit anderen Studierenden
+ * - 'competitive': Wettbewerbsmodus mit Zeitdruck
+ * - 'single-player': Individuelles Lernen ohne Zeitdruck
+ */
+
+import React, { useState, useEffect } from 'react';
+import QuizQuestion from './QuizQuestion';
+import QuizResults from './QuizResults';
+import QuizCategorySelector from './QuizCategorySelector';
+import dataManager from '../../data/dataManager';
+import simulatedPlayersService from '../../services/SimulatedPlayersService'; // UPDATE: Import für Multiplayer-Simulation
+
+function QuizMain({ user }) {
+  // Zustandsverwaltung für Quiz-Navigation
+  const [currentStep, setCurrentStep] = useState('mode');
+  const [gameMode, setGameMode] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [questionCount, setQuestionCount] = useState(10);
+
+  // Zustandsverwaltung für Quiz-Durchführung
+  const [questions, setQuestions] = useState([]);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [answers, setAnswers] = useState([]);
+  const [showResults, setShowResults] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // UPDATE: Zustandsverwaltung für Multiplayer-Simulation
+  const [multiplayerData, setMultiplayerData] = useState({
+    players: [],
+    currentPlayerAnswers: [],
+    isMultiplayer: false
+  });
+
+  /**
+   * UPDATE: Lädt Daten über DataManager beim Component-Mount
+   */
+  useEffect(() => {
+    const categories = dataManager.getAllCategories();
+    const cards = dataManager.getAllCards();
+
+    console.log('QuizMain: Geladene Kategorien:', categories.length);
+    console.log('QuizMain: Geladene Karten:', cards.length);
+
+    if (categories.length === 0 || cards.length === 0) {
+      console.log('QuizMain: Lade Mock-Daten neu...');
+      dataManager.reloadMockData();
+    }
+  }, []);
+
+  /**
+   * UPDATE: Startet die Modus-Auswahl - Schritt 1
+   * Initialisiert Multiplayer-Simulation falls erforderlich
+   */
+  const startModeSelection = (mode) => {
+    console.log('Modus ausgewählt:', mode);
+    setGameMode(mode);
+
+    // UPDATE: Initialisiere Multiplayer-Simulation für kooperative/kompetitive Modi
+    if (mode === 'cooperative' || mode === 'competitive') {
+      setMultiplayerData({
+        players: [],
+        currentPlayerAnswers: [],
+        isMultiplayer: true
+      });
+    } else {
+      setMultiplayerData({
+        players: [],
+        currentPlayerAnswers: [],
+        isMultiplayer: false
+      });
+    }
+
+    setCurrentStep('category');
+  };
+
+  /**
+   * UPDATE: Behandelt die Kategorieauswahl - Schritt 2
+   * Initialisiert simulierte Spieler für Multiplayer-Modi
+   */
+  const handleCategorySelect = (category) => {
+    console.log('Kategorie ausgewählt:', category.name);
+    setSelectedCategory(category);
+
+    // Fragen über DataManager laden
+    const allQuestions = dataManager.getQuestionsForQuiz().filter(
+        question => question.category === category.name
+    );
+
+    const selectedQuestions = allQuestions.slice(0, questionCount);
+
+    console.log('Verfügbare Fragen:', allQuestions.length);
+    console.log('Ausgewählte Fragen:', selectedQuestions.length);
+    setQuestions(selectedQuestions);
+    setCurrentQuestionIndex(0);
+    setAnswers([]);
+    setShowResults(false);
+
+    // UPDATE: Initialisiere simulierte Spieler für Multiplayer-Modi
+    if (multiplayerData.isMultiplayer) {
+      const players = simulatedPlayersService.initializePlayers(
+          gameMode,
+          category.name,
+          3 // 3 Mitspieler
+      );
+      setMultiplayerData(prev => ({
+        ...prev,
+        players
+      }));
+      console.log('Simulierte Spieler initialisiert:', players.map(p => p.name));
+    }
+
+    setCurrentStep('quiz');
+  };
+
+  /**
+   * Behandelt die Rückkehr zur Modus-Auswahl
+   */
+  const handleBackToModeSelection = () => {
+    setCurrentStep('mode');
+    setGameMode(null);
+    setSelectedCategory(null);
+    setQuestionCount(10);
+    resetQuizState();
+
+    // UPDATE: Reset Multiplayer-Daten
+    simulatedPlayersService.reset();
+    setMultiplayerData({
+      players: [],
+      currentPlayerAnswers: [],
+      isMultiplayer: false
+    });
+  };
+
+  /**
+   * Behandelt die Rückkehr zur Kategorie-Auswahl
+   */
+  const handleBackToCategorySelection = () => {
+    setCurrentStep('category');
+    resetQuizState();
+
+    // UPDATE: Reset Multiplayer-Daten
+    simulatedPlayersService.reset();
+    setMultiplayerData(prev => ({
+      ...prev,
+      players: [],
+      currentPlayerAnswers: []
+    }));
+  };
+
+  /**
+   * Setzt den Quiz-Zustand zurück
+   */
+  const resetQuizState = () => {
+    setQuestions([]);
+    setCurrentQuestionIndex(0);
+    setAnswers([]);
+    setShowResults(false);
+    setIsLoading(false);
+  };
+
+  /**
+   * UPDATE: Verarbeitet eine Antwort - Unterstützt alle Spielmodi
+   * Simuliert Mitspieler-Antworten für Multiplayer-Modi
+   */
+  const handleAnswer = async (answer) => {
+    console.log('Antwort erhalten:', answer);
+    const newAnswers = [...answers, answer];
+    setAnswers(newAnswers);
+
+    // UPDATE: Simuliere Mitspieler-Antworten für Multiplayer-Modi
+    if (multiplayerData.isMultiplayer &amp;&amp; questions[currentQuestionIndex]) {
+      try {
+        const playerAnswers = await simulatedPlayersService.simulatePlayerAnswers(
+            questions[currentQuestionIndex],
+            currentQuestionIndex
+        );
+
+        setMultiplayerData(prev => ({
+          ...prev,
+          currentPlayerAnswers: playerAnswers
+        }));
+
+        console.log('Simulierte Spieler-Antworten:', playerAnswers.map(a => ({
+          name: a.playerName,
+          correct: a.isCorrect,
+          time: a.timeTaken
+        })));
+      } catch (error) {
+        console.error('Fehler bei Simulation der Spieler-Antworten:', error);
+      }
+    }
+
+    // Verzögerung für bessere UX
+    const delay = gameMode === 'single-player' ? 2000 : 1500;
+
+    setTimeout(() => {
+      if (currentQuestionIndex &lt; questions.length - 1) {
+        console.log('Weiterleitung zur nächsten Frage:', currentQuestionIndex + 1);
+        setCurrentQuestionIndex(currentQuestionIndex + 1);
+
+        // UPDATE: Reset aktuelle Spieler-Antworten für nächste Frage
+        if (multiplayerData.isMultiplayer) {
+          setMultiplayerData(prev => ({
+            ...prev,
+            currentPlayerAnswers: []
+          }));
+        }
+      } else {
+        console.log('Quiz beendet - zeige Ergebnisse');
+        setShowResults(true);
+        setCurrentStep('results');
+      }
+    }, delay);
+  };
+
+  /**
+   * Setzt das komplette Quiz zurück
+   */
+  const resetQuiz = () => {
+    setCurrentStep('mode');
+    setGameMode(null);
+    setSelectedCategory(null);
+    setQuestionCount(10);
+    resetQuizState();
+
+    // UPDATE: Reset Multiplayer-Daten
+    simulatedPlayersService.reset();
+    setMultiplayerData({
+      players: [],
+      currentPlayerAnswers: [],
+      isMultiplayer: false
+    });
+  };
+
+  /**
+   * UPDATE: Startet ein neues Quiz mit der gleichen Kategorie
+   * Initialisiert simulierte Spieler neu
+   */
+  const restartWithSameCategory = () => {
+    if (selectedCategory) {
+      console.log('Quiz wird mit gleicher Kategorie neu gestartet');
+
+      const allQuestions = dataManager.getQuestionsForQuiz().filter(
+          question => question.category === selectedCategory.name
+      );
+
+      const selectedQuestions = allQuestions.slice(0, questionCount);
+
+      setQuestions(selectedQuestions);
+      setCurrentQuestionIndex(0);
+      setAnswers([]);
+      setShowResults(false);
+      setCurrentStep('quiz');
+
+      // UPDATE: Initialisiere simulierte Spieler neu für Multiplayer-Modi
+      if (multiplayerData.isMultiplayer) {
+        const players = simulatedPlayersService.initializePlayers(
+            gameMode,
+            selectedCategory.name,
+            3
+        );
+        setMultiplayerData(prev => ({
+          ...prev,
+          players,
+          currentPlayerAnswers: []
+        }));
+      }
+    }
+  };
+
+  /**
+   * Gibt den angezeigten Spielmodus-Text zurück
+   */
+  const getGameModeDisplayName = () => {
+    switch (gameMode) {
+      case 'cooperative':
+        return 'Kooperativer';
+      case 'competitive':
+        return 'Kompetitiver';
+      case 'single-player':
+        return 'Single-Player';
+      default:
+        return 'Unbekannter';
+    }
+  };
+
+  // Schritt 1: Spielmodus-Auswahl anzeigen
+  if (currentStep === 'mode') {
+    return (
+        &lt;div className="container mt-4">
+          &lt;div className="row justify-content-center">
+            &lt;div className="col-md-10">
+              &lt;div className="card">
+                &lt;div className="card-header bg-primary text-white">
+                  &lt;h2 className="mb-0">
+                    &lt;i className="fas fa-play me-2">&lt;/i>
+                    Quiz-Modus auswählen
+                  &lt;/h2>
+                &lt;/div>
+                &lt;div className="card-body">
+                  &lt;p className="card-text mb-4">
+                    Wählen Sie Ihren bevorzugten Spielmodus aus. Im nächsten Schritt können Sie
+                    dann die gewünschte Fragensammlung und Anzahl der Fragen auswählen.
+                  &lt;/p>
+
+                  &lt;div className="row">
+                    {/* Single-Player-Modus */}
+                    &lt;div className="col-md-4 mb-3">
+                      &lt;div className="card h-100 border-primary">
+                        &lt;div className="card-header bg-primary text-white">
+                          &lt;h5 className="mb-0">
+                            &lt;i className="fas fa-user me-2">&lt;/i>
+                            Single-Player
+                          &lt;/h5>
+                        &lt;/div>
+                        &lt;div className="card-body">
+                          &lt;p className="card-text">
+                            Lernen Sie in Ihrem eigenen Tempo. Perfekt für
+                            individuelles Studium und Wiederholung von Lernstoff.
+                            Keine Zeitbegrenzung, kein Wettbewerb.
+                          &lt;/p>
+                          &lt;ul className="list-unstyled">
+                            &lt;li>&lt;i className="fas fa-check text-primary me-2">&lt;/i>Individuelles Lernen&lt;/li>
+                            &lt;li>&lt;i className="fas fa-check text-primary me-2">&lt;/i>Kein Zeitdruck&lt;/li>
+                            &lt;li>&lt;i className="fas fa-check text-primary me-2">&lt;/i>Entspanntes Tempo&lt;/li>
+                            &lt;li>&lt;i className="fas fa-check text-primary me-2">&lt;/i>Fokus auf Verstehen&lt;/li>
+                          &lt;/ul>
+                        &lt;/div>
+                        &lt;div className="card-footer">
+                          &lt;button
+                              className="btn btn-primary w-100"
+                              onClick={() => startModeSelection('single-player')}
+                          >
+                            &lt;i className="fas fa-arrow-right me-2">&lt;/i>
+                            Alleine spielen
+                          &lt;/button>
+                        &lt;/div>
+                      &lt;/div>
+                    &lt;/div>
+
+                    {/* Kooperativer Modus */}
+                    &lt;div className="col-md-4 mb-3">
+                      &lt;div className="card h-100 border-success">
+                        &lt;div className="card-header bg-success text-white">
+                          &lt;h5 className="mb-0">
+                            &lt;i className="fas fa-users me-2">&lt;/i>
+                            Kooperativer Modus
+                          &lt;/h5>
+                        &lt;/div>
+                        &lt;div className="card-body">
+                          &lt;p className="card-text">
+                            Arbeiten Sie mit anderen Studierenden zusammen.
+                            Diskutieren Sie Antworten und lernen Sie gemeinsam.
+                            Fokus auf Teamarbeit und gegenseitige Unterstützung.
+                          &lt;/p>
+                          &lt;ul className="list-unstyled">
+                            &lt;li>&lt;i className="fas fa-check text-success me-2">&lt;/i>Teamarbeit&lt;/li>
+                            &lt;li>&lt;i className="fas fa-check text-success me-2">&lt;/i>Diskussion&lt;/li>
+                            &lt;li>&lt;i className="fas fa-check text-success me-2">&lt;/i>Gemeinsames Lernen&lt;/li>
+                            &lt;li>&lt;i className="fas fa-check text-success me-2">&lt;/i>Kooperation&lt;/li>
+                          &lt;/ul>
+                        &lt;/div>
+                        &lt;div className="card-footer">
+                          &lt;button
+                              className="btn btn-success w-100"
+                              onClick={() => startModeSelection('cooperative')}
+                          >
+                            &lt;i className="fas fa-arrow-right me-2">&lt;/i>
+                            Zusammen lernen
+                          &lt;/button>
+                        &lt;/div>
+                      &lt;/div>
+                    &lt;/div>
+
+                    {/* Kompetitiver Modus */}
+                    &lt;div className="col-md-4 mb-3">
+                      &lt;div className="card h-100 border-warning">
+                        &lt;div className="card-header bg-warning text-dark">
+                          &lt;h5 className="mb-0">
+                            &lt;i className="fas fa-trophy me-2">&lt;/i>
+                            Kompetitiver Modus
+                          &lt;/h5>
+                        &lt;/div>
+                        &lt;div className="card-body">
+                          &lt;p className="card-text">
+                            Treten Sie gegen andere Studierende an.
+                            Schnelligkeit und Genauigkeit sind entscheidend.
+                            Perfekt für Prüfungsvorbereitung unter Zeitdruck.
+                          &lt;/p>
+                          &lt;ul className="list-unstyled">
+                            &lt;li>&lt;i className="fas fa-check text-warning me-2">&lt;/i>Wettbewerb&lt;/li>
+                            &lt;li>&lt;i className="fas fa-check text-warning me-2">&lt;/i>Zeitdruck&lt;/li>
+                            &lt;li>&lt;i className="fas fa-check text-warning me-2">&lt;/i>Ranglisten&lt;/li>
+                            &lt;li>&lt;i className="fas fa-check text-warning me-2">&lt;/i>Prüfungssimulation&lt;/li>
+                          &lt;/ul>
+                        &lt;/div>
+                        &lt;div className="card-footer">
+                          &lt;button
+                              className="btn btn-warning w-100"
+                              onClick={() => startModeSelection('competitive')}
+                          >
+                            &lt;i className="fas fa-arrow-right me-2">&lt;/i>
+                            Wettbewerb starten
+                          &lt;/button>
+                        &lt;/div>
+                      &lt;/div>
+                    &lt;/div>
+                  &lt;/div>
+                &lt;/div>
+              &lt;/div>
+            &lt;/div>
+          &lt;/div>
+        &lt;/div>
+    );
+  }
+
+  // Schritt 2: Kategorie-Auswahl mit Fragenanzahl-Konfiguration
+  if (currentStep === 'category') {
+    return (
+        &lt;QuizCategorySelector
+            gameMode={gameMode}
+            questionCount={questionCount}
+            setQuestionCount={setQuestionCount}
+            onCategorySelect={handleCategorySelect}
+            onBackToModeSelection={handleBackToModeSelection}
+        />
+    );
+  }
+
+  // Schritt 3: Quiz-Durchführung
+  if (currentStep === 'quiz' &amp;&amp; !showResults) {
+    return (
+        &lt;QuizQuestion
+            question={questions[currentQuestionIndex]}
+            questionNumber={currentQuestionIndex + 1}
+            totalQuestions={questions.length}
+            gameMode={gameMode}
+            onAnswer={handleAnswer}
+            onBackToCategorySelection={handleBackToCategorySelection}
+            user={user}
+            multiplayerData={multiplayerData} // UPDATE: Übergabe der Multiplayer-Daten
+        />
+    );
+  }
+
+  // Schritt 4: Ergebnisse anzeigen
+  if (currentStep === 'results') {
+    return (
+        &lt;QuizResults
+            questions={questions}
+            answers={answers}
+            gameMode={gameMode}
+            category={selectedCategory}
+            user={user}
+            onRestart={resetQuiz}
+            onRestartSameCategory={restartWithSameCategory}
+            onBackToCategorySelection={handleBackToCategorySelection}
+            multiplayerData={multiplayerData} // UPDATE: Übergabe der Multiplayer-Daten
+        />
+    );
+  }
+
+  // Fallback-Anzeige
+  return (
+      &lt;div className="container mt-4">
+        &lt;div className="alert alert-warning">
+          &lt;i className="fas fa-exclamation-triangle me-2">&lt;/i>
+          Ein unerwarteter Fehler ist aufgetreten. Bitte laden Sie die Seite neu.
+        &lt;/div>
+      &lt;/div>
+  );
+}
+
+export default QuizMain;</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="DataManager.html">DataManager</a></li><li><a href="SimulatedPlayersService.html">SimulatedPlayersService</a></li></ul><h3>Global</h3><ul><li><a href="global.html#App">App</a></li><li><a href="global.html#Footer">Footer</a></li><li><a href="global.html#Header">Header</a></li><li><a href="global.html#LoginForm">LoginForm</a></li><li><a href="global.html#MOCK_USERS">MOCK_USERS</a></li><li><a href="global.html#QuestionEditor">QuestionEditor</a></li><li><a href="global.html#QuizQuestion">QuizQuestion</a></li><li><a href="global.html#QuizResults">QuizResults</a></li><li><a href="global.html#SIMULATED_PLAYERS">SIMULATED_PLAYERS</a></li><li><a href="global.html#SecurityUtils">SecurityUtils</a></li><li><a href="global.html#UserProfile">UserProfile</a></li><li><a href="global.html#mockCategories">mockCategories</a></li><li><a href="global.html#root">root</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Mon Jul 14 2025 22:44:25 GMT+0200 (Mitteleuropäische Sommerzeit)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: components/common/Header.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: components/common/Header.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Header-Komponente für die Navigation
+ *
+ * Diese Komponente stellt die Hauptnavigation der Anwendung bereit
+ * und ist vollständig responsiv für alle Endgeräte optimiert.
+ *
+ * Features:
+ * - Responsive Bootstrap-Navigation
+ * - Aktive Menüpunkte-Hervorhebung
+ * - Benutzerinformationen in der Navigation
+ * - Mobilfreundliches Hamburger-Menü
+ * - Logo-Klick führt zur Startseite
+ *
+ * UPDATE: Logout-Funktion hinzugefügt
+ */
+
+import React from 'react';
+
+/**
+ * Header-Komponente mit Bootstrap-Navigation
+ *
+ * @param {Object} props - Komponenteneigenschaften
+ * @param {string} props.currentView - Aktuelle Ansicht
+ * @param {Function} props.setCurrentView - Funktion zum Ändern der Ansicht
+ * @param {Object} props.user - Benutzerdaten
+ * @param {Function} props.onLogout - UPDATE: Logout-Funktion
+ */
+function Header({ currentView, setCurrentView, user, onLogout }) {
+  return (
+      &lt;nav className="navbar navbar-expand-lg navbar-dark bg-primary">
+        &lt;div className="container">
+          {/* Logo und Titel - Klick führt zur Startseite */}
+          &lt;a
+              className="navbar-brand"
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                setCurrentView('home');
+              }}
+              style={{ cursor: 'pointer' }}
+          >
+            &lt;i className="fas fa-graduation-cap me-2">&lt;/i>
+            IU Community Quiz
+          &lt;/a>
+
+          {/* Mobile Navigation Toggle */}
+          &lt;button
+              className="navbar-toggler"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#navbarNav"
+              aria-controls="navbarNav"
+              aria-expanded="false"
+              aria-label="Toggle navigation"
+          >
+            &lt;span className="navbar-toggler-icon">&lt;/span>
+          &lt;/button>
+
+          {/* Navigation Links */}
+          &lt;div className="collapse navbar-collapse" id="navbarNav">
+            &lt;ul className="navbar-nav me-auto">
+              &lt;li className="nav-item">
+                &lt;button
+                    className={`nav-link btn btn-link ${currentView === 'home' ? 'active' : ''}`}
+                    onClick={() => setCurrentView('home')}
+                >
+                  &lt;i className="fas fa-home me-1">&lt;/i>
+                  Home
+                &lt;/button>
+              &lt;/li>
+              &lt;li className="nav-item">
+                &lt;button
+                    className={`nav-link btn btn-link ${currentView === 'quiz' ? 'active' : ''}`}
+                    onClick={() => setCurrentView('quiz')}
+                >
+                  &lt;i className="fas fa-play me-1">&lt;/i>
+                  Quiz spielen
+                &lt;/button>
+              &lt;/li>
+              &lt;li className="nav-item">
+                &lt;button
+                    className={`nav-link btn btn-link ${currentView === 'cards' ? 'active' : ''}`}
+                    onClick={() => setCurrentView('cards')}
+                >
+                  &lt;i className="fas fa-layer-group me-1">&lt;/i>
+                  Kartenverwaltung
+                &lt;/button>
+              &lt;/li>
+              &lt;li className="nav-item">
+                &lt;button
+                    className={`nav-link btn btn-link ${currentView === 'profile' ? 'active' : ''}`}
+                    onClick={() => setCurrentView('profile')}
+                >
+                  &lt;i className="fas fa-user me-1">&lt;/i>
+                  Profil
+                &lt;/button>
+              &lt;/li>
+            &lt;/ul>
+
+            {/* UPDATE: Benutzerinfo mit Logout-Button */}
+            &lt;div className="d-flex align-items-center">
+              &lt;span className="navbar-text me-3">
+                &lt;i className="fas fa-user-circle me-1">&lt;/i>
+                Willkommen, {user.name}
+              &lt;/span>
+              &lt;button
+                  className="btn btn-outline-light btn-sm"
+                  onClick={onLogout}
+                  title="Abmelden"
+              >
+                &lt;i className="fas fa-sign-out-alt me-1">&lt;/i>
+                Abmelden
+              &lt;/button>
+            &lt;/div>
+          &lt;/div>
+        &lt;/div>
+      &lt;/nav>
+  );
+}
+
+export default Header;</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="DataManager.html">DataManager</a></li><li><a href="SimulatedPlayersService.html">SimulatedPlayersService</a></li></ul><h3>Global</h3><ul><li><a href="global.html#App">App</a></li><li><a href="global.html#Footer">Footer</a></li><li><a href="global.html#Header">Header</a></li><li><a href="global.html#LoginForm">LoginForm</a></li><li><a href="global.html#MOCK_USERS">MOCK_USERS</a></li><li><a href="global.html#QuestionEditor">QuestionEditor</a></li><li><a href="global.html#QuizQuestion">QuizQuestion</a></li><li><a href="global.html#QuizResults">QuizResults</a></li><li><a href="global.html#SIMULATED_PLAYERS">SIMULATED_PLAYERS</a></li><li><a href="global.html#SecurityUtils">SecurityUtils</a></li><li><a href="global.html#UserProfile">UserProfile</a></li><li><a href="global.html#mockCategories">mockCategories</a></li><li><a href="global.html#root">root</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Mon Jul 14 2025 22:44:25 GMT+0200 (Mitteleuropäische Sommerzeit)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
