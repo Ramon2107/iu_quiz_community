@@ -11,7 +11,7 @@
  * - Mobilfreundliches Hamburger-Menü
  * - Logo-Klick führt zur Startseite
  *
- * UPDATE: Home-Seite als Entry-Point hinzugefügt
+ * UPDATE: Logout-Funktion hinzugefügt
  */
 
 import React from 'react';
@@ -23,8 +23,9 @@ import React from 'react';
  * @param {string} props.currentView - Aktuelle Ansicht
  * @param {Function} props.setCurrentView - Funktion zum Ändern der Ansicht
  * @param {Object} props.user - Benutzerdaten
+ * @param {Function} props.onLogout - UPDATE: Logout-Funktion
  */
-function Header({ currentView, setCurrentView, user }) {
+function Header({ currentView, setCurrentView, user, onLogout }) {
   return (
       <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
         <div className="container">
@@ -34,7 +35,7 @@ function Header({ currentView, setCurrentView, user }) {
               href="#"
               onClick={(e) => {
                 e.preventDefault();
-                setCurrentView('home'); // GEÄNDERT: Zurück zur Home-Seite
+                setCurrentView('home');
               }}
               style={{ cursor: 'pointer' }}
           >
@@ -96,10 +97,20 @@ function Header({ currentView, setCurrentView, user }) {
               </li>
             </ul>
 
-            {/* Benutzerinfo */}
-            <div className="navbar-text">
-              <i className="fas fa-user-circle me-1"></i>
-              Willkommen, {user.name}
+            {/* UPDATE: Benutzerinfo mit Logout-Button */}
+            <div className="d-flex align-items-center">
+              <span className="navbar-text me-3">
+                <i className="fas fa-user-circle me-1"></i>
+                Willkommen, {user.name}
+              </span>
+              <button
+                  className="btn btn-outline-light btn-sm"
+                  onClick={onLogout}
+                  title="Abmelden"
+              >
+                <i className="fas fa-sign-out-alt me-1"></i>
+                Abmelden
+              </button>
             </div>
           </div>
         </div>
