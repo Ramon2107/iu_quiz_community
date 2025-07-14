@@ -2,9 +2,14 @@
  * Hauptquiz-Komponente
  *
  * Diese Komponente verwaltet den gesamten Quiz-Ablauf und stellt
- * verschiedene Spielmodi bereit (kooperativ und kompetitiv).
+ * verschiedene Spielmodi bereit (kooperativ, kompetitiv und single-player).
  *
- * KORRIGIERT: Entfernung unnötiger useEffect-Imports
+ * ERWEITERT: Single-Player-Modus für individuelles Lernen hinzugefügt
+ *
+ * Spielmodi:
+ * - 'cooperative': Kooperatives Lernen mit anderen Studierenden
+ * - 'competitive': Wettbewerbsmodus mit Zeitdruck
+ * - 'single-player': Individuelles Lernen ohne Zeitdruck
  */
 
 import React, { useState } from 'react';
@@ -28,6 +33,8 @@ function QuizMain({ user }) {
 
   /**
    * Startet die Modus-Auswahl - Schritt 1
+   *
+   * @param {string} mode - Spielmodus ('cooperative', 'competitive', 'single-player')
    */
   const startModeSelection = (mode) => {
     console.log('Modus ausgewählt:', mode);
@@ -37,6 +44,9 @@ function QuizMain({ user }) {
 
   /**
    * Behandelt die Kategorieauswahl - Schritt 2
+   *
+   * @param {Object} category - Ausgewählte Kategorie
+   * @param {Array} filteredQuestions - Gefilterte Fragen für diese Kategorie
    */
   const handleCategorySelect = (category, filteredQuestions) => {
     console.log('Kategorie ausgewählt:', category.name, 'Anzahl Fragen:', filteredQuestions.length);
@@ -78,7 +88,9 @@ function QuizMain({ user }) {
   };
 
   /**
-   * Verarbeitet eine Antwort - KORRIGIERT mit setTimeout
+   * Verarbeitet eine Antwort - Unterstützt alle Spielmodi
+   *
+   * @param {Object} answer - Antwortdaten mit selectedAnswer, isCorrect, timeTaken, questionId
    */
   const handleAnswer = (answer) => {
     console.log('Antwort erhalten:', answer);
@@ -86,6 +98,9 @@ function QuizMain({ user }) {
     setAnswers(newAnswers);
 
     // Verzögerung für bessere UX (Zeit für Erklärung zu lesen)
+    // Single-Player-Modus hat längere Verzögerung für entspanntes Lernen
+    const delay = gameMode === 'single-player' ? 2000 : 1500;
+
     setTimeout(() => {
       if (currentQuestionIndex < questions.length - 1) {
         console.log('Weiterleitung zur nächsten Frage:', currentQuestionIndex + 1);
@@ -95,7 +110,7 @@ function QuizMain({ user }) {
         setShowResults(true);
         setCurrentStep('results');
       }
-    }, 1500); // 1.5 Sekunden Verzögerung
+    }, delay);
   };
 
   /**
@@ -127,12 +142,30 @@ function QuizMain({ user }) {
     }
   };
 
+  /**
+   * Gibt den angezeigten Spielmodus-Text zurück
+   *
+   * @returns {string} Anzeigename des Spielmodus
+   */
+  const getGameModeDisplayName = () => {
+    switch (gameMode) {
+      case 'cooperative':
+        return 'Kooperativer';
+      case 'competitive':
+        return 'Kompetitiver';
+      case 'single-player':
+        return 'Single-Player';
+      default:
+        return 'Unbekannter';
+    }
+  };
+
   // Schritt 1: Spielmodus-Auswahl anzeigen
   if (currentStep === 'mode') {
     return (
         <div className="container mt-4">
           <div className="row justify-content-center">
-            <div className="col-md-8">
+            <div className="col-md-10">
               <div className="card">
                 <div className="card-header bg-primary text-white">
                   <h2 className="mb-0">
@@ -147,8 +180,42 @@ function QuizMain({ user }) {
                   </p>
 
                   <div className="row">
+                    {/* Single-Player-Modus */}
+                    <div className="col-md-4 mb-3">
+                      <div className="card h-100 border-primary">
+                        <div className="card-header bg-primary text-white">
+                          <h5 className="mb-0">
+                            <i className="fas fa-user me-2"></i>
+                            Single-Player
+                          </h5>
+                        </div>
+                        <div className="card-body">
+                          <p className="card-text">
+                            Lernen Sie in Ihrem eigenen Tempo. Perfekt für
+                            individuelles Studium und Wiederholung von Lernstoff.
+                            Keine Zeitbegrenzung, kein Wettbewerb.
+                          </p>
+                          <ul className="list-unstyled">
+                            <li><i className="fas fa-check text-primary me-2"></i>Individuelles Lernen</li>
+                            <li><i className="fas fa-check text-primary me-2"></i>Kein Zeitdruck</li>
+                            <li><i className="fas fa-check text-primary me-2"></i>Entspanntes Tempo</li>
+                            <li><i className="fas fa-check text-primary me-2"></i>Fokus auf Verstehen</li>
+                          </ul>
+                        </div>
+                        <div className="card-footer">
+                          <button
+                              className="btn btn-primary w-100"
+                              onClick={() => startModeSelection('single-player')}
+                          >
+                            <i className="fas fa-arrow-right me-2"></i>
+                            Alleine spielen
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
                     {/* Kooperativer Modus */}
-                    <div className="col-md-6 mb-3">
+                    <div className="col-md-4 mb-3">
                       <div className="card h-100 border-success">
                         <div className="card-header bg-success text-white">
                           <h5 className="mb-0">
@@ -166,6 +233,7 @@ function QuizMain({ user }) {
                             <li><i className="fas fa-check text-success me-2"></i>Gemeinsames Lernen</li>
                             <li><i className="fas fa-check text-success me-2"></i>Diskussion möglich</li>
                             <li><i className="fas fa-check text-success me-2"></i>Weniger Zeitdruck</li>
+                            <li><i className="fas fa-check text-success me-2"></i>Teamarbeit</li>
                           </ul>
                         </div>
                         <div className="card-footer">
@@ -181,7 +249,7 @@ function QuizMain({ user }) {
                     </div>
 
                     {/* Kompetitiver Modus */}
-                    <div className="col-md-6 mb-3">
+                    <div className="col-md-4 mb-3">
                       <div className="card h-100 border-warning">
                         <div className="card-header bg-warning text-dark">
                           <h5 className="mb-0">
@@ -199,6 +267,7 @@ function QuizMain({ user }) {
                             <li><i className="fas fa-check text-warning me-2"></i>Direkter Wettkampf</li>
                             <li><i className="fas fa-check text-warning me-2"></i>Zeitdruck</li>
                             <li><i className="fas fa-check text-warning me-2"></i>Rangliste</li>
+                            <li><i className="fas fa-check text-warning me-2"></i>Schnelligkeit</li>
                           </ul>
                         </div>
                         <div className="card-footer">
@@ -209,6 +278,45 @@ function QuizMain({ user }) {
                             <i className="fas fa-arrow-right me-2"></i>
                             Kompetitiv spielen
                           </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Informationsbereich für Spielmodi */}
+                  <div className="card bg-light mt-4">
+                    <div className="card-body">
+                      <h6 className="card-title">
+                        <i className="fas fa-info-circle me-2"></i>
+                        Spielmodi im Überblick
+                      </h6>
+                      <div className="row">
+                        <div className="col-md-4">
+                          <div className="text-center">
+                            <i className="fas fa-user fa-2x text-primary mb-2"></i>
+                            <h6>Single-Player</h6>
+                            <small className="text-muted">
+                              Ideal für Prüfungsvorbereitung und Selbststudium
+                            </small>
+                          </div>
+                        </div>
+                        <div className="col-md-4">
+                          <div className="text-center">
+                            <i className="fas fa-users fa-2x text-success mb-2"></i>
+                            <h6>Kooperativ</h6>
+                            <small className="text-muted">
+                              Perfekt für Lerngruppen und gemeinsames Verstehen
+                            </small>
+                          </div>
+                        </div>
+                        <div className="col-md-4">
+                          <div className="text-center">
+                            <i className="fas fa-trophy fa-2x text-warning mb-2"></i>
+                            <h6>Kompetitiv</h6>
+                            <small className="text-muted">
+                              Für Wettkampf und Leistungsvergleich
+                            </small>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -283,18 +391,18 @@ function QuizMain({ user }) {
                   <div className="d-flex justify-content-between align-items-center mb-2">
                     <h6 className="mb-0">
                       <i className="fas fa-gamepad me-2"></i>
-                      {gameMode === 'cooperative' ? 'Kooperativer' : 'Kompetitiver'} Modus
+                      {getGameModeDisplayName()} Modus
                     </h6>
                     <div className="d-flex align-items-center">
                       {/* Kategorie-Info */}
                       <span className={`badge bg-${selectedCategory?.color || 'secondary'} me-2`}>
-                      <i className={`fas fa-${selectedCategory?.icon || 'folder'} me-1`}></i>
+                        <i className={`fas fa-${selectedCategory?.icon || 'folder'} me-1`}></i>
                         {selectedCategory?.name || 'Alle Kategorien'}
-                    </span>
+                      </span>
                       {/* Fortschritt */}
                       <span className="badge bg-primary">
-                      Frage {currentQuestionIndex + 1} von {questions.length}
-                    </span>
+                        Frage {currentQuestionIndex + 1} von {questions.length}
+                      </span>
                     </div>
                   </div>
 

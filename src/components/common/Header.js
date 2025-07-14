@@ -28,7 +28,7 @@ function Header({ currentView, setCurrentView, user }) {
         {/* Logo und Titel */}
         <a className="navbar-brand" href="#" onClick={(e) => e.preventDefault()}>
           <i className="fas fa-graduation-cap me-2"></i>
-          IUBH Quiz System
+          IU Community Quiz
         </a>
 
         {/* Mobile Navigation Toggle */}

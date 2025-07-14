@@ -23,10 +23,10 @@ function Footer() {
         <div className="row">
           {/* Über das System */}
           <div className="col-md-4 mb-3">
-            <h5>IUBH Quiz System</h5>
+            <h5>IU Community Quiz</h5>
             <p className="text-muted">
               Ein kooperatives und kollaboratives Online-Quizsystem 
-              zur Unterstützung des Fernstudiums an der IUBH.
+              zur Unterstützung des Fernstudiums an der IU Internationale Hochschule.
             </p>
           </div>
 

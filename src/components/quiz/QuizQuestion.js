@@ -4,7 +4,12 @@
  * Diese Komponente zeigt eine einzelne Quiz-Frage mit ihren Antwortmöglichkeiten
  * an und verwaltet die Benutzerinteraktion.
  *
- * BUGFIX: Korrigierte useEffect-Abhängigkeiten und automatische Weiterleitung
+ * ERWEITERT: Single-Player-Modus hinzugefügt
+ *
+ * Unterstützte Spielmodi:
+ * - 'cooperative': Kooperatives Lernen ohne Zeitdruck
+ * - 'competitive': Kompetitiver Modus mit 30 Sekunden Timer
+ * - 'single-player': Individuelles Lernen ohne Zeitdruck, fokussiert auf Verstehen
  */
 
 import React, { useState, useEffect, useCallback } from 'react';
@@ -49,7 +54,7 @@ function QuizQuestion({ question, questionNumber, totalQuestions, onAnswer, game
 
   // Effekt zum Zurücksetzen des Zustands bei neuer Frage
   useEffect(() => {
-    console.log('Neue Frage geladen:', question.id);
+    console.log('Neue Frage geladen:', question.id, 'Spielmodus:', gameMode);
     setSelectedAnswer(null);
     setTimeLeft(30);
     setIsAnswered(false);
@@ -58,9 +63,9 @@ function QuizQuestion({ question, questionNumber, totalQuestions, onAnswer, game
     if (autoAdvanceTimer) {
       clearTimeout(autoAdvanceTimer);
     }
-  }, [question.id, autoAdvanceTimer]);
+  }, [question.id, gameMode, autoAdvanceTimer]);
 
-  // Timer-Effekt für kompetitiven Modus
+  // Timer-Effekt nur für kompetitiven Modus
   useEffect(() => {
     if (gameMode === 'competitive' && !isAnswered) {
       console.log('Timer gestartet für kompetitiven Modus');
@@ -84,17 +89,19 @@ function QuizQuestion({ question, questionNumber, totalQuestions, onAnswer, game
   // Effekt für automatische Weiterleitung nach Antwort
   useEffect(() => {
     if (isAnswered && question.explanation) {
-      console.log('Antwort gegeben - starte automatische Weiterleitung in 3 Sekunden');
+      const delayTime = gameMode === 'single-player' ? 4000 : 3000; // Längere Anzeigezeit für Single-Player
+      console.log(`Antwort gegeben - starte automatische Weiterleitung in ${delayTime/1000} Sekunden`);
+
       const timer = setTimeout(() => {
         console.log('Automatische Weiterleitung zur nächsten Frage');
         // Hier wird nicht nochmal onAnswer aufgerufen, da das bereits geschehen ist
-      }, 3000);
+      }, delayTime);
 
       setAutoAdvanceTimer(timer);
 
       return () => clearTimeout(timer);
     }
-  }, [isAnswered, question.explanation]);
+  }, [isAnswered, question.explanation, gameMode]);
 
   const handleAnswerSelect = (answerIndex) => {
     if (isAnswered) return;
@@ -139,6 +146,44 @@ function QuizQuestion({ question, questionNumber, totalQuestions, onAnswer, game
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
+  /**
+   * Gibt die passende Spielmodus-Nachricht zurück
+   */
+  const getGameModeMessage = () => {
+    switch (gameMode) {
+      case 'single-player':
+        return {
+          icon: 'fas fa-user',
+          color: 'primary',
+          title: 'Single-Player-Modus:',
+          message: 'Nehmen Sie sich alle Zeit, die Sie brauchen. Fokussieren Sie sich auf das Verstehen der Inhalte.'
+        };
+      case 'cooperative':
+        return {
+          icon: 'fas fa-users',
+          color: 'info',
+          title: 'Kooperativer Modus:',
+          message: 'Diskutieren Sie mit anderen Studierenden und finden Sie gemeinsam die richtige Antwort.'
+        };
+      case 'competitive':
+        return {
+          icon: 'fas fa-stopwatch',
+          color: 'warning',
+          title: 'Kompetitiver Modus:',
+          message: `Sie haben ${timeLeft} Sekunden Zeit! Schnelligkeit und Genauigkeit sind gefragt.`
+        };
+      default:
+        return {
+          icon: 'fas fa-question',
+          color: 'secondary',
+          title: 'Quiz-Modus:',
+          message: 'Beantworten Sie die Fragen nach bestem Wissen und Gewissen.'
+        };
+    }
+  };
+
+  const modeMessage = getGameModeMessage();
+
   return (
       <div className="card">
         <div className="card-header">
@@ -148,11 +193,22 @@ function QuizQuestion({ question, questionNumber, totalQuestions, onAnswer, game
               Frage {questionNumber} von {totalQuestions}
             </h5>
 
+            {/* Timer nur für kompetitiven Modus */}
             {gameMode === 'competitive' && (
                 <div className="d-flex align-items-center">
                   <i className="fas fa-clock me-2"></i>
                   <span className={`badge ${timeLeft <= 10 ? 'bg-danger' : 'bg-primary'}`}>
                     {formatTime(timeLeft)}
+                  </span>
+                </div>
+            )}
+
+            {/* Spielmodus-Anzeige für Single-Player */}
+            {gameMode === 'single-player' && (
+                <div className="d-flex align-items-center">
+                  <i className="fas fa-user me-2 text-primary"></i>
+                  <span className="badge bg-primary">
+                    Single-Player
                   </span>
                 </div>
             )}
@@ -207,18 +263,12 @@ function QuizQuestion({ question, questionNumber, totalQuestions, onAnswer, game
             </div>
           </div>
 
+          {/* Spielmodus-spezifische Nachrichten */}
           <div className="mb-3">
-            {gameMode === 'cooperative' && !isAnswered && (
-                <div className="alert alert-info">
-                  <i className="fas fa-users me-2"></i>
-                  <strong>Kooperativer Modus:</strong> Nehmen Sie sich die Zeit, die Sie benötigen.
-                </div>
-            )}
-
-            {gameMode === 'competitive' && !isAnswered && (
-                <div className="alert alert-warning">
-                  <i className="fas fa-stopwatch me-2"></i>
-                  <strong>Kompetitiver Modus:</strong> Sie haben {timeLeft} Sekunden Zeit!
+            {!isAnswered && (
+                <div className={`alert alert-${modeMessage.color}`}>
+                  <i className={`${modeMessage.icon} me-2`}></i>
+                  <strong>{modeMessage.title}</strong> {modeMessage.message}
                 </div>
             )}
 
@@ -286,7 +336,9 @@ function QuizQuestion({ question, questionNumber, totalQuestions, onAnswer, game
                   <span className="visually-hidden">Laden...</span>
                 </div>
                 <small className="text-muted">
-                  Nächste Frage wird automatisch geladen...
+                  {gameMode === 'single-player'
+                      ? 'Nächste Frage wird automatisch geladen... (4 Sekunden)'
+                      : 'Nächste Frage wird automatisch geladen... (3 Sekunden)'}
                 </small>
               </div>
             </div>
