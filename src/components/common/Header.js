@@ -12,6 +12,7 @@
  * - Logo-Klick führt zur Startseite
  *
  * UPDATE: Logout-Funktion hinzugefügt
+ * UPDATE: Community-Navigation hinzugefügt
  */
 
 import React from 'react';
@@ -23,7 +24,7 @@ import React from 'react';
  * @param {string} props.currentView - Aktuelle Ansicht
  * @param {Function} props.setCurrentView - Funktion zum Ändern der Ansicht
  * @param {Object} props.user - Benutzerdaten
- * @param {Function} props.onLogout - UPDATE: Logout-Funktion
+ * @param {Function} props.onLogout - Logout-Funktion
  */
 function Header({ currentView, setCurrentView, user, onLogout }) {
   return (
@@ -88,6 +89,15 @@ function Header({ currentView, setCurrentView, user, onLogout }) {
               </li>
               <li className="nav-item">
                 <button
+                    className={`nav-link btn btn-link ${currentView === 'community' ? 'active' : ''}`}
+                    onClick={() => setCurrentView('community')}
+                >
+                  <i className="fas fa-users me-1"></i>
+                  Community
+                </button>
+              </li>
+              <li className="nav-item">
+                <button
                     className={`nav-link btn btn-link ${currentView === 'profile' ? 'active' : ''}`}
                     onClick={() => setCurrentView('profile')}
                 >
@@ -97,7 +107,7 @@ function Header({ currentView, setCurrentView, user, onLogout }) {
               </li>
             </ul>
 
-            {/* UPDATE: Benutzerinfo mit Logout-Button */}
+            {/* Benutzerinfo mit Logout-Button */}
             <div className="d-flex align-items-center">
               <span className="navbar-text me-3">
                 <i className="fas fa-user-circle me-1"></i>

@@ -4,6 +4,7 @@
  * UPDATE: Login-System implementiert - Zugriff nur für authentifizierte Benutzer
  * UPDATE: Sichere Authentifizierung mit Input-Validierung
  * UPDATE: Benutzer-Session-Management
+ * UPDATE: Community-Funktionalität hinzugefügt (Demo-Prototyp)
  */
 
 import React, { useState, useEffect } from 'react';
@@ -19,6 +20,7 @@ import HomePage from './components/home/HomePage';
 import QuizMain from './components/quiz/QuizMain';
 import CardManager from './components/admin/CardManager';
 import UserProfile from './components/user/UserProfile';
+import Community from './components/community/Community';
 import dataManager from './data/dataManager';
 
 /**
@@ -26,11 +28,11 @@ import dataManager from './data/dataManager';
  */
 function App() {
     const [currentView, setCurrentView] = useState('home');
-    const [user, setUser] = useState(null); // UPDATE: Benutzer-Zustand für Authentication
-    const [isAuthenticated, setIsAuthenticated] = useState(false); // UPDATE: Authentication-Status
+    const [user, setUser] = useState(null);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
 
     /**
-     * UPDATE: Überprüft beim App-Start, ob Benutzer bereits angemeldet ist
+     * Überprüft beim App-Start, ob Benutzer bereits angemeldet ist
      */
     useEffect(() => {
         console.log('App: Initialisiere Anwendung...');
@@ -62,7 +64,7 @@ function App() {
     }, []);
 
     /**
-     * UPDATE: Behandelt erfolgreiche Anmeldung
+     * Behandelt erfolgreiche Anmeldung
      * @param {Object} userData - Benutzerdaten
      */
     const handleLogin = (userData) => {
@@ -75,7 +77,7 @@ function App() {
     };
 
     /**
-     * UPDATE: Behandelt Abmeldung
+     * Behandelt Abmeldung
      */
     const handleLogout = () => {
         console.log('App: Benutzer abgemeldet');
@@ -120,12 +122,14 @@ function App() {
                 );
             case 'profile':
                 return <UserProfile user={user} onLogout={handleLogout} />;
+            case 'community':
+                return <Community user={user} />;
             default:
                 return <HomePage user={user} onNavigate={setCurrentView} />;
         }
     };
 
-    // UPDATE: Zeige Login-Formular für nicht authentifizierte Benutzer
+    // Zeige Login-Formular für nicht authentifizierte Benutzer
     if (!isAuthenticated || !user) {
         return <LoginForm onLogin={handleLogin} />;
     }
