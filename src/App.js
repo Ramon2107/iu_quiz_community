@@ -14,6 +14,7 @@ import './App.css';
 // Komponenten-Imports
 import LoginForm from './components/auth/LoginForm';
 import Header from './components/common/Header';
+import Footer from './components/common/Footer';
 import HomePage from './components/home/HomePage';
 import QuizMain from './components/quiz/QuizMain';
 import CardManager from './components/admin/CardManager';
@@ -141,6 +142,7 @@ function App() {
             <main className="main-content">
                 {renderCurrentView()}
             </main>
+            <Footer />
         </div>
     );
 }
