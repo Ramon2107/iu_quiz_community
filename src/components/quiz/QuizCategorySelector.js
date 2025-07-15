@@ -1,276 +1,341 @@
 /**
- * QuizCategorySelector-Komponente
+ * QuizCategorySelector-Komponente - Kategorieauswahl für Quiz
  *
- * Diese Komponente zeigt verfügbare Quiz-Kategorien an und ermöglicht
- * die Auswahl einer Kategorie für das Quiz.
+ * Diese Komponente ermöglicht es Benutzern, eine Kategorie für ihr Quiz auszuwählen.
+ * Sie zeigt verfügbare Kategorien mit Anzahl der Fragen und Beschreibungen an.
  *
- * UPDATE: Integration mit DataManager für konsistente Datenverwendung
- * UPDATE: Verbesserte Card-Darstellung für gleichmäßige Proportionen
+ * Features:
+ * - Anzeige aller verfügbaren Kategorien
+ * - Fragenanzahl pro Kategorie
+ * - Responsive Karten-Design
+ * - Suchfunktion für Kategorien
+ * - Rückkehr zur Modus-Auswahl
+ * - Unterstützung für alle Spielmodi
  *
- * UPDATE: Verwendet jetzt den zentralen DataManager statt
- * direktem Import von mockData für konsistente Datenverwendung.
+ * UPDATE: Erweiterte Anzeige mit Fragenanzahl
+ * UPDATE: Suchfunktion für Kategorien
+ * UPDATE: Spielmodus-spezifische Anzeige
+ *
+ * @author IU Quiz Community
+ * @version 1.3.0
+ * @since 2025-07-15
  */
 
-import React, { useState, useEffect } from 'react';
-import dataManager from '../../data/dataManager'; // KORRIGIERT: Verwendet DataManager
+import React, { useState, useMemo } from 'react';
+import dataManager from '../../data/dataManager';
 
-function QuizCategorySelector({ gameMode, onCategorySelect, onBackToModeSelection }) {
-  const [categories, setCategories] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+/**
+ * QuizCategorySelector-Komponente
+ *
+ * @param {Object} props - Komponenteneigenschaften
+ * @param {Array} props.categories - Verfügbare Kategorien
+ * @param {Function} props.onCategorySelect - Callback für Kategorieauswahl
+ * @param {Function} props.onBack - Callback für Rückkehr
+ * @param {string} props.gameMode - Aktueller Spielmodus
+ * @param {number} props.questionCount - Gewünschte Fragenanzahl
+ * @param {Object} props.user - Benutzerdaten
+ * @returns {JSX.Element} Die gerenderte QuizCategorySelector-Komponente
+ */
+function QuizCategorySelector({
+                                categories,
+                                onCategorySelect,
+                                onBack,
+                                gameMode,
+                                questionCount,
+                                user
+                              }) {
+  const [searchTerm, setSearchTerm] = useState('');
 
   /**
-   * UPDATE: Lädt Kategorien über DataManager
-   *
-   * Der DataManager stellt sicher, dass Mock-Daten verfügbar sind
-   * und bietet eine konsistente Schnittstelle für alle Komponenten.
+   * Berechnet die Anzahl verfügbarer Fragen pro Kategorie
    */
-  useEffect(() => {
-    loadCategories();
-  }, []);
+  const categoriesWithQuestionCount = useMemo(() => {
+    const allQuestions = dataManager.getQuestionsForQuiz();
+
+    return categories.map(category => {
+      const questionsInCategory = allQuestions.filter(q => q.category === category.name);
+      return {
+        ...category,
+        questionCount: questionsInCategory.length,
+        hasEnoughQuestions: questionsInCategory.length >= questionCount
+      };
+    });
+  }, [categories, questionCount]);
 
   /**
-   * Lädt alle verfügbaren Kategorien über DataManager
-   *
-   * UPDATE: Verwendet DataManager.getCategoriesForQuiz() für
-   * Quiz-kompatible Kategorienobjekte
+   * Filtert Kategorien basierend auf Suchbegriff
    */
-  const loadCategories = () => {
-    setIsLoading(true);
+  const filteredCategories = useMemo(() => {
+    if (!searchTerm) return categoriesWithQuestionCount;
 
-    try {
-      // Verwendet DataManager statt direkten Import
-      const loadedCategories = dataManager.getCategoriesForQuiz();
-      console.log('QuizCategorySelector: Geladene Kategorien:', loadedCategories);
+    return categoriesWithQuestionCount.filter(category =>
+        category.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        category.description.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [categoriesWithQuestionCount, searchTerm]);
 
-      // Kategorien mit Fragenanzahl anreichern
-      const categoriesWithQuestionCount = loadedCategories.map(category => {
-        const questions = dataManager.getQuestionsForQuiz();
-        const questionCount = questions.filter(q => q.category === category.name).length;
-
-        return {
-          ...category,
-          questionCount
-        };
-      });
-
-      setCategories(categoriesWithQuestionCount);
-    } catch (error) {
-      console.error('Fehler beim Laden der Kategorien:', error);
-      setCategories([]);
-    } finally {
-      setIsLoading(false);
+  /**
+   * Gibt Spielmodus-spezifische CSS-Klasse zurück
+   */
+  const getGameModeClass = () => {
+    switch (gameMode) {
+      case 'cooperative':
+        return 'bg-success';
+      case 'competitive':
+        return 'bg-warning';
+      default:
+        return 'bg-primary';
     }
   };
 
   /**
-   * Behandelt die Kategorieauswahl
-   *
-   * KORRIGIERT: Übergibt nur die Kategorie, QuizMain filtert die Fragen
-   *
-   * @param {Object} category - Ausgewählte Kategorie
+   * Gibt Spielmodus-spezifisches Icon zurück
+   */
+  const getGameModeIcon = () => {
+    switch (gameMode) {
+      case 'cooperative':
+        return 'fas fa-users';
+      case 'competitive':
+        return 'fas fa-trophy';
+      default:
+        return 'fas fa-user';
+    }
+  };
+
+  /**
+   * Gibt Spielmodus-Namen zurück
+   */
+  const getGameModeName = () => {
+    switch (gameMode) {
+      case 'cooperative':
+        return 'Kooperativ';
+      case 'competitive':
+        return 'Kompetitiv';
+      default:
+        return 'Single Player';
+    }
+  };
+
+  /**
+   * Behandelt Kategorieauswahl
    */
   const handleCategorySelect = (category) => {
-    if (category.questionCount === 0) {
-      alert('Diese Kategorie enthält keine Fragen.');
-      return;
-    }
-
-    // Nur Kategorie übergeben, QuizMain filtert die Fragen
-    onCategorySelect(category);
-  };
-
-  /**
-   * Gibt die Spielmodus-spezifische Beschreibung zurück
-   *
-   * @returns {Object} Spielmodus-Informationen
-   */
-  const getGameModeInfo = () => {
-    switch (gameMode) {
-      case 'single-player':
-        return {
-          icon: 'fas fa-user',
-          color: 'primary',
-          title: 'Single-Player-Modus',
-          description: 'Lernen Sie in Ihrem eigenen Tempo ohne Zeitdruck.'
-        };
-      case 'cooperative':
-        return {
-          icon: 'fas fa-users',
-          color: 'success',
-          title: 'Kooperativer Modus',
-          description: 'Arbeiten Sie zusammen mit anderen Studierenden.'
-        };
-      case 'competitive':
-        return {
-          icon: 'fas fa-trophy',
-          color: 'warning',
-          title: 'Kompetitiver Modus',
-          description: 'Treten Sie im Wettkampf gegen andere an.'
-        };
-      default:
-        return {
-          icon: 'fas fa-question',
-          color: 'secondary',
-          title: 'Quiz-Modus',
-          description: 'Wählen Sie eine Kategorie für Ihr Quiz.'
-        };
+    if (category.hasEnoughQuestions) {
+      onCategorySelect(category);
     }
   };
-
-  const modeInfo = getGameModeInfo();
-
-  // Ladezustand
-  if (isLoading) {
-    return (
-        <div className="container mt-4">
-          <div className="row justify-content-center">
-            <div className="col-md-6">
-              <div className="card">
-                <div className="card-body text-center">
-                  <div className="spinner-border text-primary" role="status">
-                    <span className="visually-hidden">Laden...</span>
-                  </div>
-                  <p className="mt-3">Kategorien werden geladen...</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-    );
-  }
 
   return (
       <div className="container mt-4">
-        <div className="row justify-content-center">
-          <div className="col-md-10">
-            <div className="card">
-              <div className="card-header">
-                <div className="d-flex justify-content-between align-items-center">
-                  <div>
+        <div className="row">
+          <div className="col-12">
+            <div className="card shadow-lg">
+              <div className={`card-header ${getGameModeClass()} text-white`}>
+                <div className="row align-items-center">
+                  <div className="col-md-6">
                     <h2 className="mb-0">
-                      <i className={`${modeInfo.icon} me-2`}></i>
+                      <i className={`${getGameModeIcon()} me-2`}></i>
                       Kategorie auswählen
                     </h2>
-                    <small className="text-muted">{modeInfo.title}</small>
                   </div>
-                  <button
-                      className="btn btn-outline-secondary"
-                      onClick={onBackToModeSelection}
-                  >
-                    <i className="fas fa-arrow-left me-2"></i>
-                    Zurück zur Modus-Auswahl
-                  </button>
+                  <div className="col-md-6 text-md-end">
+                  <span className="badge bg-light text-dark fs-6">
+                    {getGameModeName()} • {questionCount} Fragen
+                  </span>
+                  </div>
                 </div>
               </div>
               <div className="card-body">
-                <div className={`alert alert-${modeInfo.color}`}>
-                  <i className={`${modeInfo.icon} me-2`}></i>
-                  <strong>{modeInfo.title}:</strong> {modeInfo.description}
+                {/* Suchleiste */}
+                <div className="row mb-4">
+                  <div className="col-md-8 mx-auto">
+                    <div className="input-group">
+                    <span className="input-group-text">
+                      <i className="fas fa-search"></i>
+                    </span>
+                      <input
+                          type="text"
+                          className="form-control"
+                          placeholder="Kategorie suchen..."
+                          value={searchTerm}
+                          onChange={(e) => setSearchTerm(e.target.value)}
+                      />
+                      {searchTerm && (
+                          <button
+                              className="btn btn-outline-secondary"
+                              type="button"
+                              onClick={() => setSearchTerm('')}
+                          >
+                            <i className="fas fa-times"></i>
+                          </button>
+                      )}
+                    </div>
+                  </div>
                 </div>
 
-                {categories.length === 0 ? (
-                    <div className="alert alert-warning">
-                      <i className="fas fa-exclamation-triangle me-2"></i>
-                      Keine Kategorien verfügbar. Bitte erstellen Sie zuerst Kategorien und Fragen
-                      über den Frageneditor.
+                {/* Kategorien-Übersicht */}
+                <div className="row mb-4">
+                  <div className="col-12">
+                    <div className="alert alert-info">
+                      <div className="row text-center">
+                        <div className="col-md-3">
+                          <i className="fas fa-layer-group fa-2x mb-2"></i>
+                          <div><strong>{categories.length}</strong></div>
+                          <small>Kategorien verfügbar</small>
+                        </div>
+                        <div className="col-md-3">
+                          <i className="fas fa-question-circle fa-2x mb-2"></i>
+                          <div><strong>{questionCount}</strong></div>
+                          <small>Fragen gewählt</small>
+                        </div>
+                        <div className="col-md-3">
+                          <i className="fas fa-clock fa-2x mb-2"></i>
+                          <div><strong>{getEstimatedTime()}</strong></div>
+                          <small>Geschätzte Dauer</small>
+                        </div>
+                        <div className="col-md-3">
+                          <i className="fas fa-user fa-2x mb-2"></i>
+                          <div><strong>{user.name}</strong></div>
+                          <small>Spieler</small>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Kategorien-Karten */}
+                {filteredCategories.length === 0 ? (
+                    <div className="text-center py-5">
+                      <i className="fas fa-search fa-3x text-muted mb-3"></i>
+                      <h4 className="text-muted">Keine Kategorien gefunden</h4>
+                      <p className="text-muted">
+                        Versuchen Sie einen anderen Suchbegriff oder
+                        <button
+                            className="btn btn-link p-0 ms-1"
+                            onClick={() => setSearchTerm('')}
+                        >
+                          alle Kategorien anzeigen
+                        </button>
+                      </p>
                     </div>
                 ) : (
-                    // Verbesserte Card-Darstellung für gleichmäßige Proportionen
-                    <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-                      {categories.map((category) => (
-                          <div key={category.id} className="col">
-                            <div className={`card h-100 ${category.questionCount === 0 ? 'border-secondary' : `border-${category.color}`}`}>
-                              <div className={`card-header ${category.questionCount === 0 ? 'bg-secondary' : `bg-${category.color}`} text-white`}>
-                                <h5 className="mb-0">
-                                  <i className={`fas fa-${category.icon} me-2`}></i>
-                                  {category.name}
-                                </h5>
-                              </div>
-                              <div className="card-body d-flex flex-column">
-                                <p className="card-text flex-grow-1">{category.description}</p>
-                                <div className="d-flex justify-content-between align-items-center mt-auto">
-                                  <div>
-                                    <small className="text-muted">
-                                      <i className="fas fa-question-circle me-1"></i>
-                                      {category.questionCount} Fragen
-                                    </small>
+                    <div className="row g-4">
+                      {filteredCategories.map((category) => (
+                          <div key={category.id} className="col-md-6 col-lg-4">
+                            <div
+                                className={`card h-100 ${
+                                    category.hasEnoughQuestions
+                                        ? 'border-primary category-card'
+                                        : 'border-secondary'
+                                }`}
+                                style={{
+                                  cursor: category.hasEnoughQuestions ? 'pointer' : 'not-allowed',
+                                  opacity: category.hasEnoughQuestions ? 1 : 0.6
+                                }}
+                                onClick={() => handleCategorySelect(category)}
+                            >
+                              <div className="card-body">
+                                <div className="text-center mb-3">
+                                  <i className={`fas fa-${category.icon} fa-3x text-${category.color}`}></i>
+                                </div>
+                                <h5 className="card-title text-center">{category.name}</h5>
+                                <p className="card-text text-muted small">
+                                  {category.description}
+                                </p>
+
+                                {/* Fragen-Statistik */}
+                                <div className="mt-3">
+                                  <div className="d-flex justify-content-between align-items-center">
+                                    <small className="text-muted">Verfügbare Fragen:</small>
+                                    <span className={`badge ${
+                                        category.hasEnoughQuestions
+                                            ? 'bg-success'
+                                            : 'bg-warning text-dark'
+                                    }`}>
+                                {category.questionCount}
+                              </span>
                                   </div>
-                                  <div>
-                                    {category.questionCount > 0 && (
-                                        <span className={`badge bg-${category.color}`}>
-                                          Verfügbar
-                                        </span>
-                                    )}
-                                    {category.questionCount === 0 && (
-                                        <span className="badge bg-secondary">
-                                          Keine Fragen
-                                        </span>
-                                    )}
-                                  </div>
+
+                                  {!category.hasEnoughQuestions && (
+                                      <div className="text-center mt-2">
+                                        <small className="text-warning">
+                                          <i className="fas fa-exclamation-triangle me-1"></i>
+                                          Nicht genug Fragen für {questionCount} Auswahl
+                                        </small>
+                                      </div>
+                                  )}
                                 </div>
                               </div>
-                              <div className="card-footer">
-                                <button
-                                    className={`btn w-100 ${
-                                        category.questionCount > 0
-                                            ? `btn-${category.color}`
-                                            : 'btn-secondary'
-                                    }`}
-                                    onClick={() => handleCategorySelect(category)}
-                                    disabled={category.questionCount === 0}
-                                >
-                                  {category.questionCount > 0 ? (
-                                      <>
+
+                              {category.hasEnoughQuestions && (
+                                  <div className="card-footer bg-transparent border-top-0">
+                                    <div className="d-grid">
+                                      <button className="btn btn-primary btn-sm">
                                         <i className="fas fa-play me-2"></i>
-                                        Quiz starten
-                                      </>
-                                  ) : (
-                                      <>
-                                        <i className="fas fa-ban me-2"></i>
-                                        Keine Fragen
-                                      </>
-                                  )}
-                                </button>
-                              </div>
+                                        Auswählen
+                                      </button>
+                                    </div>
+                                  </div>
+                              )}
                             </div>
                           </div>
                       ))}
                     </div>
                 )}
+              </div>
 
-                {/* Hinweis für Benutzer */}
-                <div className="card bg-light mt-4">
-                  <div className="card-body">
-                    <h6 className="card-title">
-                      <i className="fas fa-info-circle me-2"></i>
-                      Hinweis
-                    </h6>
-                    <p className="mb-2">
-                      Sie können neue Kategorien und Fragen über den <strong>Frageneditor</strong> erstellen.
-                      Alle Kategorien mit verfügbaren Fragen werden hier angezeigt.
-                    </p>
-                    <div className="row">
-                      <div className="col-md-6">
-                        <small className="text-muted">
-                          <i className="fas fa-lightbulb me-1"></i>
-                          <strong>Tipp:</strong> Erstellen Sie eigene Fragen, um Ihr Wissen zu vertiefen.
-                        </small>
-                      </div>
-                      <div className="col-md-6">
-                        <small className="text-muted">
-                          <i className="fas fa-users me-1"></i>
-                          <strong>Community:</strong> Teilen Sie Ihr Wissen mit anderen Studierenden.
-                        </small>
-                      </div>
-                    </div>
+              {/* Footer mit Navigation */}
+              <div className="card-footer">
+                <div className="d-flex justify-content-between align-items-center">
+                  <button
+                      className="btn btn-secondary"
+                      onClick={onBack}
+                  >
+                    <i className="fas fa-arrow-left me-2"></i>
+                    Zurück zur Fragenanzahl
+                  </button>
+
+                  <div className="text-muted">
+                    <small>
+                      {filteredCategories.filter(c => c.hasEnoughQuestions).length} von {filteredCategories.length} Kategorien verfügbar
+                    </small>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
+
+        {/* CSS für Hover-Effekte */}
+        <style jsx>{`
+        .category-card:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+          transition: all 0.3s ease;
+        }
+      `}</style>
       </div>
   );
+
+  /**
+   * Berechnet die geschätzte Dauer basierend auf Spielmodus und Fragenanzahl
+   */
+  function getEstimatedTime() {
+    let timePerQuestion = 0;
+    switch (gameMode) {
+      case 'single-player':
+        timePerQuestion = 2; // 2 Minuten pro Frage
+        break;
+      case 'cooperative':
+        timePerQuestion = 1; // 1 Minute pro Frage
+        break;
+      case 'competitive':
+        timePerQuestion = 0.5; // 30 Sekunden pro Frage
+        break;
+    }
+    const totalMinutes = Math.round(questionCount * timePerQuestion);
+    return `${totalMinutes} Min`;
+  }
 }
 
 export default QuizCategorySelector;

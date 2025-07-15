@@ -1,23 +1,25 @@
 /**
  * Footer-Komponente
  *
- * Diese Komponente stellt den Footer der Anwendung dar und enthält Links zu wichtigen
- * Seiten wie Datenschutz und Impressum sowie Kontaktinformationen.
+ * Diese Komponente stellt den Footer der Anwendung dar mit allen wichtigen
+ * Informationen, Links und rechtlichen Hinweisen.
  *
- * @author System
- * @version 1.2.0
+ * Features:
+ * - Responsive Design
+ * - Datenschutz- und Impressum-Modals
+ * - Kontaktinformationen
+ * - Social Media Links
+ * - Harmonisierte Ausrichtung für alle Endgeräte
+ *
+ * @author IU Quiz Community
+ * @version 1.1.0
  * @since 2025-07-15
  */
 
 import React, { useState } from 'react';
-import PrivacyPolicy from './PrivacyPolicy';
-import Imprint from './Imprint';
 
 /**
  * Footer-Komponente
- *
- * Zeigt den Footer mit Navigation, Kontaktinformationen und rechtlichen Hinweisen.
- * Enthält Modal-Dialoge für Datenschutz und Impressum.
  *
  * @returns {JSX.Element} Die gerenderte Footer-Komponente
  */
@@ -27,8 +29,6 @@ function Footer() {
 
     /**
      * Öffnet das Datenschutz-Modal
-     *
-     * @function handleShowPrivacy
      */
     const handleShowPrivacy = () => {
         setShowPrivacyModal(true);
@@ -36,8 +36,6 @@ function Footer() {
 
     /**
      * Schließt das Datenschutz-Modal
-     *
-     * @function handleClosePrivacy
      */
     const handleClosePrivacy = () => {
         setShowPrivacyModal(false);
@@ -45,8 +43,6 @@ function Footer() {
 
     /**
      * Öffnet das Impressum-Modal
-     *
-     * @function handleShowImprint
      */
     const handleShowImprint = () => {
         setShowImprintModal(true);
@@ -54,8 +50,6 @@ function Footer() {
 
     /**
      * Schließt das Impressum-Modal
-     *
-     * @function handleCloseImprint
      */
     const handleCloseImprint = () => {
         setShowImprintModal(false);
@@ -64,10 +58,10 @@ function Footer() {
     return (
         <>
             <footer className="bg-dark text-light mt-5">
-                <div className="container py-5">
+                <div className="container py-4 py-md-5">
                     <div className="row g-4">
-                        {/* Über das System - Erweitert */}
-                        <div className="col-lg-5 col-md-6 mb-4">
+                        {/* Über das System */}
+                        <div className="col-12 col-md-6 col-lg-5 mb-4">
                             <h4 className="mb-3">
                                 <i className="fas fa-graduation-cap me-2"></i>
                                 IU Community Quiz
@@ -80,26 +74,26 @@ function Footer() {
                                 <i className="fas fa-users me-2"></i>
                                 Gemeinsam lernen, gemeinsam wachsen - für eine bessere Bildung.
                             </p>
-                            <div className="d-flex align-items-center">
-                  <span className="badge bg-primary me-2">
-                    <i className="fas fa-star me-1"></i>
-                    Kostenlos
-                  </span>
-                                <span className="badge bg-success me-2">
-                    <i className="fas fa-mobile-alt me-1"></i>
-                    Responsive
-                  </span>
-                                <span className="badge bg-info">
-                    <i className="fas fa-heart me-1"></i>
-                    Open Source
-                  </span>
+                            <div className="d-flex flex-wrap justify-content-center justify-content-md-start">
+                                <span className="badge bg-primary me-2 mb-2">
+                                    <i className="fas fa-star me-1"></i>
+                                    Kostenlos
+                                </span>
+                                <span className="badge bg-success me-2 mb-2">
+                                    <i className="fas fa-mobile-alt me-1"></i>
+                                    Responsive
+                                </span>
+                                <span className="badge bg-info mb-2">
+                                    <i className="fas fa-heart me-1"></i>
+                                    Open Source
+                                </span>
                             </div>
                         </div>
 
-                        {/* Navigation & Links */}
-                        <div className="col-lg-3 col-md-6 mb-4">
-                            <h5 className="mb-3">Navigation</h5>
-                            <ul className="list-unstyled">
+                        {/* Navigation & Links - Zentriert für alle Endgeräte */}
+                        <div className="col-12 col-md-6 col-lg-3 mb-4">
+                            <h5 className="mb-3 text-center text-md-start">Navigation</h5>
+                            <ul className="list-unstyled d-flex flex-column align-items-center align-items-md-start">
                                 <li className="mb-2">
                                     <a href="#" className="text-light text-decoration-none d-flex align-items-center">
                                         <i className="fas fa-question-circle me-2"></i>
@@ -108,7 +102,7 @@ function Footer() {
                                 </li>
                                 <li className="mb-2">
                                     <button
-                                        className="btn btn-link text-light p-0 text-decoration-none text-start d-flex align-items-center"
+                                        className="btn btn-link text-light p-0 text-decoration-none d-flex align-items-center"
                                         onClick={handleShowPrivacy}
                                         style={{ border: 'none' }}
                                     >
@@ -124,7 +118,7 @@ function Footer() {
                                 </li>
                                 <li className="mb-2">
                                     <button
-                                        className="btn btn-link text-light p-0 text-decoration-none text-start d-flex align-items-center"
+                                        className="btn btn-link text-light p-0 text-decoration-none d-flex align-items-center"
                                         onClick={handleShowImprint}
                                         style={{ border: 'none' }}
                                     >
@@ -135,10 +129,10 @@ function Footer() {
                             </ul>
                         </div>
 
-                        {/* Kontakt & Social */}
-                        <div className="col-lg-4 col-md-12 mb-4">
-                            <h5 className="mb-3">Kontakt & Community</h5>
-                            <div className="mb-3">
+                        {/* Kontakt & Social - Harmonisiert für alle Endgeräte */}
+                        <div className="col-12 col-lg-4 mb-4">
+                            <h5 className="mb-3 text-center text-lg-start">Kontakt & Community</h5>
+                            <div className="mb-3 text-center text-lg-start">
                                 <p className="text-light mb-2">
                                     <i className="fas fa-envelope me-2"></i>
                                     <a href="mailto:support@iubh-quiz.de" className="text-light text-decoration-none">
@@ -157,9 +151,9 @@ function Footer() {
                                 </p>
                             </div>
 
-                            <div className="mb-3">
+                            <div className="mb-3 text-center text-lg-start">
                                 <h6 className="text-light mb-2">Folgen Sie uns</h6>
-                                <div className="social-links">
+                                <div className="social-links d-flex justify-content-center justify-content-lg-start">
                                     <a href="#" className="text-light me-3 d-inline-block" aria-label="Facebook">
                                         <i className="fab fa-facebook fa-2x"></i>
                                     </a>
@@ -179,10 +173,10 @@ function Footer() {
 
                     <hr className="my-4 border-secondary" />
 
-                    {/* Copyright & Bottom Info */}
+                    {/* Copyright & Bottom Info - Zentriert für alle Endgeräte */}
                     <div className="row align-items-center">
-                        <div className="col-lg-8 col-md-6 mb-2 mb-md-0">
-                            <p className="text-muted mb-0">
+                        <div className="col-12 col-md-8 col-lg-8 mb-3 mb-md-0 text-center text-md-start">
+                            <p className="text-muted mb-1">
                                 <i className="fas fa-copyright me-1"></i>
                                 2025 IU Quiz Community. Alle Rechte vorbehalten.
                             </p>
@@ -190,8 +184,8 @@ function Footer() {
                                 IU Internationale Hochschule - Juri-Gagarin-Ring 152, 99084 Erfurt
                             </small>
                         </div>
-                        <div className="col-lg-4 col-md-6 text-md-end">
-                            <p className="text-light mb-0">
+                        <div className="col-12 col-md-4 col-lg-4 text-center text-md-end">
+                            <p className="text-light mb-1">
                                 <i className="fas fa-code me-1"></i>
                                 Entwickelt mit <i className="fas fa-heart text-danger mx-1"></i>
                                 für Studierende
@@ -228,7 +222,26 @@ function Footer() {
                             ></button>
                         </div>
                         <div className="modal-body" style={{ maxHeight: '70vh', overflowY: 'auto' }}>
-                            <PrivacyPolicy />
+                            <div className="container-fluid">
+                                <h6>1. Datenschutz auf einen Blick</h6>
+                                <p>
+                                    Die folgenden Hinweise geben einen einfachen Überblick darüber, was mit Ihren
+                                    personenbezogenen Daten passiert, wenn Sie unsere Website besuchen.
+                                </p>
+
+                                <h6>2. Verantwortliche Stelle</h6>
+                                <p>
+                                    IU Internationale Hochschule<br />
+                                    Juri-Gagarin-Ring 152<br />
+                                    99084 Erfurt
+                                </p>
+
+                                <h6>3. Datenerfassung</h6>
+                                <p>
+                                    Diese Anwendung erfasst nur die notwendigen Daten für die Funktionalität
+                                    des Quiz-Systems. Alle Daten werden lokal gespeichert.
+                                </p>
+                            </div>
                         </div>
                         <div className="modal-footer">
                             <button
@@ -236,7 +249,6 @@ function Footer() {
                                 className="btn btn-secondary"
                                 onClick={handleClosePrivacy}
                             >
-                                <i className="fas fa-times me-2"></i>
                                 Schließen
                             </button>
                         </div>
@@ -253,7 +265,7 @@ function Footer() {
                 aria-labelledby="imprintModalLabel"
                 aria-hidden={!showImprintModal}
             >
-                <div className="modal-dialog modal-xl" role="document">
+                <div className="modal-dialog modal-lg" role="document">
                     <div className="modal-content">
                         <div className="modal-header">
                             <h5 className="modal-title" id="imprintModalLabel">
@@ -267,8 +279,27 @@ function Footer() {
                                 aria-label="Schließen"
                             ></button>
                         </div>
-                        <div className="modal-body" style={{ maxHeight: '70vh', overflowY: 'auto' }}>
-                            <Imprint />
+                        <div className="modal-body">
+                            <div className="container-fluid">
+                                <h6>Angaben gemäß § 5 TMG</h6>
+                                <p>
+                                    IU Internationale Hochschule<br />
+                                    Juri-Gagarin-Ring 152<br />
+                                    99084 Erfurt
+                                </p>
+
+                                <h6>Kontakt</h6>
+                                <p>
+                                    Telefon: +49 (0) 2151 822-0<br />
+                                    E-Mail: support@iubh-quiz.de
+                                </p>
+
+                                <h6>Haftungsausschluss</h6>
+                                <p>
+                                    Diese Anwendung dient ausschließlich zu Lehr- und Lernzwecken.
+                                    Alle Inhalte wurden sorgfältig geprüft.
+                                </p>
+                            </div>
                         </div>
                         <div className="modal-footer">
                             <button
@@ -276,23 +307,14 @@ function Footer() {
                                 className="btn btn-secondary"
                                 onClick={handleCloseImprint}
                             >
-                                <i className="fas fa-times me-2"></i>
                                 Schließen
                             </button>
                         </div>
                     </div>
                 </div>
             </div>
-
-            {/* Modal Backdrop */}
-            {(showPrivacyModal || showImprintModal) && (
-                <div
-                    className="modal-backdrop fade show"
-                    onClick={showPrivacyModal ? handleClosePrivacy : handleCloseImprint}
-                ></div>
-            )}
         </>
     );
 }
 
-export default Footer
+export default Footer;

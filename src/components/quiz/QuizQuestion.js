@@ -13,10 +13,23 @@
  *
  * UPDATE: Multiplayer-Simulation für kooperative und kompetitive Modi
  * UPDATE: Live-Updates und Mitspieler-Antworten anzeigen
+ * UPDATE: Vollständige Multiplayer-Sidebar mit Ranglisten
+ * UPDATE: Live-Chat Integration (nur für cooperative Mode)
+ * UPDATE: Punkte-Anzeige für alle Spieler
+ * UPDATE: Zeit-Anzeige für kooperativen Modus
+ * UPDATE: Lobby-Anzeige
+ * UPDATE: Separate Chat- und Ranking-Fenster integriert
+ * UPDATE: Dynamische Punkte-Erhöhung je nach Antwort
+ * UPDATE: Timer-Fix für erste Frage
+ * UPDATE: Kein Chat für Competitive Mode
+ *
+ * @author IU Quiz Community
+ * @version 1.6.0
+ * @since 2025-07-15
  */
 
-import React, { useState, useEffect } from 'react';
-import simulatedPlayersService from '../../services/SimulatedPlayersService'; // UPDATE: Import für Multiplayer-Simulation
+import React, { useState, useEffect, useRef } from 'react';
+import simulatedPlayersService from '../../services/SimulatedPlayersService';
 
 /**
  * QuizQuestion-Komponente
@@ -29,7 +42,11 @@ import simulatedPlayersService from '../../services/SimulatedPlayersService'; //
  * @param {Function} props.onAnswer - Callback-Funktion für Antwort
  * @param {Function} props.onBackToCategorySelection - Callback für Rückkehr zur Kategorieauswahl
  * @param {Object} props.user - Benutzerdaten
- * @param {Object} props.multiplayerData - UPDATE: Multiplayer-Daten mit simulierten Spielern
+ * @param {Object} props.multiplayerData - Multiplayer-Daten mit simulierten Spielern
+ * @param {Array} props.chatMessages - Chat-Nachrichten
+ * @param {Function} props.onSendChatMessage - Callback für Chat-Nachrichten
+ * @param {Array} props.allAnswers - Alle bisherigen Antworten für Punkte-Berechnung
+ * @returns {JSX.Element} Die gerenderte QuizQuestion-Komponente
  */
 function QuizQuestion({
                         question,
@@ -39,54 +56,207 @@ function QuizQuestion({
                         onAnswer,
                         onBackToCategorySelection,
                         user,
-                        multiplayerData // UPDATE: Neue Prop für Multiplayer-Daten
+                        multiplayerData,
+                        chatMessages = [],
+                        onSendChatMessage,
+                        allAnswers = []
                       }) {
+  // Basis-Zustand für Fragen-Handling
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [showExplanation, setShowExplanation] = useState(false);
   const [timeLeft, setTimeLeft] = useState(null);
   const [startTime, setStartTime] = useState(null);
   const [isAnswered, setIsAnswered] = useState(false);
 
-  // UPDATE: Zustand für Multiplayer-Funktionen
+  // Multiplayer-Zustand
   const [cooperativeMessages, setCooperativeMessages] = useState([]);
   const [competitiveUpdates, setCompetitiveUpdates] = useState([]);
+  const [liveComments, setLiveComments] = useState([]);
   const [showMultiplayerInfo, setShowMultiplayerInfo] = useState(false);
 
-  // Zeitmessung und Timer-Setup
+  // Chat-Zustand (nur für cooperative Mode)
+  const [chatInputMessage, setChatInputMessage] = useState('');
+  const [isTyping, setIsTyping] = useState(false);
+
+  // Ranking-Zustand
+  const [animatedScores, setAnimatedScores] = useState({});
+
+  // Dynamische Punkte-Anzeige
+  const [currentScore, setCurrentScore] = useState(0);
+  const [scoreAnimation, setScoreAnimation] = useState(false);
+
+  // Timer-Referenz für korrektes Cleanup
+  const timerRef = useRef(null);
+
+  /**
+   * Berechnet die aktuellen Punkte des Spielers
+   * @returns {number} Aktuelle Punkte
+   */
+  const calculateCurrentScore = () => {
+    return allAnswers.reduce((total, answer) => {
+      if (answer.isCorrect) {
+        const speedBonus = Math.max(0, 30 - answer.timeTaken);
+        return total + 100 + speedBonus;
+      }
+      return total;
+    }, 0);
+  };
+
+  /**
+   * Berechnet die Genauigkeit des menschlichen Spielers
+   * @returns {number} Genauigkeit in Prozent
+   */
+  const calculateHumanAccuracy = () => {
+    if (allAnswers.length === 0) return 0;
+    const correctAnswers = allAnswers.filter(a => a.isCorrect).length;
+    return Math.round((correctAnswers / allAnswers.length) * 100);
+  };
+
+  /**
+   * Berechnet die durchschnittliche Antwortzeit des menschlichen Spielers
+   * @returns {number} Durchschnittliche Zeit in Sekunden
+   */
+  const calculateAverageTime = () => {
+    if (allAnswers.length === 0) return 0;
+    const totalTime = allAnswers.reduce((sum, answer) => sum + answer.timeTaken, 0);
+    return Math.round(totalTime / allAnswers.length);
+  };
+
+  /**
+   * Erstellt die vollständige Rangliste mit menschlichem Spieler
+   * @returns {Array} Sortierte Rangliste
+   */
+  const createFullRanking = () => {
+    const humanScore = calculateCurrentScore();
+    const humanAccuracy = calculateHumanAccuracy();
+    const averageTime = calculateAverageTime();
+
+    const humanPlayer = {
+      id: 'human_player',
+      name: user.name,
+      score: humanScore,
+      accuracy: humanAccuracy,
+      averageTime: averageTime,
+      isHuman: true,
+      color: 'primary',
+      avatar: 'fas fa-user',
+      answeredQuestions: allAnswers.length,
+      correctAnswers: allAnswers.filter(a => a.isCorrect).length,
+      status: 'Online'
+    };
+
+    // Kombiniere menschlichen Spieler mit KI-Spielern
+    const allPlayers = [humanPlayer, ...multiplayerData.players];
+
+    // Sortiere nach Punktzahl (höchste zuerst)
+    return allPlayers.sort((a, b) => b.score - a.score);
+  };
+
+  /**
+   * Gibt die Positions-Farbe zurück
+   * @param {number} position - Position in der Rangliste
+   * @returns {string} Bootstrap-Farben-Klasse
+   */
+  const getPositionColor = (position) => {
+    switch (position) {
+      case 1: return 'warning'; // Gold
+      case 2: return 'secondary'; // Silber
+      case 3: return 'primary'; // Bronze
+      default: return 'light';
+    }
+  };
+
+  /**
+   * Gibt das Positions-Icon zurück
+   * @param {number} position - Position in der Rangliste
+   * @returns {string} Icon-Klasse
+   */
+  const getPositionIcon = (position) => {
+    switch (position) {
+      case 1: return 'fas fa-crown';
+      case 2: return 'fas fa-medal';
+      case 3: return 'fas fa-award';
+      default: return 'fas fa-user';
+    }
+  };
+
+  /**
+   * Aktualisiert die Punkte-Anzeige dynamisch
+   */
   useEffect(() => {
+    const newScore = calculateCurrentScore();
+    if (newScore !== currentScore) {
+      setScoreAnimation(true);
+      setCurrentScore(newScore);
+      setTimeout(() => setScoreAnimation(false), 1000);
+    }
+  }, [allAnswers]);
+
+  /**
+   * Zeitmessung und Timer-Setup - KORRIGIERT
+   */
+  useEffect(() => {
+    // Cleanup vorheriger Timer
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+    }
+
+    // Reset Zustand für neue Frage
     setStartTime(Date.now());
     setSelectedAnswer(null);
     setShowExplanation(false);
     setIsAnswered(false);
 
-    // UPDATE: Reset Multiplayer-Daten für neue Frage
+    // Reset Multiplayer-Daten für neue Frage
     setCooperativeMessages([]);
     setCompetitiveUpdates([]);
+    setLiveComments([]);
     setShowMultiplayerInfo(false);
 
-    // Timer nur für competitive Mode
+    // Timer für competitive UND cooperative Mode
+    let initialTime = null;
     if (gameMode === 'competitive') {
-      setTimeLeft(30); // 30 Sekunden für competitive Mode
-      const timer = setInterval(() => {
+      initialTime = 30; // 30 Sekunden für competitive Mode
+    } else if (gameMode === 'cooperative') {
+      initialTime = 60; // 60 Sekunden für cooperative Mode
+    }
+
+    if (initialTime !== null) {
+      setTimeLeft(initialTime);
+
+      // Starte Timer sofort
+      timerRef.current = setInterval(() => {
         setTimeLeft(prev => {
           if (prev <= 1) {
-            clearInterval(timer);
-            if (!isAnswered) {
-              handleTimeUp();
-            }
+            clearInterval(timerRef.current);
+            // Verwende setTimeout um Race-Condition zu vermeiden
+            setTimeout(() => {
+              setIsAnswered(current => {
+                if (!current) {
+                  handleTimeUp();
+                  return true;
+                }
+                return current;
+              });
+            }, 0);
             return 0;
           }
           return prev - 1;
         });
       }, 1000);
-
-      return () => clearInterval(timer);
-    } else {
-      setTimeLeft(null);
     }
+
+    // Cleanup beim Unmount
+    return () => {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
+    };
   }, [question, gameMode]);
 
-  // UPDATE: Effekt für Multiplayer-Nachrichten und Updates
+  /**
+   * Effekt für Multiplayer-Nachrichten und Updates
+   */
   useEffect(() => {
     if (multiplayerData?.isMultiplayer && multiplayerData.currentPlayerAnswers.length > 0) {
       if (gameMode === 'cooperative') {
@@ -100,6 +270,12 @@ function QuizQuestion({
             multiplayerData.currentPlayerAnswers
         );
         setCompetitiveUpdates(updates);
+
+        // Generiere Live-Kommentare
+        const comments = simulatedPlayersService.generateLiveComments(
+            multiplayerData.currentPlayerAnswers
+        );
+        setLiveComments(comments);
       }
 
       // Zeige Multiplayer-Info nach kurzer Verzögerung
@@ -110,30 +286,34 @@ function QuizQuestion({
   }, [multiplayerData?.currentPlayerAnswers, gameMode, question]);
 
   /**
-   * Behandelt Zeit-Ablauf im competitive Mode
+   * Behandelt Zeit-Ablauf im competitive/cooperative Mode
    */
   const handleTimeUp = () => {
-    if (!isAnswered) {
-      setIsAnswered(true);
-      setShowExplanation(true);
+    setShowExplanation(true);
 
-      const timeTaken = Math.round((Date.now() - startTime) / 1000);
+    const timeTaken = Math.round((Date.now() - startTime) / 1000);
 
-      onAnswer({
-        selectedAnswer: null,
-        isCorrect: false,
-        timeTaken,
-        questionId: question.id,
-        timedOut: true
-      });
-    }
+    onAnswer({
+      selectedAnswer: null,
+      isCorrect: false,
+      timeTaken,
+      questionId: question.id,
+      timedOut: true
+    });
   };
 
   /**
    * Behandelt Antwort-Auswahl
+   *
+   * @param {number} answerIndex - Index der ausgewählten Antwort
    */
   const handleAnswerSelect = (answerIndex) => {
     if (isAnswered) return;
+
+    // Stoppe Timer
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+    }
 
     setSelectedAnswer(answerIndex);
     setIsAnswered(true);
@@ -152,7 +332,39 @@ function QuizQuestion({
   };
 
   /**
+   * Chat-Nachricht senden (nur für cooperative Mode)
+   */
+  const handleSendMessage = () => {
+    if (chatInputMessage.trim() && onSendChatMessage) {
+      const message = {
+        id: Date.now(),
+        playerId: 'human_player',
+        playerName: user.name,
+        message: chatInputMessage.trim(),
+        timestamp: new Date().toISOString(),
+        isHuman: true,
+        color: 'primary'
+      };
+
+      onSendChatMessage(message);
+      setChatInputMessage('');
+    }
+  };
+
+  /**
+   * Behandelt Enter-Taste im Chat
+   */
+  const handleChatKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleSendMessage();
+    }
+  };
+
+  /**
    * Gibt CSS-Klasse für Antwort-Button zurück
+   *
+   * @param {number} index - Index der Antwort
+   * @returns {string} CSS-Klassen-String
    */
   const getAnswerButtonClass = (index) => {
     if (!showExplanation) {
@@ -172,6 +384,8 @@ function QuizQuestion({
 
   /**
    * Berechnet Fortschritt in Prozent
+   *
+   * @returns {number} Fortschritt in Prozent
    */
   const getProgressPercentage = () => {
     return Math.round((questionNumber / totalQuestions) * 100);
@@ -179,6 +393,8 @@ function QuizQuestion({
 
   /**
    * Gibt Spielmodus-spezifische CSS-Klasse zurück
+   *
+   * @returns {string} CSS-Klassen-String
    */
   const getGameModeClass = () => {
     switch (gameMode) {
@@ -193,6 +409,8 @@ function QuizQuestion({
 
   /**
    * Gibt Spielmodus-spezifisches Icon zurück
+   *
+   * @returns {string} Icon-Klassen-String
    */
   const getGameModeIcon = () => {
     switch (gameMode) {
@@ -205,6 +423,244 @@ function QuizQuestion({
     }
   };
 
+  /**
+   * Rendert die Lobby-Übersicht
+   */
+  const renderLobby = () => {
+    const humanAccuracy = calculateHumanAccuracy();
+
+    return (
+        <div className="mb-3">
+          <h6 className="mb-3">
+            <i className="fas fa-users me-2"></i>
+            Spieler-Lobby
+          </h6>
+
+          {/* Menschlicher Spieler */}
+          <div className="card mb-2 border-primary">
+            <div className="card-body p-2">
+              <div className="d-flex align-items-center">
+                <i className="fas fa-user text-primary me-2"></i>
+                <div className="flex-grow-1">
+                  <div className="fw-bold">{user.name} (Du)</div>
+                  <small className="text-muted">Online</small>
+                </div>
+                <div className="text-end">
+                  <div className={`badge bg-primary ${scoreAnimation ? 'animate-pulse' : ''}`}>
+                    <i className="fas fa-star me-1"></i>
+                    {currentScore} Punkte
+                  </div>
+                  <div className="small text-muted">{humanAccuracy}% richtig</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Simulierte Spieler */}
+          {multiplayerData.players.map((player, index) => (
+              <div key={player.id} className="card mb-2">
+                <div className="card-body p-2">
+                  <div className="d-flex align-items-center">
+                    <i className={`${player.avatar} text-${player.color} me-2`}></i>
+                    <div className="flex-grow-1">
+                      <div className="fw-bold">{player.name}</div>
+                      <small className="text-muted">{player.studyProgram} • {player.semester}. Sem</small>
+                    </div>
+                    <div className="text-end">
+                      <div className="badge bg-secondary">
+                        <i className="fas fa-star me-1"></i>
+                        {player.score || 0} Punkte
+                      </div>
+                      <div className="small text-muted">
+                        {player.answeredQuestions > 0 ?
+                            Math.round((player.correctAnswers / player.answeredQuestions) * 100) : 0
+                        }% richtig
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+          ))}
+        </div>
+    );
+  };
+
+  /**
+   * Rendert das integrierte Chat-Fenster (nur für cooperative Mode)
+   */
+  const renderChatWindow = () => {
+    if (gameMode !== 'cooperative') return null;
+
+    return (
+        <div className="card h-100">
+          <div className={`card-header ${getGameModeClass()} text-white`}>
+            <h6 className="mb-0">
+              <i className="fas fa-comments me-2"></i>
+              Live-Chat
+              {chatMessages.length > 0 && (
+                  <span className="badge bg-light text-dark ms-2">{chatMessages.length}</span>
+              )}
+            </h6>
+          </div>
+
+          <div className="card-body p-2" style={{ height: '300px', overflowY: 'auto' }}>
+            {chatMessages.length === 0 ? (
+                <div className="text-center text-muted h-100 d-flex align-items-center justify-content-center">
+                  <div>
+                    <i className="fas fa-comments fa-2x mb-2"></i>
+                    <p>Noch keine Nachrichten...</p>
+                    <small>Starten Sie eine Unterhaltung!</small>
+                  </div>
+                </div>
+            ) : (
+                <div className="chat-messages">
+                  {chatMessages.map((msg, index) => (
+                      <div key={msg.id} className={`mb-2 ${msg.isHuman ? 'text-end' : 'text-start'}`}>
+                        <div className={`d-inline-block p-2 rounded ${
+                            msg.isHuman
+                                ? 'bg-primary text-white'
+                                : `bg-${msg.color === 'info' ? 'info' : 'light'} text-dark`
+                        }`} style={{ maxWidth: '80%' }}>
+                          <div className="fw-bold small">{msg.playerName}</div>
+                          <div>{msg.message}</div>
+                          <small className="text-muted">
+                            {new Date(msg.timestamp).toLocaleTimeString()}
+                          </small>
+                        </div>
+                      </div>
+                  ))}
+                </div>
+            )}
+          </div>
+
+          <div className="card-footer p-2">
+            <div className="input-group">
+              <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Nachricht eingeben..."
+                  value={chatInputMessage}
+                  onChange={(e) => setChatInputMessage(e.target.value)}
+                  onKeyPress={handleChatKeyPress}
+                  maxLength={200}
+              />
+              <button
+                  className="btn btn-primary"
+                  onClick={handleSendMessage}
+                  disabled={!chatInputMessage.trim()}
+              >
+                <i className="fas fa-paper-plane"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+    );
+  };
+
+  /**
+   * Rendert das integrierte Ranking-Fenster
+   */
+  const renderRankingWindow = () => {
+    const ranking = createFullRanking();
+
+    return (
+        <div className="card h-100">
+          <div className={`card-header ${getGameModeClass()} text-white`}>
+            <h6 className="mb-0">
+              <i className="fas fa-trophy me-2"></i>
+              Live-Rangliste
+              {ranking.length > 0 && (
+                  <span className="badge bg-light text-dark ms-2">{ranking.length} Spieler</span>
+              )}
+            </h6>
+          </div>
+
+          <div className="card-body p-2" style={{ height: '300px', overflowY: 'auto' }}>
+            {ranking.length === 0 ? (
+                <div className="text-center text-muted h-100 d-flex align-items-center justify-content-center">
+                  <div>
+                    <i className="fas fa-trophy fa-2x mb-2"></i>
+                    <p>Noch keine Ergebnisse...</p>
+                    <small>Beantworten Sie Fragen für die Rangliste!</small>
+                  </div>
+                </div>
+            ) : (
+                <div className="ranking-list">
+                  {ranking.map((player, index) => {
+                    const position = index + 1;
+                    const isCurrentUser = player.isHuman;
+
+                    return (
+                        <div
+                            key={player.id}
+                            className={`mb-2 p-2 border rounded ${isCurrentUser ? 'border-primary bg-light' : ''}`}
+                            style={{
+                              animation: isCurrentUser ? 'pulse 2s infinite' : 'none'
+                            }}
+                        >
+                          <div className="d-flex align-items-center">
+                            {/* Position und Icon */}
+                            <div className="me-2 text-center" style={{ minWidth: '30px' }}>
+                              <div className={`badge bg-${getPositionColor(position)} text-dark`}>
+                                #{position}
+                              </div>
+                            </div>
+
+                            {/* Spieler-Avatar */}
+                            <div className="me-2">
+                              <i className={`${player.avatar} text-${player.color}`}></i>
+                            </div>
+
+                            {/* Spieler-Info */}
+                            <div className="flex-grow-1">
+                              <div className="fw-bold small">
+                                {player.name}
+                                {isCurrentUser && (
+                                    <span className="badge bg-primary ms-1">Du</span>
+                                )}
+                              </div>
+                              <small className="text-muted">
+                                {player.accuracy}% richtig
+                              </small>
+                            </div>
+
+                            {/* Punkte */}
+                            <div className="text-end">
+                              <div className={`badge bg-${isCurrentUser ? 'primary' : 'secondary'}`}>
+                                <i className="fas fa-star me-1"></i>
+                                {player.score}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                    );
+                  })}
+                </div>
+            )}
+          </div>
+
+          {/* Statistiken Footer */}
+          <div className="card-footer p-2">
+            <div className="row text-center">
+              <div className="col-6">
+                <small className="text-muted d-block">Deine Position</small>
+                <strong className="small">
+                  #{ranking.findIndex(p => p.isHuman) + 1}
+                </strong>
+              </div>
+              <div className="col-6">
+                <small className="text-muted d-block">Deine Punkte</small>
+                <strong className="small">
+                  {currentScore}
+                </strong>
+              </div>
+            </div>
+          </div>
+        </div>
+    );
+  };
+
+  // Frage-Validierung
   if (!question) {
     return (
         <div className="container mt-4">
@@ -216,11 +672,28 @@ function QuizQuestion({
     );
   }
 
+  // Berechne Spalten-Layout basierend auf Spielmodus
+  const getColumnLayout = () => {
+    if (!multiplayerData?.isMultiplayer) {
+      return { main: "col-12", sidebar: null };
+    }
+
+    if (gameMode === 'cooperative') {
+      return { main: "col-lg-6", chat: "col-lg-3", ranking: "col-lg-3" };
+    } else if (gameMode === 'competitive') {
+      return { main: "col-lg-8", ranking: "col-lg-4" };
+    }
+
+    return { main: "col-12", sidebar: null };
+  };
+
+  const layout = getColumnLayout();
+
   return (
-      <div className="container mt-4">
+      <div className="container-fluid mt-4">
         <div className="row">
-          <div className="col-md-8">
-            {/* Hauptfrage-Bereich */}
+          {/* Hauptfrage-Bereich */}
+          <div className={layout.main}>
             <div className="card shadow-lg">
               <div className={`card-header ${getGameModeClass()} text-white`}>
                 <div className="d-flex justify-content-between align-items-center">
@@ -228,14 +701,25 @@ function QuizQuestion({
                     <i className={`${getGameModeIcon()} me-2`}></i>
                     Frage {questionNumber} von {totalQuestions}
                   </h3>
-                  {timeLeft !== null && (
-                      <div className="d-flex align-items-center">
-                        <i className="fas fa-clock me-2"></i>
-                        <span className="badge bg-light text-dark fs-6">
-                      {timeLeft}s
-                    </span>
-                      </div>
-                  )}
+                  <div className="d-flex align-items-center">
+                    {/* Punkte-Anzeige */}
+                    {multiplayerData?.isMultiplayer && (
+                        <span className={`badge bg-light text-dark me-3 ${scoreAnimation ? 'animate-pulse' : ''}`}>
+                        <i className="fas fa-star me-1"></i>
+                          {currentScore} Punkte
+                      </span>
+                    )}
+
+                    {/* Zeit-Anzeige */}
+                    {timeLeft !== null && (
+                        <div className="d-flex align-items-center">
+                          <i className="fas fa-clock me-2"></i>
+                          <span className={`badge ${timeLeft <= 10 ? 'bg-danger' : 'bg-light'} text-dark fs-6`}>
+                          {timeLeft}s
+                        </span>
+                        </div>
+                    )}
+                  </div>
                 </div>
               </div>
 
@@ -261,6 +745,12 @@ function QuizQuestion({
                       <small className="text-muted">
                         <i className="fas fa-tag me-1"></i>
                         Kategorie: {question.category}
+                      </small>
+                  )}
+                  {question.difficulty && (
+                      <small className="text-muted ms-3">
+                        <i className="fas fa-signal me-1"></i>
+                        Schwierigkeit: {question.difficulty}
                       </small>
                   )}
                 </div>
@@ -300,6 +790,19 @@ function QuizQuestion({
                       <p className="mb-0">{question.explanation}</p>
                     </div>
                 )}
+
+                {/* Timeout-Meldung */}
+                {showExplanation && selectedAnswer === null && (
+                    <div className="mt-4 p-3 bg-warning rounded">
+                      <h6>
+                        <i className="fas fa-clock me-2"></i>
+                        Zeit abgelaufen!
+                      </h6>
+                      <p className="mb-0">
+                        Die Zeit ist abgelaufen. Die richtige Antwort war: <strong>{question.answers[question.correctAnswer]}</strong>
+                      </p>
+                    </div>
+                )}
               </div>
 
               <div className="card-footer">
@@ -315,113 +818,30 @@ function QuizQuestion({
                   <div className="d-flex align-items-center">
                     <i className="fas fa-user-circle me-2"></i>
                     <span>{user.name}</span>
+                    {gameMode !== 'single-player' && (
+                        <span className="badge bg-secondary ms-2">
+                      {gameMode === 'cooperative' ? 'Kooperativ' : 'Kompetitiv'}
+                    </span>
+                    )}
                   </div>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* UPDATE: Multiplayer-Sidebar */}
-          <div className="col-md-4">
-            {multiplayerData?.isMultiplayer && (
-                <div className="card">
-                  <div className={`card-header ${getGameModeClass()} text-white`}>
-                    <h5 className="mb-0">
-                      <i className="fas fa-users me-2"></i>
-                      Mitspieler
-                    </h5>
-                  </div>
-                  <div className="card-body">
-                    {/* Spieler-Liste */}
-                    <div className="mb-3">
-                      <h6>Teilnehmer:</h6>
-                      <div className="list-group list-group-flush">
-                        <div className="list-group-item d-flex justify-content-between align-items-center">
-                      <span>
-                        <i className="fas fa-user-circle me-2 text-primary"></i>
-                        {user.name} <small className="text-muted">(Sie)</small>
-                      </span>
-                          <span className="badge bg-primary rounded-pill">Mensch</span>
-                        </div>
-                        {multiplayerData.players.map(player => (
-                            <div key={player.id} className="list-group-item d-flex justify-content-between align-items-center">
-                        <span>
-                          <i className={`${player.avatar} me-2 text-${player.color}`}></i>
-                          {player.name}
-                        </span>
-                              <span className={`badge bg-${player.color} rounded-pill`}>
-                          {player.semester}. Sem
-                        </span>
-                            </div>
-                        ))}
-                      </div>
-                    </div>
+          {/* Chat-Bereich (nur für cooperative Mode) */}
+          {layout.chat && (
+              <div className={layout.chat + " mb-4"}>
+                {renderChatWindow()}
+              </div>
+          )}
 
-                    {/* Kooperative Nachrichten */}
-                    {gameMode === 'cooperative' && cooperativeMessages.length > 0 && showMultiplayerInfo && (
-                        <div className="mb-3">
-                          <h6>
-                            <i className="fas fa-comments me-2"></i>
-                            Diskussion:
-                          </h6>
-                          <div className="alert alert-info">
-                            {cooperativeMessages.map((msg, index) => (
-                                <div key={index} className="mb-2">
-                                  <strong>{msg.playerName}:</strong>
-                                  <br />
-                                  <small className={msg.isHelpful ? 'text-success' : 'text-muted'}>
-                                    {msg.message}
-                                  </small>
-                                </div>
-                            ))}
-                          </div>
-                        </div>
-                    )}
-
-                    {/* Kompetitive Updates */}
-                    {gameMode === 'competitive' && competitiveUpdates.length > 0 && showMultiplayerInfo && (
-                        <div className="mb-3">
-                          <h6>
-                            <i className="fas fa-tachometer-alt me-2"></i>
-                            Live-Updates:
-                          </h6>
-                          <div className="alert alert-warning">
-                            {competitiveUpdates.map((update, index) => (
-                                <div key={index} className="mb-2">
-                                  <div className="d-flex justify-content-between">
-                                    <strong>{update.playerName}:</strong>
-                                    <small>{update.time}s</small>
-                                  </div>
-                                  <small className={update.isCorrect ? 'text-success' : 'text-danger'}>
-                                    {update.status}
-                                  </small>
-                                </div>
-                            ))}
-                          </div>
-                        </div>
-                    )}
-
-                    {/* Aktuelle Punkte */}
-                    {multiplayerData.isMultiplayer && (
-                        <div>
-                          <h6>
-                            <i className="fas fa-chart-bar me-2"></i>
-                            Aktuelle Punkte:
-                          </h6>
-                          <div className="list-group list-group-flush">
-                            {simulatedPlayersService.getPlayerStats().map((stat, index) => (
-                                <div key={stat.id} className="list-group-item d-flex justify-content-between">
-                                  <span>{stat.name}</span>
-                                  <span className="badge bg-secondary rounded-pill">{stat.score}</span>
-                                </div>
-                            ))}
-                          </div>
-                        </div>
-                    )}
-                  </div>
-                </div>
-            )}
-          </div>
+          {/* Ranking-Bereich (für beide Multiplayer-Modi) */}
+          {layout.ranking && (
+              <div className={layout.ranking + " mb-4"}>
+                {renderRankingWindow()}
+              </div>
+          )}
         </div>
       </div>
   );

@@ -12,10 +12,16 @@
  * - Statistische Auswertung und Ranglisten
  *
  * UPDATE: Neue Implementierung für Multiplayer-Simulation
+ * UPDATE: Komplette Methoden für generateCompetitiveUpdates und reset
+ *
+ * @author IU Quiz Community
+ * @version 1.2.0
+ * @since 2025-07-15
  */
 
 /**
  * Simulierte Spieler-Profile mit verschiedenen Charakteristiken
+ * @type {Array<Object>}
  */
 const SIMULATED_PLAYERS = [
     {
@@ -87,8 +93,14 @@ const SIMULATED_PLAYERS = [
 
 /**
  * SimulatedPlayers-Service-Klasse
+ *
+ * Verwaltet die Simulation von Mitspielern in verschiedenen Quiz-Modi
+ * und stellt realistische Spieler-Interaktionen bereit.
  */
 class SimulatedPlayersService {
+    /**
+     * Konstruktor - Initialisiert den Service
+     */
     constructor() {
         this.activePlayers = [];
         this.gameMode = null;
@@ -97,10 +109,11 @@ class SimulatedPlayersService {
 
     /**
      * Initialisiert Spieler für eine Quiz-Runde
+     *
      * @param {string} gameMode - 'cooperative' oder 'competitive'
      * @param {string} category - Kategorie für Spezialisierung
      * @param {number} playerCount - Anzahl der Mitspieler (2-4)
-     * @returns {Array} Array von Spielern
+     * @returns {Array<Object>} Array von Spielern
      */
     initializePlayers(gameMode, category, playerCount = 3) {
         this.gameMode = gameMode;
@@ -124,9 +137,10 @@ class SimulatedPlayersService {
 
     /**
      * Simuliert Antworten der KI-Spieler
+     *
      * @param {Object} question - Aktuelle Frage
      * @param {number} questionIndex - Index der Frage
-     * @returns {Promise<Array>} Array mit Spieler-Antworten
+     * @returns {Promise<Array<Object>>} Array mit Spieler-Antworten
      */
     async simulatePlayerAnswers(question, questionIndex) {
         const playerAnswers = [];
@@ -141,6 +155,7 @@ class SimulatedPlayersService {
 
     /**
      * Simuliert eine individuelle Spieler-Antwort
+     *
      * @param {Object} player - Spieler-Objekt
      * @param {Object} question - Frage-Objekt
      * @param {number} questionIndex - Frage-Index
@@ -209,6 +224,7 @@ class SimulatedPlayersService {
 
     /**
      * Generiert eine zufällige falsche Antwort
+     *
      * @param {number} correctAnswer - Index der richtigen Antwort
      * @param {number} totalAnswers - Gesamtanzahl der Antworten
      * @returns {number} Index der falschen Antwort
@@ -223,8 +239,9 @@ class SimulatedPlayersService {
 
     /**
      * Berechnet finale Rangliste
+     *
      * @param {Object} humanPlayer - Menschlicher Spieler
-     * @returns {Array} Sortierte Rangliste
+     * @returns {Array<Object>} Sortierte Rangliste
      */
     calculateFinalRanking(humanPlayer) {
         const allPlayers = [
@@ -254,9 +271,10 @@ class SimulatedPlayersService {
 
     /**
      * Generiert Spieler-Nachrichten für kooperativen Modus
+     *
      * @param {Object} question - Aktuelle Frage
-     * @param {Array} playerAnswers - Antworten der Spieler
-     * @returns {Array} Nachrichten-Array
+     * @param {Array<Object>} playerAnswers - Antworten der Spieler
+     * @returns {Array<Object>} Nachrichten-Array
      */
     generateCooperativeMessages(question, playerAnswers) {
         const messages = [];
@@ -290,69 +308,162 @@ class SimulatedPlayersService {
     }
 
     /**
-     * Generiert Live-Updates für kompetitiven Modus
-     * @param {Array} playerAnswers - Antworten der Spieler
-     * @returns {Array} Update-Nachrichten
+     * Generiert kompetitive Updates für Ranglisten-Anzeige
+     *
+     * @param {Array<Object>} playerAnswers - Antworten der Spieler
+     * @returns {Array<Object>} Update-Array mit Live-Ranglisten-Daten
      */
     generateCompetitiveUpdates(playerAnswers) {
         const updates = [];
 
-        // Sortiere Spieler nach Antwortzeit
-        const sortedAnswers = [...playerAnswers].sort((a, b) => a.timeTaken - b.timeTaken);
-
-        sortedAnswers.forEach((answer, index) => {
+        playerAnswers.forEach(answer => {
             const player = this.activePlayers.find(p => p.id === answer.playerId);
-            if (!player) return;
-
-            let status = '';
-            if (index === 0) {
-                status = 'Erste Antwort!';
-            } else if (answer.isCorrect) {
-                status = 'Richtig beantwortet';
-            } else {
-                status = 'Falsche Antwort';
+            if (player) {
+                updates.push({
+                    playerId: answer.playerId,
+                    playerName: answer.playerName,
+                    isCorrect: answer.isCorrect,
+                    timeTaken: answer.timeTaken,
+                    currentScore: player.score,
+                    averageTime: player.averageTime,
+                    correctAnswers: player.correctAnswers,
+                    totalAnswers: player.answeredQuestions,
+                    accuracy: Math.round((player.correctAnswers / player.answeredQuestions) * 100),
+                    statusMessage: answer.isCorrect ?
+                        `Richtig! (${answer.timeTaken}s)` :
+                        `Falsch (${answer.timeTaken}s)`,
+                    performance: this.calculatePerformanceRating(player)
+                });
             }
-
-            updates.push({
-                playerId: player.id,
-                playerName: player.name,
-                status,
-                time: answer.timeTaken,
-                score: player.score,
-                isCorrect: answer.isCorrect
-            });
         });
 
-        return updates;
+        // Sortiere nach aktueller Punktzahl
+        return updates.sort((a, b) => b.currentScore - a.currentScore);
     }
 
     /**
-     * Gibt aktuelle Spieler-Statistiken zurück
-     * @returns {Array} Spieler-Statistiken
+     * Berechnet Performance-Rating eines Spielers
+     *
+     * @param {Object} player - Spieler-Objekt
+     * @returns {string} Performance-Rating ('excellent', 'good', 'average', 'needs_improvement')
      */
-    getPlayerStats() {
-        return this.activePlayers.map(player => ({
-            id: player.id,
-            name: player.name,
-            score: player.score,
-            correctAnswers: player.correctAnswers,
-            answeredQuestions: player.answeredQuestions,
-            averageTime: player.averageTime,
-            accuracy: player.answeredQuestions > 0 ?
-                Math.round((player.correctAnswers / player.answeredQuestions) * 100) : 0
-        }));
+    calculatePerformanceRating(player) {
+        const accuracy = player.correctAnswers / player.answeredQuestions;
+        const speedRating = player.averageTime <= 15 ? 1 : (player.averageTime <= 25 ? 0.5 : 0);
+        const overallRating = (accuracy + speedRating) / 2;
+
+        if (overallRating >= 0.8) return 'excellent';
+        if (overallRating >= 0.6) return 'good';
+        if (overallRating >= 0.4) return 'average';
+        return 'needs_improvement';
     }
 
     /**
-     * Setzt Service für neues Spiel zurück
+     * Generiert Live-Kommentare für kompetitive Modi
+     *
+     * @param {Array<Object>} playerAnswers - Aktuelle Spieler-Antworten
+     * @returns {Array<Object>} Live-Kommentare
+     */
+    generateLiveComments(playerAnswers) {
+        const comments = [];
+        const competitivePlayers = this.activePlayers.filter(p => p.personality === 'competitive');
+
+        competitivePlayers.forEach(player => {
+            const playerAnswer = playerAnswers.find(a => a.playerId === player.id);
+
+            if (playerAnswer && Math.random() < 0.25) { // 25% Chance für Kommentar
+                const commentTemplates = {
+                    correct_fast: [
+                        "Ja! Das war einfach!",
+                        "Geschafft in Rekordzeit!",
+                        "Zu leicht für mich!"
+                    ],
+                    correct_slow: [
+                        "Endlich... das war knapp!",
+                        "Puh, gerade noch richtig!",
+                        "Das war schwerer als gedacht..."
+                    ],
+                    incorrect: [
+                        "Ach nein... das war ein Fehler!",
+                        "Verdammt, falscher Klick!",
+                        "Das nächste Mal klappt's besser!"
+                    ]
+                };
+
+                let templateType;
+                if (playerAnswer.isCorrect && playerAnswer.timeTaken <= 10) {
+                    templateType = 'correct_fast';
+                } else if (playerAnswer.isCorrect) {
+                    templateType = 'correct_slow';
+                } else {
+                    templateType = 'incorrect';
+                }
+
+                const templates = commentTemplates[templateType];
+                const comment = templates[Math.floor(Math.random() * templates.length)];
+
+                comments.push({
+                    playerId: player.id,
+                    playerName: player.name,
+                    comment,
+                    timestamp: new Date().toISOString(),
+                    type: templateType
+                });
+            }
+        });
+
+        return comments;
+    }
+
+    /**
+     * Setzt den Service vollständig zurück
+     *
+     * Bereinigt alle Spieler-Daten und Zustandsvariablen
      */
     reset() {
         this.activePlayers = [];
         this.gameMode = null;
         this.currentCategory = null;
+        console.log('SimulatedPlayersService wurde vollständig zurückgesetzt');
+    }
+
+    /**
+     * Gibt aktuelle Spieler-Statistiken zurück
+     *
+     * @returns {Array<Object>} Array mit Spieler-Statistiken
+     */
+    getPlayerStatistics() {
+        return this.activePlayers.map(player => ({
+            id: player.id,
+            name: player.name,
+            score: player.score,
+            correctAnswers: player.correctAnswers,
+            totalAnswers: player.answeredQuestions,
+            accuracy: player.answeredQuestions > 0 ?
+                Math.round((player.correctAnswers / player.answeredQuestions) * 100) : 0,
+            averageTime: player.averageTime,
+            performance: this.calculatePerformanceRating(player)
+        }));
+    }
+
+    /**
+     * Gibt Spieler-Informationen zurück
+     *
+     * @returns {Array<Object>} Array mit Basis-Spieler-Informationen
+     */
+    getActivePlayers() {
+        return this.activePlayers.map(player => ({
+            id: player.id,
+            name: player.name,
+            studyProgram: player.studyProgram,
+            semester: player.semester,
+            avatar: player.avatar,
+            color: player.color,
+            isActive: player.isActive
+        }));
     }
 }
 
-// Exportiere Singleton-Instanz
+// Exportiere eine Singleton-Instanz
 const simulatedPlayersService = new SimulatedPlayersService();
 export default simulatedPlayersService;
