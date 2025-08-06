@@ -5,6 +5,11 @@
  * Einstellungen und Verlauf der Quiz-Aktivitäten an.
  *
  * UPDATE: Logout-Funktion integriert
+ *
+ * @author Projektteam IU Community Quiz
+ * @version 1.1.0
+ * @since 2025-07-15
+ *
  */
 
 import React, { useState, useEffect } from 'react';
@@ -55,7 +60,6 @@ function UserProfile({ user, onLogout }) {
    */
   const handleProfileUpdate = () => {
     // In echter App würde dies über API erfolgen
-    console.log('Profil aktualisiert:', editedUser);
     setEditMode(false);
   };
 

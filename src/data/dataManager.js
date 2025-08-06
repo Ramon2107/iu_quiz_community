@@ -2,7 +2,13 @@
  * Zentraler Datenmanager für die gesamte Anwendung
  *
  * KORRIGIERT: Mock-Daten werden jetzt garantiert geladen
- * WICHTIG: Kleine Änderungen für sofortige Funktionalität
+ * UPDATE: Kleine Änderungen für sofortige Funktionalität
+ *
+ * @author Projektteam IU Community Quiz
+ * @version 1.1.1
+ * @since 2025-07-15
+ *
+ *  *
  */
 
 import { mockCategories, mockQuestions } from './mockData';
@@ -163,7 +169,13 @@ class DataManager {
   }
 
   /**
-   * Gibt alle Kategorien zurück
+   * Gibt alle Kategorien aus der Datenbank zurück
+   * 
+   * Diese Methode liest alle gespeicherten Kategorien aus dem localStorage
+   * und gibt sie als Array zurück. Falls keine Kategorien gefunden werden,
+   * wird ein leeres Array zurückgegeben.
+   *
+   * @returns {Array<Object>} Array mit allen Kategorien oder leeres Array, wenn keine vorhanden sind
    */
   getAllCategories() {
     const storedCategories = localStorage.getItem('quiz-categories');
@@ -171,7 +183,13 @@ class DataManager {
   }
 
   /**
-   * Gibt alle Karten zurück
+   * Gibt alle Karten (Fragen) aus der Datenbank zurück
+   * 
+   * Diese Methode liest alle gespeicherten Karten aus dem localStorage
+   * und gibt sie als Array zurück. Falls keine Karten gefunden werden,
+   * wird ein leeres Array zurückgegeben.
+   *
+   * @returns {Array<Object>} Array mit allen Karten oder leeres Array, wenn keine vorhanden sind
    */
   getAllCards() {
     const storedCards = localStorage.getItem('quiz-cards');
@@ -179,7 +197,14 @@ class DataManager {
   }
 
   /**
-   * Gibt Karten einer bestimmten Kategorie zurück
+   * Gibt alle Karten einer bestimmten Kategorie zurück
+   * 
+   * Diese Methode filtert alle Karten nach der angegebenen Kategorie-ID
+   * und gibt nur die Karten zurück, die zu dieser Kategorie gehören.
+   * Dies ist nützlich für die kategoriebasierte Navigation und Anzeige.
+   *
+   * @param {string} categoryId - ID der Kategorie, deren Karten zurückgegeben werden sollen
+   * @returns {Array<Object>} Array mit allen Karten der angegebenen Kategorie oder leeres Array, wenn keine gefunden wurden
    */
   getCardsByCategory(categoryId) {
     const allCards = this.getAllCards();
@@ -187,7 +212,15 @@ class DataManager {
   }
 
   /**
-   * Gibt Karten einer bestimmten Kategorie nach Namen zurück (für Kompatibilität)
+   * Gibt alle Karten einer bestimmten Kategorie anhand des Kategorienamens zurück
+   * 
+   * Diese Methode sucht zunächst die Kategorie anhand ihres Namens und filtert dann
+   * alle Karten nach der gefundenen Kategorie-ID. Dies ist eine Hilfsmethode für
+   * ältere Komponenten, die noch mit Kategorienamen statt IDs arbeiten.
+   *
+   * @param {string} categoryName - Name der Kategorie, deren Karten zurückgegeben werden sollen
+   * @returns {Array<Object>} Array mit allen Karten der angegebenen Kategorie oder leeres Array, 
+   * wenn keine Kategorie mit diesem Namen gefunden wurde oder keine Karten vorhanden sind
    */
   getCardsByCategoryName(categoryName) {
     const allCards = this.getAllCards();
@@ -200,7 +233,21 @@ class DataManager {
   }
 
   /**
-   * Speichert eine neue Kategorie
+   * Speichert eine neue Kategorie in der Datenbank
+   * 
+   * Diese Methode erstellt eine neue Kategorie mit einer eindeutigen ID,
+   * fügt sie zur Liste der vorhandenen Kategorien hinzu und speichert
+   * die aktualisierte Liste im localStorage.
+   *
+   * @param {Object} category - Die zu speichernde Kategorie
+   * @param {string} [category.id] - Optionale ID (wird generiert, falls nicht vorhanden)
+   * @param {string} category.name - Name der Kategorie
+   * @param {string} category.description - Beschreibung der Kategorie
+   * @param {string} category.icon - Icon der Kategorie (FontAwesome-Klasse)
+   * @param {string} category.color - Farbschema der Kategorie
+   * @param {boolean} [category.isPublic=true] - Gibt an, ob die Kategorie öffentlich ist
+   * @param {Array} [category.collaborators=[]] - Liste der Mitarbeiter
+   * @returns {Object} Die neu erstellte Kategorie mit generierter ID und Zeitstempel
    */
   saveCategory(category) {
     const categories = this.getAllCategories();
@@ -218,7 +265,25 @@ class DataManager {
   }
 
   /**
-   * Speichert eine neue Karte
+   * Speichert eine neue Karte (Frage) in der Datenbank
+   * 
+   * Diese Methode erstellt eine neue Karte mit einer eindeutigen ID,
+   * fügt sie zur Liste der vorhandenen Karten hinzu und speichert
+   * die aktualisierte Liste im localStorage. Außerdem wird die
+   * Kartenanzahl in den zugehörigen Kategorien aktualisiert.
+   *
+   * @param {Object} card - Die zu speichernde Karte
+   * @param {string} [card.id] - Optionale ID (wird generiert, falls nicht vorhanden)
+   * @param {string} card.categoryId - ID der Kategorie, zu der die Karte gehört
+   * @param {string} card.question - Fragetext der Karte
+   * @param {string[]} card.answers - Array mit Antwortmöglichkeiten
+   * @param {number} card.correctAnswer - Index der richtigen Antwort
+   * @param {string} card.difficulty - Schwierigkeitsgrad der Frage
+   * @param {string} [card.explanation=''] - Erklärung zur richtigen Antwort
+   * @param {string|string[]} [card.tags=[]] - Tags für die Karte (als String oder Array)
+   * @param {string} [card.author] - Autor der Karte
+   * @param {boolean} [card.isPublic=true] - Gibt an, ob die Karte öffentlich ist
+   * @returns {Object} Die neu erstellte Karte mit generierter ID und Zeitstempel
    */
   saveCard(card) {
     const cards = this.getAllCards();
@@ -283,7 +348,13 @@ class DataManager {
   }
 
   /**
-   * Gibt eindeutige Autoren zurück
+   * Gibt eine Liste aller eindeutigen Autoren im System zurück
+   * 
+   * Diese Methode sammelt alle Autoren aus Karten und Kategorien,
+   * entfernt Duplikate und gibt eine Liste mit eindeutigen Autorennamen zurück.
+   * Dies ist nützlich für Filteroptionen in der Benutzeroberfläche.
+   *
+   * @returns {Array<string>} Array mit eindeutigen Autorennamen
    */
   getUniqueAuthors() {
     const cards = this.getAllCards();
@@ -296,7 +367,15 @@ class DataManager {
   }
 
   /**
-   * Sucht nach Karten basierend auf Suchbegriff
+   * Sucht nach Karten basierend auf Suchbegriff und optionalem Autorfilter
+   * 
+   * Diese Methode durchsucht alle Karten nach dem angegebenen Suchbegriff
+   * in Fragen und Tags. Zusätzlich kann nach einem bestimmten Autor gefiltert werden.
+   * Die Suche ist unabhängig von Groß- und Kleinschreibung.
+   *
+   * @param {string} searchTerm - Suchbegriff für die Filterung (leerer String gibt alle Karten zurück)
+   * @param {string} [authorFilter='all'] - Optionaler Filter für den Autor ('all' für alle Autoren)
+   * @returns {Array<Object>} Array mit den gefilterten Karten, die den Suchkriterien entsprechen
    */
   searchCards(searchTerm, authorFilter = 'all') {
     const cards = this.getAllCards();
@@ -311,7 +390,21 @@ class DataManager {
   }
 
   /**
-   * Aktualisiert eine bestehende Kategorie
+   * Aktualisiert eine bestehende Kategorie in der Datenbank
+   * 
+   * Diese Methode sucht eine Kategorie anhand ihrer ID und aktualisiert
+   * ihre Eigenschaften mit den übergebenen Werten. Die aktualisierte
+   * Kategorienliste wird dann im localStorage gespeichert.
+   *
+   * @param {string} categoryId - ID der zu aktualisierenden Kategorie
+   * @param {Object} updates - Objekt mit den zu aktualisierenden Eigenschaften
+   * @param {string} [updates.name] - Neuer Name der Kategorie
+   * @param {string} [updates.description] - Neue Beschreibung der Kategorie
+   * @param {string} [updates.icon] - Neues Icon der Kategorie
+   * @param {string} [updates.color] - Neues Farbschema der Kategorie
+   * @param {boolean} [updates.isPublic] - Neuer Wert für die Öffentlichkeit
+   * @param {Array} [updates.collaborators] - Neue Liste der Mitarbeiter
+   * @returns {Object|undefined} Die aktualisierte Kategorie oder undefined, wenn keine Kategorie mit der ID gefunden wurde
    */
   updateCategory(categoryId, updates) {
     const categories = this.getAllCategories();
@@ -324,7 +417,25 @@ class DataManager {
   }
 
   /**
-   * Aktualisiert eine bestehende Karte
+   * Aktualisiert eine bestehende Karte (Frage) in der Datenbank
+   * 
+   * Diese Methode sucht eine Karte anhand ihrer ID und aktualisiert
+   * ihre Eigenschaften mit den übergebenen Werten. Die aktualisierte
+   * Kartenliste wird dann im localStorage gespeichert. Zusätzlich wird
+   * die Kartenanzahl in den Kategorien aktualisiert, falls sich die
+   * Kategorie-Zuordnung geändert hat.
+   *
+   * @param {string} cardId - ID der zu aktualisierenden Karte
+   * @param {Object} updates - Objekt mit den zu aktualisierenden Eigenschaften
+   * @param {string} [updates.categoryId] - Neue Kategorie-ID
+   * @param {string} [updates.question] - Neuer Fragetext
+   * @param {string[]} [updates.answers] - Neue Antwortmöglichkeiten
+   * @param {number} [updates.correctAnswer] - Neuer Index der richtigen Antwort
+   * @param {string} [updates.difficulty] - Neuer Schwierigkeitsgrad
+   * @param {string} [updates.explanation] - Neue Erklärung
+   * @param {string|string[]} [updates.tags] - Neue Tags
+   * @param {boolean} [updates.isPublic] - Neuer Wert für die Öffentlichkeit
+   * @returns {Object|undefined} Die aktualisierte Karte oder undefined, wenn keine Karte mit der ID gefunden wurde
    */
   updateCard(cardId, updates) {
     const cards = this.getAllCards();
@@ -338,7 +449,15 @@ class DataManager {
   }
 
   /**
-   * Löscht eine Kategorie
+   * Löscht eine Kategorie und alle zugehörigen Karten aus der Datenbank
+   * 
+   * Diese Methode entfernt eine Kategorie anhand ihrer ID aus der Datenbank.
+   * Zusätzlich werden alle Karten, die dieser Kategorie zugeordnet sind,
+   * ebenfalls gelöscht, um Konsistenz zu gewährleisten und verwaiste
+   * Karten zu vermeiden.
+   *
+   * @param {string} categoryId - ID der zu löschenden Kategorie
+   * @returns {boolean} true, wenn die Löschung erfolgreich war
    */
   deleteCategory(categoryId) {
     const categories = this.getAllCategories();
@@ -356,7 +475,14 @@ class DataManager {
   }
 
   /**
-   * Löscht eine Karte
+   * Löscht eine Karte (Frage) aus der Datenbank
+   * 
+   * Diese Methode entfernt eine Karte anhand ihrer ID aus der Datenbank.
+   * Nach dem Löschen wird die Kartenanzahl in den Kategorien aktualisiert,
+   * um die Konsistenz der Daten zu gewährleisten.
+   *
+   * @param {string} cardId - ID der zu löschenden Karte
+   * @returns {boolean} true, wenn die Löschung erfolgreich war
    */
   deleteCard(cardId) {
     const cards = this.getAllCards();
@@ -409,5 +535,5 @@ class DataManager {
   }
 }
 
-// Exportiere eine Singleton-Instanz
+
 export default new DataManager();

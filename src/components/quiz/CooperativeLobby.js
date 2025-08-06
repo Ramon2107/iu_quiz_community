@@ -9,6 +9,10 @@
  * @param {Object} props.user - Benutzerdaten
  * @param {Function} props.onStartGame - Callback zum Spielstart
  * @returns {JSX.Element} Die gerenderte CooperativeLobby-Komponente
+ *
+ * @author Projektteam IU Community Quiz
+ * @version 1.0.0
+ * @since 2025-07-15
  */
 import React, { useState, useEffect } from 'react';
 

@@ -13,6 +13,10 @@
  *
  * UPDATE: Logout-Funktion hinzugefügt
  * UPDATE: Community-Navigation hinzugefügt
+ *
+ * @author Projektteam IU Community Quiz
+ * @version 1.2.1
+ * @since 2025-07-15
  */
 
 import React from 'react';

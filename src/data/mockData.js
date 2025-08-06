@@ -11,6 +11,11 @@
  * Struktur:
  * - categories: Array mit Kategorien und deren Eigenschaften
  * - questions: Array mit Fragen und deren Antworten
+ *
+ * @author Projektteam IU Community Quiz
+ * @version 1.3.0
+ * * @since 2025-07-15
+ *
  */
 
 export const mockCategories = [

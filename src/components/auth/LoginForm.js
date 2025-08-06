@@ -12,6 +12,10 @@
  * - Simulierte Authentifizierung mit echten Benutzern
  *
  * UPDATE: Implementierung eines prototypischen aber authentischen Login-Systems
+ *
+ * @author Projektteam IU Community Quiz
+ * @version 1.1.0
+ * @since 2025-07-15
  */
 
 import React, { useState } from 'react';

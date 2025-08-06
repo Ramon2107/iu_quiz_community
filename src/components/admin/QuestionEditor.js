@@ -20,6 +20,10 @@
  * - Schwierigkeitsgrade
  * - Erklärungen für Antworten
  * - Kollaborative Kartenverwaltung
+ *
+ * @author Projektteam IU Community Quiz
+ * @version 1.4.0
+ * @since 2025-07-15
  */
 
 import React, { useState, useEffect } from 'react';

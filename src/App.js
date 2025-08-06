@@ -5,6 +5,12 @@
  * UPDATE: Sichere Authentifizierung mit Input-Validierung
  * UPDATE: Benutzer-Session-Management
  * UPDATE: Community-Funktionalität hinzugefügt (Demo-Prototyp)
+ * UPDATE: Verbesserte Layout-Struktur mit automatischer Anpassung des Inhaltsbereichs
+ * 
+ * Das Layout verwendet eine Flexbox-Struktur, um sicherzustellen, dass der Footer
+ * außerhalb des sichtbaren Bereichs bleibt, bis der Benutzer nach unten scrollt.
+ * Der Inhaltsbereich (.main-content) dehnt sich automatisch aus, um den verfügbaren
+ * Platz zu füllen und den Footer nach unten zu drücken.
  */
 
 import React, { useState, useEffect } from 'react';
@@ -25,6 +31,15 @@ import dataManager from './data/dataManager';
 
 /**
  * Hauptanwendungskomponente mit Login-Schutz
+ * 
+ * Diese Komponente steuert den gesamten Anwendungsfluss und verwaltet:
+ * - Benutzerauthentifizierung und Session-Management
+ * - Navigation zwischen verschiedenen Ansichten
+ * - Zentrale Datenverwaltung und -initialisierung
+ * - Responsive Layout-Struktur mit Header, Inhaltsbereich und Footer
+ *
+ * @returns {JSX.Element} Die gerenderte App-Komponente mit entsprechender Ansicht
+ * basierend auf dem Authentifizierungsstatus
  */
 function App() {
     const [currentView, setCurrentView] = useState('home');
@@ -105,6 +120,11 @@ function App() {
 
     /**
      * Rendert die aktuelle Ansicht
+     * 
+     * Die gerenderte Ansicht wird innerhalb des main-content Bereichs angezeigt,
+     * welcher sich automatisch ausdehnt, um den verfügbaren Platz zu füllen.
+     * Dies sorgt dafür, dass der Footer außerhalb des sichtbaren Bereichs bleibt,
+     * bis der Benutzer nach unten scrollt.
      */
     const renderCurrentView = () => {
         switch (currentView) {
@@ -143,6 +163,13 @@ function App() {
                 user={user}
                 onLogout={handleLogout}
             />
+            {/* 
+              Der Hauptinhaltsbereich verwendet die main-content Klasse,
+              die mit flex: 1 0 auto konfiguriert ist, um sich automatisch
+              auszudehnen und den verfügbaren Platz zu füllen. Dies sorgt dafür,
+              dass der Footer außerhalb des sichtbaren Bereichs bleibt, bis der
+              Benutzer nach unten scrollt.
+            */}
             <main className="main-content">
                 {renderCurrentView()}
             </main>

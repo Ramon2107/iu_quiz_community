@@ -1,7 +1,7 @@
 /**
  * Impressum-Komponente
  *
- * Diese Komponente zeigt das Impressum für das IU Quiz Community System an.
+ * Diese Komponente zeigt das Impressum für das IU Community Quiz System an.
  * Sie enthält alle rechtlich erforderlichen Angaben gemäß TMG und anderen relevanten Gesetzen.
  *
  * @author System

@@ -15,7 +15,7 @@ import Imprint from './Imprint';
  * - Vollständige Inhalte für Hilfe, Datenschutz, Impressum und Nutzungsbedingungen
  * - Social Media Links und Kontaktinformationen
  *
- * @author IU Quiz Community
+ * @author Projektteam IU Community Quiz
  * @version 1.1.0
  * @since 2025-07-15
  *
@@ -197,7 +197,7 @@ function Footer() {
                                             <div className="text-light small">
                                                 <div className="d-flex align-items-center mb-1">
                                                     <i className="fas fa-copyright me-2"></i>
-                                                    <span>2025 IU Quiz Community. Alle Rechte vorbehalten.</span>
+                                                    <span>2025 IU Community Quiz. Alle Rechte vorbehalten.</span>
                                                 </div>
                                                 <div className="d-flex align-items-center">
                                                     <i className="fas fa-building me-2"></i>

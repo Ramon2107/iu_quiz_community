@@ -7,6 +7,10 @@
  * @param {Object} props - Komponenteneigenschaften
  * @param {string} props.gameMode - Spielmodus
  * @returns {JSX.Element} Die gerenderte PointsInfo-Komponente
+ *
+ * @author Projektteam IU Community Quiz
+ * @version 1.0.0
+ * @since 2025-07-15
  */
 import React from 'react';
 

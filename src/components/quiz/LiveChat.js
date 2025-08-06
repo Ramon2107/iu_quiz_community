@@ -4,7 +4,7 @@
  * Ein vollständiger Live-Chat für Multiplayer-Quiz-Modi mit persistenten Nachrichten
  * über alle Fragen hinweg.
  *
- * @author IU Quiz Community
+ * @author Projektteam IU Community Quiz
  * @version 1.1.0
  * @since 2025-07-15
  */
@@ -109,29 +109,29 @@ function LiveChat({ messages, user, onSendMessage, players, gameMode }) {
                 </h6>
             </div>
 
-            <div className="card-body p-2" style={{ height: '400px', overflowY: 'auto' }}>
+            <div className="card-body p-3" style={{ height: '400px', overflowY: 'auto' }}>
                 {messages.length === 0 ? (
                     <div className="text-center text-muted h-100 d-flex align-items-center justify-content-center">
                         <div>
-                            <i className="fas fa-comments fa-2x mb-2"></i>
-                            <p>Noch keine Nachrichten...</p>
-                            <small>Schreiben Sie die erste Nachricht!</small>
+                            <i className="fas fa-comments fa-3x mb-3"></i>
+                            <p className="fs-5">Noch keine Nachrichten...</p>
+                            <p className="fs-6">Schreiben Sie die erste Nachricht!</p>
                         </div>
                     </div>
                 ) : (
                     <>
                         {messages.map((msg, index) => (
-                            <div key={msg.id || index} className={`mb-2 ${msg.isHuman ? 'text-end' : 'text-start'}`}>
-                                <div className={`d-inline-block p-2 rounded ${msg.isHuman ? 'bg-primary text-white' : 'bg-light'}`}
-                                     style={{ maxWidth: '80%' }}>
-                                    <div className="d-flex align-items-center mb-1">
-                                        <i className={`${getPlayerIcon(msg)} me-1 text-${msg.isHuman ? 'white' : getPlayerColor(msg)}`}></i>
-                                        <strong className="small">{msg.playerName}</strong>
+                            <div key={msg.id || index} className={`mb-3 ${msg.isHuman ? 'text-end' : 'text-start'}`}>
+                                <div className={`d-inline-block p-3 rounded ${msg.isHuman ? 'bg-primary text-white' : 'bg-light'}`}
+                                     style={{ maxWidth: '95%' }}>
+                                    <div className="d-flex align-items-center mb-2">
+                                        <i className={`${getPlayerIcon(msg)} me-2 text-${msg.isHuman ? 'white' : getPlayerColor(msg)}`}></i>
+                                        <strong className="fs-6">{msg.playerName}</strong>
                                         <small className={`ms-2 ${msg.isHuman ? 'text-white-50' : 'text-muted'}`}>
                                             {formatTime(msg.timestamp)}
                                         </small>
                                     </div>
-                                    <div className="small">{msg.message}</div>
+                                    <div className="fs-6">{msg.message}</div>
                                 </div>
                             </div>
                         ))}
@@ -140,19 +140,19 @@ function LiveChat({ messages, user, onSendMessage, players, gameMode }) {
                 )}
             </div>
 
-            <div className="card-footer p-2">
+            <div className="card-footer p-3">
                 <form onSubmit={handleSendMessage}>
                     <div className="input-group">
                         <input
                             type="text"
-                            className="form-control"
+                            className="form-control fs-6"
                             placeholder="Nachricht eingeben..."
                             value={chatInput}
                             onChange={handleInputChange}
                             maxLength={200}
                         />
                         <button
-                            className={`btn ${gameMode === 'cooperative' ? 'btn-success' : 'btn-warning'}`}
+                            className={`btn ${gameMode === 'cooperative' ? 'btn-success' : 'btn-warning'} btn-lg`}
                             type="submit"
                             disabled={!chatInput.trim()}
                         >
@@ -162,10 +162,10 @@ function LiveChat({ messages, user, onSendMessage, players, gameMode }) {
                 </form>
 
                 {isTyping && (
-                    <small className="text-muted">
-                        <i className="fas fa-keyboard me-1"></i>
+                    <div className="text-muted mt-2 fs-6">
+                        <i className="fas fa-keyboard me-2"></i>
                         Eingabe...
-                    </small>
+                    </div>
                 )}
             </div>
         </div>

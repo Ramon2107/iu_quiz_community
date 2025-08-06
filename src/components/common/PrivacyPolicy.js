@@ -1,7 +1,7 @@
 /**
  * Datenschutzhinweise-Komponente
  *
- * Diese Komponente zeigt die Datenschutzbestimmungen für das IU Quiz Community System an.
+ * Diese Komponente zeigt die Datenschutzbestimmungen für das IU Community Quiz System an.
  * Sie enthält alle relevanten Informationen zur Datenerfassung, -verarbeitung und -nutzung.
  *
  * @author System

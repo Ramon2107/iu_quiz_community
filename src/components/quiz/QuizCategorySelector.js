@@ -16,7 +16,7 @@
  * UPDATE: Suchfunktion für Kategorien
  * UPDATE: Spielmodus-spezifische Anzeige
  *
- * @author IU Quiz Community
+ * @author Projektteam IU Community Quiz
  * @version 1.3.0
  * @since 2025-07-15
  */
@@ -37,305 +37,162 @@ import dataManager from '../../data/dataManager';
  * @returns {JSX.Element} Die gerenderte QuizCategorySelector-Komponente
  */
 function QuizCategorySelector({
-                                categories,
-                                onCategorySelect,
-                                onBack,
-                                gameMode,
-                                questionCount,
-                                user
+                                  categories,
+                                  onCategorySelect,
+                                  onBack,
+                                  gameMode,
+                                  questionCount,
+                                  user
                               }) {
-  const [searchTerm, setSearchTerm] = useState('');
+    const [searchTerm, setSearchTerm] = useState('');
 
-  /**
-   * Berechnet die Anzahl verfügbarer Fragen pro Kategorie
-   */
-  const categoriesWithQuestionCount = useMemo(() => {
-    const allQuestions = dataManager.getQuestionsForQuiz();
+    const categoriesWithQuestionCount = useMemo(() => {
+        const allQuestions = dataManager.getQuestionsForQuiz();
+        return categories.map(category => {
+            const questionsInCategory = allQuestions.filter(q => q.category === category.name);
+            return {
+                ...category,
+                questionCount: questionsInCategory.length,
+                hasEnoughQuestions: questionsInCategory.length >= questionCount
+            };
+        });
+    }, [categories, questionCount]);
 
-    return categories.map(category => {
-      const questionsInCategory = allQuestions.filter(q => q.category === category.name);
-      return {
-        ...category,
-        questionCount: questionsInCategory.length,
-        hasEnoughQuestions: questionsInCategory.length >= questionCount
-      };
-    });
-  }, [categories, questionCount]);
+    const filteredCategories = useMemo(() => {
+        if (!searchTerm) return categoriesWithQuestionCount;
+        return categoriesWithQuestionCount.filter(category =>
+            category.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            (category.description && category.description.toLowerCase().includes(searchTerm.toLowerCase()))
+        );
+    }, [categoriesWithQuestionCount, searchTerm]);
 
-  /**
-   * Filtert Kategorien basierend auf Suchbegriff
-   */
-  const filteredCategories = useMemo(() => {
-    if (!searchTerm) return categoriesWithQuestionCount;
-
-    return categoriesWithQuestionCount.filter(category =>
-        category.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        category.description.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  }, [categoriesWithQuestionCount, searchTerm]);
-
-  /**
-   * Gibt Spielmodus-spezifische CSS-Klasse zurück
-   */
-  const getGameModeClass = () => {
-    switch (gameMode) {
-      case 'cooperative':
-        return 'bg-success';
-      case 'competitive':
-        return 'bg-warning';
-      default:
-        return 'bg-primary';
-    }
-  };
-
-  /**
-   * Gibt Spielmodus-spezifisches Icon zurück
-   */
-  const getGameModeIcon = () => {
-    switch (gameMode) {
-      case 'cooperative':
-        return 'fas fa-users';
-      case 'competitive':
-        return 'fas fa-trophy';
-      default:
-        return 'fas fa-user';
-    }
-  };
-
-  /**
-   * Gibt Spielmodus-Namen zurück
-   */
-  const getGameModeName = () => {
-    switch (gameMode) {
-      case 'cooperative':
-        return 'Kooperativ';
-      case 'competitive':
-        return 'Kompetitiv';
-      default:
-        return 'Single Player';
-    }
-  };
-
-  /**
-   * Behandelt Kategorieauswahl
-   */
-  const handleCategorySelect = (category) => {
-    if (category.hasEnoughQuestions) {
-      onCategorySelect(category);
-    }
-  };
-
-  return (
-      <div className="container mt-4">
-        <div className="row">
-          <div className="col-12">
-            <div className="card shadow-lg">
-              <div className={`card-header ${getGameModeClass()} text-white`}>
-                <div className="row align-items-center">
-                  <div className="col-md-6">
-                    <h2 className="mb-0">
-                      <i className={`${getGameModeIcon()} me-2`}></i>
-                      Kategorie auswählen
-                    </h2>
-                  </div>
-                  <div className="col-md-6 text-md-end">
-                  <span className="badge bg-light text-dark fs-6">
-                    {getGameModeName()} • {questionCount} Fragen
-                  </span>
-                  </div>
-                </div>
-              </div>
-              <div className="card-body">
-                {/* Suchleiste */}
-                <div className="row mb-4">
-                  <div className="col-md-8 mx-auto">
-                    <div className="input-group">
-                    <span className="input-group-text">
-                      <i className="fas fa-search"></i>
-                    </span>
-                      <input
-                          type="text"
-                          className="form-control"
-                          placeholder="Kategorie suchen..."
-                          value={searchTerm}
-                          onChange={(e) => setSearchTerm(e.target.value)}
-                      />
-                      {searchTerm && (
-                          <button
-                              className="btn btn-outline-secondary"
-                              type="button"
-                              onClick={() => setSearchTerm('')}
-                          >
-                            <i className="fas fa-times"></i>
-                          </button>
-                      )}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Kategorien-Übersicht */}
-                <div className="row mb-4">
-                  <div className="col-12">
-                    <div className="alert alert-info">
-                      <div className="row text-center">
-                        <div className="col-md-3">
-                          <i className="fas fa-layer-group fa-2x mb-2"></i>
-                          <div><strong>{categories.length}</strong></div>
-                          <small>Kategorien verfügbar</small>
-                        </div>
-                        <div className="col-md-3">
-                          <i className="fas fa-question-circle fa-2x mb-2"></i>
-                          <div><strong>{questionCount}</strong></div>
-                          <small>Fragen gewählt</small>
-                        </div>
-                        <div className="col-md-3">
-                          <i className="fas fa-clock fa-2x mb-2"></i>
-                          <div><strong>{getEstimatedTime()}</strong></div>
-                          <small>Geschätzte Dauer</small>
-                        </div>
-                        <div className="col-md-3">
-                          <i className="fas fa-user fa-2x mb-2"></i>
-                          <div><strong>{user.name}</strong></div>
-                          <small>Spieler</small>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Kategorien-Karten */}
-                {filteredCategories.length === 0 ? (
-                    <div className="text-center py-5">
-                      <i className="fas fa-search fa-3x text-muted mb-3"></i>
-                      <h4 className="text-muted">Keine Kategorien gefunden</h4>
-                      <p className="text-muted">
-                        Versuchen Sie einen anderen Suchbegriff oder
-                        <button
-                            className="btn btn-link p-0 ms-1"
-                            onClick={() => setSearchTerm('')}
-                        >
-                          alle Kategorien anzeigen
-                        </button>
-                      </p>
-                    </div>
-                ) : (
-                    <div className="row g-4">
-                      {filteredCategories.map((category) => (
-                          <div key={category.id} className="col-md-6 col-lg-4">
-                            <div
-                                className={`card h-100 ${
-                                    category.hasEnoughQuestions
-                                        ? 'border-primary category-card'
-                                        : 'border-secondary'
-                                }`}
-                                style={{
-                                  cursor: category.hasEnoughQuestions ? 'pointer' : 'not-allowed',
-                                  opacity: category.hasEnoughQuestions ? 1 : 0.6
-                                }}
-                                onClick={() => handleCategorySelect(category)}
-                            >
-                              <div className="card-body">
-                                <div className="text-center mb-3">
-                                  <i className={`fas fa-${category.icon} fa-3x text-${category.color}`}></i>
-                                </div>
-                                <h5 className="card-title text-center">{category.name}</h5>
-                                <p className="card-text text-muted small">
-                                  {category.description}
-                                </p>
-
-                                {/* Fragen-Statistik */}
-                                <div className="mt-3">
-                                  <div className="d-flex justify-content-between align-items-center">
-                                    <small className="text-muted">Verfügbare Fragen:</small>
-                                    <span className={`badge ${
-                                        category.hasEnoughQuestions
-                                            ? 'bg-success'
-                                            : 'bg-warning text-dark'
-                                    }`}>
-                                {category.questionCount}
-                              </span>
-                                  </div>
-
-                                  {!category.hasEnoughQuestions && (
-                                      <div className="text-center mt-2">
-                                        <small className="text-warning">
-                                          <i className="fas fa-exclamation-triangle me-1"></i>
-                                          Nicht genug Fragen für {questionCount} Auswahl
-                                        </small>
-                                      </div>
-                                  )}
-                                </div>
-                              </div>
-
-                              {category.hasEnoughQuestions && (
-                                  <div className="card-footer bg-transparent border-top-0">
-                                    <div className="d-grid">
-                                      <button className="btn btn-primary btn-sm">
-                                        <i className="fas fa-play me-2"></i>
-                                        Auswählen
-                                      </button>
-                                    </div>
-                                  </div>
-                              )}
-                            </div>
-                          </div>
-                      ))}
-                    </div>
-                )}
-              </div>
-
-              {/* Footer mit Navigation */}
-              <div className="card-footer">
-                <div className="d-flex justify-content-between align-items-center">
-                  <button
-                      className="btn btn-secondary"
-                      onClick={onBack}
-                  >
-                    <i className="fas fa-arrow-left me-2"></i>
-                    Zurück zur Fragenanzahl
-                  </button>
-
-                  <div className="text-muted">
-                    <small>
-                      {filteredCategories.filter(c => c.hasEnoughQuestions).length} von {filteredCategories.length} Kategorien verfügbar
-                    </small>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* CSS für Hover-Effekte */}
-        <style jsx>{`
-        .category-card:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-          transition: all 0.3s ease;
+    const getGameModeClass = () => {
+        switch (gameMode) {
+            case 'cooperative': return 'bg-success';
+            case 'competitive': return 'bg-warning';
+            default: return 'bg-primary';
         }
-      `}</style>
-      </div>
-  );
+    };
 
-  /**
-   * Berechnet die geschätzte Dauer basierend auf Spielmodus und Fragenanzahl
-   */
-  function getEstimatedTime() {
-    let timePerQuestion = 0;
-    switch (gameMode) {
-      case 'single-player':
-        timePerQuestion = 2; // 2 Minuten pro Frage
-        break;
-      case 'cooperative':
-        timePerQuestion = 1; // 1 Minute pro Frage
-        break;
-      case 'competitive':
-        timePerQuestion = 0.5; // 30 Sekunden pro Frage
-        break;
+    const getGameModeIcon = () => {
+        switch (gameMode) {
+            case 'cooperative': return 'fas fa-users';
+            case 'competitive': return 'fas fa-trophy';
+            default: return 'fas fa-user';
+        }
+    };
+
+    const getGameModeName = () => {
+        switch (gameMode) {
+            case 'cooperative': return 'Kooperativ';
+            case 'competitive': return 'Kompetitiv';
+            default: return 'Single Player';
+        }
+    };
+
+    const handleCategorySelect = (category) => {
+        if (category.hasEnoughQuestions) {
+            onCategorySelect(category);
+        }
+    };
+
+    function getEstimatedTime() {
+        let timePerQuestion = 1;
+        switch (gameMode) {
+            case 'single-player': timePerQuestion = 2; break;
+            case 'cooperative': timePerQuestion = 1; break;
+            case 'competitive': timePerQuestion = 0.5; break;
+        }
+        const totalMinutes = Math.round(questionCount * timePerQuestion);
+        return `${totalMinutes} Min`;
     }
-    const totalMinutes = Math.round(questionCount * timePerQuestion);
-    return `${totalMinutes} Min`;
-  }
+
+    return (
+        <div className="container mt-4 mb-4">
+            <div className="row justify-content-center">
+                <div className="col-12">
+                    <div className="card shadow-lg">
+                        <div className={`card-header ${getGameModeClass()} text-white py-2`}>
+                            <div className="d-flex justify-content-between align-items-center">
+                                <h5 className="mb-0">
+                                    <i className={`${getGameModeIcon()} me-2`}></i>
+                                    Kategorie auswählen
+                                </h5>
+                                <span className="badge bg-light text-dark p-2">
+                                    {getGameModeName()} • {questionCount} Fragen
+                                </span>
+                            </div>
+                        </div>
+                        <div className="card-body p-3">
+                            <div className="row mb-3">
+                                <div className="col-md-8 mx-auto">
+                                    <div className="input-group">
+                                        <span className="input-group-text"><i className="fas fa-search"></i></span>
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            placeholder="Kategorie suchen..."
+                                            value={searchTerm}
+                                            onChange={(e) => setSearchTerm(e.target.value)}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+
+                            {filteredCategories.length === 0 ? (
+                                <div className="text-center text-muted p-4">
+                                    <i className="fas fa-search fa-3x mb-3"></i>
+                                    <h5>Keine Kategorien gefunden</h5>
+                                    <p>Versuchen Sie einen anderen Suchbegriff.</p>
+                                </div>
+                            ) : (
+                                <div className="row g-3">
+                                    {filteredCategories.map((category) => (
+                                        <div key={category.id} className="col-sm-6 col-md-4 col-lg-3 d-flex">
+                                            <div
+                                                className={`card w-100 category-card ${category.hasEnoughQuestions ? 'border-primary' : 'border-light'}`}
+                                                style={{ cursor: category.hasEnoughQuestions ? 'pointer' : 'not-allowed', opacity: category.hasEnoughQuestions ? 1 : 0.7 }}
+                                                onClick={() => handleCategorySelect(category)}
+                                            >
+                                                <div className="card-body p-2 text-center d-flex flex-column">
+                                                    <div className="flex-grow-1 d-flex flex-column justify-content-center">
+                                                        <i className={`fas fa-${category.icon} fa-2x mb-2 text-${category.color}`}></i>
+                                                        <h6 className="card-title small mb-1">{category.name}</h6>
+                                                        <p className="card-text small text-muted" style={{fontSize: '0.8em'}}>{category.description}</p>
+                                                    </div>
+                                                    <div className={`card-footer p-1 mt-auto ${category.hasEnoughQuestions ? 'bg-primary text-white' : ''}`}>
+                                                        <small>{category.hasEnoughQuestions ? 'Auswählen' : `${category.questionCount} / ${questionCount} Fragen`}</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                        <div className="card-footer bg-light p-3">
+                            <div className="d-flex justify-content-between align-items-center">
+                                <button className="btn btn-secondary" onClick={onBack}>
+                                    <i className="fas fa-arrow-left me-2"></i>
+                                    Zurück
+                                </button>
+                                <div className="text-muted">
+                                    <small>{filteredCategories.filter(c => c.hasEnoughQuestions).length} von {categories.length} Kategorien wählbar</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <style jsx>{`
+                .category-card:hover {
+                    transform: translateY(-3px);
+                    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+                    transition: all 0.2s ease-in-out;
+                }
+            `}</style>
+        </div>
+    );
 }
 
 export default QuizCategorySelector;

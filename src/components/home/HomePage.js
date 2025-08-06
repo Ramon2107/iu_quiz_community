@@ -3,11 +3,28 @@
  *
  * Diese Komponente stellt die Startseite der IU Community Quiz App bereit
  * und bietet eine Übersicht über die verfügbaren Funktionen.
+ *
+ * @author Projektteam IU Community Quiz
+ * @version 1.2.0
+ * @since 2025-07-15
+ *
  */
 
 import React, { useState, useEffect } from 'react';
 import dataManager from '../../data/dataManager';
 
+/**
+ * HomePage-Komponente - Startseite der Anwendung
+ * 
+ * Diese Komponente zeigt die Startseite mit einer Übersicht der verfügbaren Funktionen,
+ * Statistiken und Navigationsmöglichkeiten. Sie dient als zentraler Einstiegspunkt
+ * für Benutzer nach der Anmeldung.
+ *
+ * @param {Object} props - Komponenteneigenschaften
+ * @param {Object} props.user - Benutzerdaten des angemeldeten Benutzers
+ * @param {Function} props.onNavigate - Callback-Funktion für die Navigation zu anderen Ansichten
+ * @returns {JSX.Element} Die gerenderte HomePage-Komponente
+ */
 function HomePage({ user, onNavigate }) {
     const [stats, setStats] = useState({
         totalCategories: 0,

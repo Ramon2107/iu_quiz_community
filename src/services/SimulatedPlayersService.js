@@ -14,9 +14,10 @@
  * UPDATE: Neue Implementierung für Multiplayer-Simulation
  * UPDATE: Komplette Methoden für generateCompetitiveUpdates und reset
  *
- * @author IU Quiz Community
+ * @author Projektteam IU Community Quiz
  * @version 1.2.0
  * @since 2025-07-15
+ *
  */
 
 /**
@@ -284,14 +285,20 @@ class SimulatedPlayersService {
             const playerAnswer = playerAnswers.find(a => a.playerId === player.id);
 
             if (playerAnswer && Math.random() < 0.3) { // 30% Chance für Nachricht
+                // Prüfe, ob question und question.answers definiert sind, um Fehler zu vermeiden
+                // Wenn nicht definiert, verwende einen Platzhaltertext
+                const answerText = question && question.answers && question.answers[playerAnswer.selectedAnswer] 
+                    ? question.answers[playerAnswer.selectedAnswer] 
+                    : "eine der Antwortmöglichkeiten";
+                
                 const messageTemplates = playerAnswer.isCorrect ? [
-                    `Ich denke, die Antwort ist ${question.answers[playerAnswer.selectedAnswer]}`,
-                    `Meiner Meinung nach ist es ${question.answers[playerAnswer.selectedAnswer]}`,
-                    `Ich bin mir ziemlich sicher: ${question.answers[playerAnswer.selectedAnswer]}`
+                    `Ich denke, die Antwort ist ${answerText}`,
+                    `Meiner Meinung nach ist es ${answerText}`,
+                    `Ich bin mir ziemlich sicher: ${answerText}`
                 ] : [
-                    `Ich bin mir nicht sicher... vielleicht ${question.answers[playerAnswer.selectedAnswer]}?`,
-                    `Hmm, schwierige Frage. Ich tippe auf ${question.answers[playerAnswer.selectedAnswer]}`,
-                    `Könnte ${question.answers[playerAnswer.selectedAnswer]} sein, aber ich bin nicht sicher`
+                    `Ich bin mir nicht sicher... vielleicht ${answerText}?`,
+                    `Hmm, schwierige Frage. Ich tippe auf ${answerText}`,
+                    `Könnte ${answerText} sein, aber ich bin nicht sicher`
                 ];
 
                 messages.push({

@@ -13,6 +13,11 @@
  *
  * UPDATE: Multiplayer-Rangliste für kooperative und kompetitive Modi
  * UPDATE: Gewinner-Ermittlung und Gleichstände
+ *
+ * @author Projektteam IU Community Quiz
+ * @version 1.2.0
+ * @since 2025-07-15
+ *
  */
 
 import React, { useState, useEffect } from 'react';
@@ -48,10 +53,12 @@ function QuizResults({
   const [gameResults, setGameResults] = useState(null); // UPDATE: Spielergebnisse
 
   // Berechne Basis-Statistiken
-  const correctAnswers = answers.filter(answer => answer.isCorrect).length;
+  // Prüfe, ob answer definiert ist, bevor auf isCorrect zugegriffen wird, um Fehler zu vermeiden
+  const correctAnswers = answers.filter(answer => answer && answer.isCorrect).length;
   const totalQuestions = questions.length;
   const score = Math.round((correctAnswers / totalQuestions) * 100);
-  const totalTime = answers.reduce((sum, answer) => sum + answer.timeTaken, 0);
+  // Prüfe, ob answer definiert ist, bevor auf timeTaken zugegriffen wird, um Fehler zu vermeiden
+  const totalTime = answers.reduce((sum, answer) => sum + (answer && answer.timeTaken ? answer.timeTaken : 0), 0);
   const averageTime = Math.round(totalTime / totalQuestions);
 
   // UPDATE: Berechne Multiplayer-Rangliste beim Component-Mount
@@ -296,33 +303,39 @@ function QuizResults({
                       <h5>Detaillierte Antworten:</h5>
                       {questions.map((question, index) => {
                         const answer = answers[index];
+                        // Prüfe, ob answer definiert ist, bevor auf isCorrect zugegriffen wird, um Fehler zu vermeiden
+                        const isCorrect = answer && answer.isCorrect;
                         return (
                             <div key={index} className="card mb-3">
                               <div className="card-body">
                                 <div className="d-flex justify-content-between align-items-start mb-2">
                                   <h6>Frage {index + 1}:</h6>
-                                  <span className={`badge ${answer.isCorrect ? 'bg-success' : 'bg-danger'}`}>
-                              {answer.isCorrect ? 'Richtig' : 'Falsch'}
+                                  <span className={`badge ${isCorrect ? 'bg-success' : 'bg-danger'}`}>
+                              {isCorrect ? 'Richtig' : 'Falsch'}
                             </span>
                                 </div>
                                 <p className="mb-2">{question.question}</p>
                                 <div className="row">
                                   <div className="col-md-6">
                                     <small className="text-muted">Ihre Antwort:</small>
-                                    <p className={answer.isCorrect ? 'text-success' : 'text-danger'}>
-                                      {answer.selectedAnswer !== null ? question.answers[answer.selectedAnswer] : 'Nicht beantwortet'}
+                                    <p className={isCorrect ? 'text-success' : 'text-danger'}>
+                                      {answer && answer.selectedAnswer !== null && question.answers 
+                                        ? question.answers[answer.selectedAnswer] 
+                                        : 'Nicht beantwortet'}
                                     </p>
                                   </div>
                                   <div className="col-md-6">
                                     <small className="text-muted">Richtige Antwort:</small>
                                     <p className="text-success">
-                                      {question.answers[question.correctAnswer]}
+                                      {question.answers && question.correctAnswer !== undefined 
+                                        ? question.answers[question.correctAnswer] 
+                                        : 'Nicht verfügbar'}
                                     </p>
                                   </div>
                                 </div>
                                 <div className="d-flex justify-content-between text-muted">
-                                  <small>Zeit: {answer.timeTaken}s</small>
-                                  <small>Kategorie: {question.category}</small>
+                                  <small>Zeit: {answer && answer.timeTaken ? answer.timeTaken : '0'}s</small>
+                                  <small>Kategorie: {question.category || 'Unbekannt'}</small>
                                 </div>
                                 {question.explanation && (
                                     <div className="mt-2 p-2 bg-light rounded">
@@ -398,13 +411,13 @@ function QuizResults({
             {/* UPDATE: Multiplayer-Rangliste */}
             {multiplayerData?.isMultiplayer && multiplayerRanking.length > 0 && (
                 <div className="card">
-                  <div className={`card-header ${getGameModeClass()} text-white`}>
+                  <div className={`card-header ${getGameModeClass()} text-white py-1`}>
                     <h5 className="mb-0">
                       <i className="fas fa-trophy me-2"></i>
                       Rangliste
                     </h5>
                   </div>
-                  <div className="card-body">
+                  <div className="card-body py-1">
                     <div className="list-group list-group-flush">
                       {multiplayerRanking.map((player, index) => (
                           <div key={player.id || index} className={`list-group-item ${player.isHuman ? 'bg-light' : ''}`}>
