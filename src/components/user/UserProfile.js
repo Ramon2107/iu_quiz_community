@@ -4,16 +4,22 @@
  * Diese Komponente zeigt das Benutzerprofil mit Statistiken,
  * Einstellungen und Verlauf der Quiz-Aktivitäten an.
  *
+ * SICHERHEITSFEATURES:
+ * - XSS-Schutz für alle Eingabefelder
+ * - Validierung von Benutzereingaben
+ * - Sichere Darstellung von Benutzerdaten
+ *
  * UPDATE: Logout-Funktion integriert
+ * UPDATE: XSS-Schutz für alle Eingabefelder implementiert
  *
  * @author Projektteam IU Community Quiz
- * @version 1.1.0
+ * @version 1.2.0
  * @since 2025-07-15
- *
  */
 
 import React, { useState, useEffect } from 'react';
 import dataManager from '../../data/dataManager';
+import { sanitizeInput } from '../../utils/xssUtils';
 
 /**
  * UserProfile-Komponente
@@ -131,7 +137,7 @@ function UserProfile({ user, onLogout }) {
                             type="text"
                             className="form-control"
                             value={editedUser.name}
-                            onChange={(e) => setEditedUser({...editedUser, name: e.target.value})}
+                            onChange={(e) => setEditedUser({...editedUser, name: sanitizeInput(e.target.value)})}
                         />
                       </div>
                       <div className="mb-3">
@@ -140,7 +146,7 @@ function UserProfile({ user, onLogout }) {
                             type="text"
                             className="form-control"
                             value={editedUser.studyProgram}
-                            onChange={(e) => setEditedUser({...editedUser, studyProgram: e.target.value})}
+                            onChange={(e) => setEditedUser({...editedUser, studyProgram: sanitizeInput(e.target.value)})}
                         />
                       </div>
                       <div className="mb-3">
@@ -149,7 +155,12 @@ function UserProfile({ user, onLogout }) {
                             type="number"
                             className="form-control"
                             value={editedUser.semester}
-                            onChange={(e) => setEditedUser({...editedUser, semester: parseInt(e.target.value)})}
+                            onChange={(e) => {
+                              // Für numerische Werte: Zuerst sanitize, dann parse
+                              const sanitizedValue = sanitizeInput(e.target.value);
+                              const parsedValue = parseInt(sanitizedValue) || 0;
+                              setEditedUser({...editedUser, semester: parsedValue});
+                            }}
                         />
                       </div>
                       <div className="d-flex gap-2">

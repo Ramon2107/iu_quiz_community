@@ -19,6 +19,7 @@
  */
 
 import React, { useState } from 'react';
+import { sanitizeInput } from '../../utils/xssUtils';
 
 /**
  * Simulierte Benutzerdatenbank mit verschiedenen Nutzer-Typen
@@ -73,18 +74,24 @@ const MOCK_USERS = [
 const SecurityUtils = {
     /**
      * Bereinigt Eingaben gegen SQL-Injection und XSS-Angriffe
+     * 
+     * Diese Funktion kombiniert XSS-Schutz durch HTML-Entitäten mit
+     * SQL-Injection-Schutz und Längenbegrenzung für maximale Sicherheit.
+     * 
      * @param {string} input - Zu bereinigende Eingabe
      * @returns {string} Bereinigte Eingabe
      */
     sanitizeInput: (input) => {
         if (!input || typeof input !== 'string') return '';
 
-        // Entfernt potentielle SQL-Injection-Zeichen
-        return input
-            .replace(/[<>\"'%;()&+]/g, '') // XSS-Schutz
-            .replace(/(\b(ALTER|CREATE|DELETE|DROP|EXEC|INSERT|SELECT|UNION|UPDATE)\b)/gi, '') // SQL-Injection-Schutz
+        // XSS-Schutz durch importierte Funktion
+        const xssSafeInput = sanitizeInput(input);
+        
+        // Zusätzlicher SQL-Injection-Schutz und Längenbegrenzung
+        return xssSafeInput
+            .replace(/(\b(ALTER|CREATE|DELETE|DROP|EXEC|INSERT|SELECT|UNION|UPDATE)\b)/gi, '')
             .trim()
-            .substring(0, 100); // Begrenzung der Eingabelänge
+            .substring(0, 100);
     },
 
     /**

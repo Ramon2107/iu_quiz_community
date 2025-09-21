@@ -11,6 +11,11 @@
  * - Benutzerfreundliche Antwort-Auswahl
  * - Sofortiges Feedback nach Antwort
  *
+ * SICHERHEITSFEATURES:
+ * - XSS-Schutz für alle Chat-Eingaben
+ * - Sichere Verarbeitung von Benutzereingaben
+ * - Bereinigung aller Nachrichten vor dem Senden
+ *
  * UPDATE: Multiplayer-Simulation für kooperative und kompetitive Modi
  * UPDATE: Live-Updates und Mitspieler-Antworten anzeigen
  * UPDATE: Vollständige Multiplayer-Sidebar mit Ranglisten
@@ -22,19 +27,21 @@
  * UPDATE: Dynamische Punkte-Erhöhung je nach Antwort
  * UPDATE: Timer-Fix für erste Frage
  * UPDATE: Kein Chat für Competitive Mode
+ * UPDATE: XSS-Schutz für alle Eingabefelder implementiert
  * FIX: Live-Rangliste zeigt jetzt Anzahl richtiger Antworten statt Prozent
  * FIX: Korrekte Berechnung der durchschnittlichen Antwortzeit
  * FIX: Verbesserte Positionierung der Live-Punktzahl-Anzeige
  * FIX: Kompakte und übersichtliche Live-Ranglisten-Darstellung
  *
  * @author Projektteam IU Community Quiz
- * @version 1.6.3
+ * @version 1.7.0
  * @since 2025-07-15
  */
 
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect, useRef } from 'react';
 import simulatedPlayersService from '../../services/SimulatedPlayersService';
+import { sanitizeInput } from '../../utils/xssUtils';
 
 /**
  * QuizQuestion-Komponente
@@ -366,14 +373,20 @@ function QuizQuestion({
 
     /**
      * Chat-Nachricht senden (nur für cooperative Mode)
+     * 
+     * Die Nachricht wird vor dem Senden mit XSS-Schutz bereinigt,
+     * um die Sicherheit der Anwendung zu gewährleisten.
      */
     const handleSendMessage = () => {
         if (chatInputMessage.trim() && onSendChatMessage) {
+            // Nochmalige Bereinigung vor dem Senden für maximale Sicherheit
+            const sanitizedMessage = sanitizeInput(chatInputMessage.trim());
+            
             const message = {
                 id: Date.now(),
                 playerId: 'human_player',
                 playerName: user.name,
-                message: chatInputMessage.trim(),
+                message: sanitizedMessage,
                 timestamp: new Date().toISOString(),
                 isHuman: true,
                 color: 'primary'
@@ -589,7 +602,7 @@ function QuizQuestion({
                             className="form-control"
                             placeholder="Nachricht eingeben..."
                             value={chatInputMessage}
-                            onChange={(e) => setChatInputMessage(e.target.value)}
+                            onChange={(e) => setChatInputMessage(sanitizeInput(e.target.value))}
                             onKeyDown={handleChatKeyPress}
                             maxLength={200}
                         />

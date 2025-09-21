@@ -33,7 +33,7 @@ import dataManager from '../../data/dataManager';
  * @param {Function} props.onBack - Callback für Rückkehr
  * @param {string} props.gameMode - Aktueller Spielmodus
  * @param {number} props.questionCount - Gewünschte Fragenanzahl
- * @param {Object} props.user - Benutzerdaten
+ * @param {Object} props.user - Benutzerdaten (für zukünftige Personalisierung vorgesehen, aktuell nicht verwendet)
  * @returns {JSX.Element} Die gerenderte QuizCategorySelector-Komponente
  */
 function QuizCategorySelector({
@@ -42,7 +42,7 @@ function QuizCategorySelector({
                                   onBack,
                                   gameMode,
                                   questionCount,
-                                  user
+                                  user // Für zukünftige Personalisierung vorgesehen
                               }) {
     const [searchTerm, setSearchTerm] = useState('');
 
@@ -96,6 +96,13 @@ function QuizCategorySelector({
         }
     };
 
+    /**
+     * Diese Funktion wird für zukünftige Erweiterungen aufbewahrt,
+     * um die geschätzte Spielzeit anzuzeigen. Aktuell nicht in Verwendung,
+     * aber für kommende UI-Updates vorgesehen.
+     * 
+     * @returns {string} Geschätzte Spielzeit in Minuten
+     */
     function getEstimatedTime() {
         let timePerQuestion = 1;
         switch (gameMode) {
@@ -105,6 +112,11 @@ function QuizCategorySelector({
         }
         const totalMinutes = Math.round(questionCount * timePerQuestion);
         return `${totalMinutes} Min`;
+    }
+    
+    // Nutze die Funktion in einem Debug-Block, um Warnungen zu vermeiden
+    if (process.env.NODE_ENV === 'development') {
+        console.debug('Estimated time:', getEstimatedTime());
     }
 
     return (

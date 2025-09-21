@@ -104,7 +104,7 @@ function QuizResults({
   const analyzeGameResults = (ranking) => {
     if (!ranking || ranking.length === 0) return null;
 
-    const humanPlayer = ranking.find(p => p.isHuman);
+    // Finde Position des menschlichen Spielers
     const humanPosition = ranking.findIndex(p => p.isHuman) + 1;
     const winner = ranking[0];
     const isHumanWinner = winner.isHuman;
@@ -114,9 +114,8 @@ function QuizResults({
     const winners = ranking.filter(p => p.score === winnerScore);
     const isTie = winners.length > 1;
 
-    let resultType = '';
-    let resultMessage = '';
-    let resultColor = '';
+    // Variablen für Ergebnistyp, Nachricht und Farbe
+    let resultType, resultMessage, resultColor;
 
     if (isTie) {
       if (winners.some(w => w.isHuman)) {

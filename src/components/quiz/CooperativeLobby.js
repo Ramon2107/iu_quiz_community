@@ -74,7 +74,7 @@ function CooperativeLobby({ players, user, onStartGame }) {
                 </div>
 
                 {/* Simulierte Spieler */}
-                {players.map((player, index) => (
+                {players.map((player, _) => (
                   <div key={player.id} className="col-md-6 mb-3">
                     <div className={`card bg-${player.color} text-white`}>
                       <div className="card-body text-center">

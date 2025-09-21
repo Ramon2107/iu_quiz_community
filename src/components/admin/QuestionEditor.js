@@ -6,6 +6,11 @@
  * Erstellen von Fragenkatalogen und ist vollständig in die neue
  * Kartenverwaltung integriert.
  *
+ * SICHERHEITSFEATURES:
+ * - XSS-Schutz für alle Eingabefelder
+ * - Bereinigung aller Benutzereingaben
+ * - Sichere Speicherung von Fragen und Antworten
+ *
  * ERWEITERT:
  * - Integration mit CardManager-Komponente
  * - Unterstützung für dynamische Kategorien
@@ -21,16 +26,23 @@
  * - Erklärungen für Antworten
  * - Kollaborative Kartenverwaltung
  *
+ * UPDATE: XSS-Schutz für alle Eingabefelder implementiert
+ *
  * @author Projektteam IU Community Quiz
- * @version 1.4.0
+ * @version 1.5.0
  * @since 2025-07-15
  */
 
 import React, { useState, useEffect } from 'react';
 import CardManager from './CardManager';
+import { sanitizeInput } from '../../utils/xssUtils';
 
 /**
  * QuestionEditor-Komponente mit erweiterter Kartenverwaltung
+ * 
+ * Diese Komponente bietet umfassenden XSS-Schutz für alle Eingabefelder,
+ * indem sie Benutzereingaben bereinigt und potenziell gefährliche Zeichen
+ * in sichere HTML-Entitäten umwandelt, ohne die Funktionalität zu beeinträchtigen.
  *
  * @param {Object} props - Komponenteneigenschaften
  * @param {Object} props.user - Benutzerdaten
@@ -88,14 +100,20 @@ function QuestionEditor({ user }) {
 
   /**
    * Aktualisiert die Formulardaten (Legacy-Support)
+   * 
+   * Diese Funktion bereinigt alle Texteingaben mit XSS-Schutz,
+   * bevor sie im Formular-Zustand gespeichert werden.
    *
    * @param {string} field - Feldname
    * @param {any} value - Neuer Wert
    */
   const updateFormData = (field, value) => {
+    // XSS-Schutz für Texteingaben
+    const sanitizedValue = typeof value === 'string' ? sanitizeInput(value) : value;
+    
     setFormData(prev => ({
       ...prev,
-      [field]: value
+      [field]: sanitizedValue
     }));
 
     // Fehler für dieses Feld entfernen
@@ -109,13 +127,19 @@ function QuestionEditor({ user }) {
 
   /**
    * Aktualisiert eine Antwort (Legacy-Support)
+   * 
+   * Diese Funktion bereinigt die Antwort-Eingabe mit XSS-Schutz,
+   * bevor sie im Formular-Zustand gespeichert wird.
    *
    * @param {number} index - Index der Antwort
    * @param {string} value - Neuer Wert
    */
   const updateAnswer = (index, value) => {
+    // XSS-Schutz für Antwort-Eingabe
+    const sanitizedValue = sanitizeInput(value);
+    
     const newAnswers = [...formData.answers];
-    newAnswers[index] = value;
+    newAnswers[index] = sanitizedValue;
     updateFormData('answers', newAnswers);
   };
 
