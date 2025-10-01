@@ -1,4 +1,4 @@
-describe('template spec', () => {
+describe('Start Application', () => {
   it('passes', () => {
     cy.visit('/')
     cy.get('.mt-3 > .btn')

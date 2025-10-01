@@ -1,6 +1,11 @@
 const { defineConfig } = require("cypress");
 
 module.exports = defineConfig({
+  reporter: 'junit',
+  reporterOptions: {
+    mochaFile: 'coverage_cy/my-cypress-output.xml',
+    toConsole: true,
+  },
   e2e: {
     baseUrl: 'http://localhost:3000', // Base URL for your application
     supportFile: 'cypress/support/e2e.js', // Path to support file
@@ -9,6 +14,8 @@ module.exports = defineConfig({
     viewportHeight: 720, // Default viewport height
     setupNodeEvents(on, config) {
       // implement node event listeners here
+      require("@cypress/code-coverage/task")(on, config);
+      return config;
     },
   },
   component: {

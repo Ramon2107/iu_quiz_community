@@ -4,7 +4,7 @@
   "description": "Kooperatives Online-Quizsystem für Studierende",
   "main": "index.js",
   "scripts": {
-    "start": "react-scripts start",
+    "start": "react-scripts -r @cypress/instrument-cra start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "test_ci": "react-scripts test --coverage",
@@ -18,6 +18,7 @@
     "eject": "react-scripts eject"
   },
   "dependencies": {
+    "@cypress/instrument-cra": "^1.4.0",
     "@fortawesome/fontawesome-free": "^6.7.2",
     "bootstrap": "^5.3.7",
     "react": "^18.2.0",
@@ -26,6 +27,7 @@
     "web-vitals": "^2.1.4"
   },
   "devDependencies": {
+    "@cypress/code-coverage": "^3.14.6",
     "@eslint/js": "^9.33.0",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
