@@ -533,6 +533,225 @@ class DataManager {
     }
     this.updateCategoryCardCounts();
   }
+
+  /**
+   * Gibt den Status einer Karte zurück
+   * Mögliche Status: 'active', 'review', 'archived'
+   *
+   * @param {string} cardId - ID der Karte
+   * @returns {string} Status der Karte (default: 'active')
+   */
+  getCardStatus(cardId) {
+    const cardStatus = localStorage.getItem('quiz-card-status');
+    const statusMap = cardStatus ? JSON.parse(cardStatus) : {};
+    const cardInfo = statusMap[cardId];
+    return cardInfo ? cardInfo.status : 'active';
+  }
+
+  /**
+   * Setzt den Status einer Karte
+   *
+   * @param {string} cardId - ID der Karte
+   * @param {string} status - Neuer Status ('active', 'review', 'archived')
+   * @param {string} reason - Grund für die Statusänderung (optional)
+   * @returns {boolean} true, wenn erfolgreich
+   */
+  setCardStatus(cardId, status, reason = '') {
+    const cardStatus = localStorage.getItem('quiz-card-status');
+    const statusMap = cardStatus ? JSON.parse(cardStatus) : {};
+
+    statusMap[cardId] = {
+      status: status,
+      reason: reason,
+      timestamp: new Date().toISOString()
+    };
+
+    localStorage.setItem('quiz-card-status', JSON.stringify(statusMap));
+    return true;
+  }
+
+  /**
+   * Gibt alle Karten mit einem bestimmten Status zurück
+   *
+   * @param {string} status - Gewünschter Status ('active', 'review', 'archived')
+   * @returns {Array<Object>} Array mit Karten des angegebenen Status
+   */
+  getCardsByStatus(status) {
+    const cards = this.getAllCards();
+    const cardStatus = localStorage.getItem('quiz-card-status');
+    const statusMap = cardStatus ? JSON.parse(cardStatus) : {};
+
+    return cards.filter(card => {
+      const cardStatusInfo = statusMap[card.id];
+      const cardCurrentStatus = cardStatusInfo ? cardStatusInfo.status : 'active';
+      return cardCurrentStatus === status;
+    });
+  }
+
+  /**
+   * Gibt vollständige Status-Informationen für eine Karte zurück
+   *
+   * @param {string} cardId - ID der Karte
+   * @returns {Object|null} Status-Objekt mit status, reason, timestamp oder null
+   */
+  getCardStatusInfo(cardId) {
+    const cardStatus = localStorage.getItem('quiz-card-status');
+    const statusMap = cardStatus ? JSON.parse(cardStatus) : {};
+    return statusMap[cardId] || null;
+  }
+
+  /**
+   * Archiviert eine Karte (setzt Status auf 'archived')
+   *
+   * @param {string} cardId - ID der Karte
+   * @param {string} reason - Grund für die Archivierung
+   * @returns {boolean} true, wenn erfolgreich
+   */
+  archiveCard(cardId, reason = 'Archiviert durch Nutzer') {
+    return this.setCardStatus(cardId, 'archived', reason);
+  }
+
+  /**
+   * Markiert eine Karte zur Überprüfung (setzt Status auf 'review')
+   *
+   * @param {string} cardId - ID der Karte
+   * @param {string} reason - Grund für die Überprüfung
+   * @returns {boolean} true, wenn erfolgreich
+   */
+  markCardForReview(cardId, reason = 'Zur Überprüfung markiert') {
+    return this.setCardStatus(cardId, 'review', reason);
+  }
+
+  /**
+   * Reaktiviert eine Karte (setzt Status auf 'active')
+   *
+   * @param {string} cardId - ID der Karte
+   * @returns {boolean} true, wenn erfolgreich
+   */
+  reactivateCard(cardId) {
+    return this.setCardStatus(cardId, 'active', 'Reaktiviert');
+  }
+
+  /**
+   * ===== ROLLENBASIERTE FUNKTIONEN (PB12.1) =====
+   * Mockup-Implementierung für rollenbasierte Zugriffskontrolle
+   * Vorbereitet für spätere Backend-Integration
+   */
+
+  /**
+   * Gibt die aktuelle Benutzerrolle zurück (Mockup)
+   * In Produktionsumgebung würde dies vom Backend kommen
+   * 
+   * Verfügbare Rollen:
+   * - 'user': Standard-Nutzer (kann Fragen melden)
+   * - 'tutor': Erweiterte Rechte (kann Karten bearbeiten und Status ändern)
+   * - 'moderator': Vollzugriff (kann alles verwalten)
+   *
+   * @returns {string} Aktuelle Rolle des Nutzers
+   */
+  getCurrentUserRole() {
+    const storedRole = localStorage.getItem('user-role');
+    return storedRole || 'user'; // Default: Standard-Nutzer
+  }
+
+  /**
+   * Setzt die Rolle des aktuellen Nutzers (nur für Mockup/Demo)
+   * WICHTIG: In Produktion würde dies durch Backend-Authentifizierung erfolgen
+   *
+   * @param {string} role - Neue Rolle ('user', 'tutor', 'moderator')
+   * @returns {boolean} true, wenn erfolgreich
+   */
+  setCurrentUserRole(role) {
+    const validRoles = ['user', 'tutor', 'moderator'];
+    if (!validRoles.includes(role)) {
+      console.error('Ungültige Rolle:', role);
+      return false;
+    }
+    localStorage.setItem('user-role', role);
+    return true;
+  }
+
+  /**
+   * Prüft, ob der aktuelle Nutzer eine bestimmte Berechtigung hat
+   *
+   * Berechtigungen:
+   * - 'report': Fragen melden (alle Nutzer)
+   * - 'moderate': Karten bearbeiten und Status ändern (Tutor, Moderator)
+   * - 'delete': Karten löschen (nur Moderator)
+   * - 'manage_categories': Kategorien verwalten (Tutor, Moderator)
+   *
+   * @param {string} permission - Zu prüfende Berechtigung
+   * @returns {boolean} true, wenn Nutzer die Berechtigung hat
+   */
+  hasPermission(permission) {
+    const role = this.getCurrentUserRole();
+    
+    const permissions = {
+      'user': ['report'],
+      'tutor': ['report', 'moderate', 'manage_categories'],
+      'moderator': ['report', 'moderate', 'delete', 'manage_categories']
+    };
+
+    return permissions[role]?.includes(permission) || false;
+  }
+
+  /**
+   * Gibt alle verfügbaren Rollen zurück (für UI-Auswahl)
+   *
+   * @returns {Array<Object>} Array mit Rollen-Objekten
+   */
+  getAvailableRoles() {
+    return [
+      { 
+        value: 'user', 
+        label: 'Standard-Nutzer',
+        description: 'Kann Fragen melden',
+        icon: 'fas fa-user'
+      },
+      { 
+        value: 'tutor', 
+        label: 'Tutor',
+        description: 'Kann Karten bearbeiten und moderieren',
+        icon: 'fas fa-user-graduate'
+      },
+      { 
+        value: 'moderator', 
+        label: 'Moderator',
+        description: 'Vollzugriff auf alle Funktionen',
+        icon: 'fas fa-user-shield'
+      }
+    ];
+  }
+
+  /**
+   * Gibt die Rollenbeschreibung zurück
+   *
+   * @param {string} role - Rolle
+   * @returns {Object} Rollen-Objekt mit Details
+   */
+  getRoleInfo(role) {
+    const roles = this.getAvailableRoles();
+    return roles.find(r => r.value === role) || roles[0];
+  }
+
+  /**
+   * Prüft, ob der Nutzer Tutor oder Moderator ist
+   *
+   * @returns {boolean} true, wenn Nutzer erweiterte Rechte hat
+   */
+  isPrivilegedUser() {
+    const role = this.getCurrentUserRole();
+    return role === 'tutor' || role === 'moderator';
+  }
+
+  /**
+   * Prüft, ob der Nutzer Moderator ist
+   *
+   * @returns {boolean} true, wenn Nutzer Moderator ist
+   */
+  isModerator() {
+    return this.getCurrentUserRole() === 'moderator';
+  }
 }
 
 

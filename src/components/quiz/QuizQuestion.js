@@ -285,7 +285,8 @@ function QuizQuestion({
                             setIsAnswered(current => {
                                 if (!current) {
                                     setShowExplanation(true);
-                                    const timeTaken = Math.round((Date.now() - startTime) / 1000);
+                                    // Verwende startTimeRef.current statt startTime um Dependency-Warnung zu vermeiden
+                                    const timeTaken = Math.round((Date.now() - startTimeRef.current) / 1000);
                                     onAnswer({
                                         selectedAnswer: null,
                                         isCorrect: false,
@@ -311,6 +312,7 @@ function QuizQuestion({
                 clearInterval(timerRef.current);
             }
         };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [question, gameMode, onAnswer]);
 
     /**
@@ -343,23 +345,6 @@ function QuizQuestion({
             }, 1000);
         }
     }, [multiplayerData?.currentPlayerAnswers, multiplayerData?.isMultiplayer, gameMode, question]);
-
-    /**
-     * Behandelt Zeit-Ablauf im competitive/cooperative Mode
-     */
-    const handleTimeUp = () => {
-        setShowExplanation(true);
-
-        const timeTaken = Math.round((Date.now() - startTime) / 1000);
-
-        onAnswer({
-            selectedAnswer: null,
-            isCorrect: false,
-            timeTaken,
-            questionId: question.id,
-            timedOut: true
-        });
-    };
 
     /**
      * Behandelt Antwort-Auswahl
@@ -826,7 +811,29 @@ function QuizQuestion({
 
                             {/* Frage */}
                             <div className="mb-3 p-2">
-                                <h4 className="question-text mb-3 fs-3">{question.question}</h4>
+                                <div className="d-flex justify-content-between align-items-start mb-2">
+                                    <h4 className="question-text mb-0 fs-3 flex-grow-1">{question.question}</h4>
+                                    <button
+                                        className="btn btn-sm btn-outline-warning ms-2"
+                                        onClick={() => {
+                                            if (window.confirm('Möchten Sie diese Frage als fehlerhaft oder unpassend melden?')) {
+                                                // Markiere Frage als gemeldet
+                                                const reportedQuestions = JSON.parse(localStorage.getItem('reported-questions') || '[]');
+                                                if (!reportedQuestions.includes(question.id)) {
+                                                    reportedQuestions.push(question.id);
+                                                    localStorage.setItem('reported-questions', JSON.stringify(reportedQuestions));
+                                                    alert('Frage wurde gemeldet und wird überprüft.');
+                                                } else {
+                                                    alert('Diese Frage wurde bereits gemeldet.');
+                                                }
+                                            }
+                                        }}
+                                        title="Frage melden"
+                                    >
+                                        <i className="fas fa-flag me-1"></i>
+                                        Melden
+                                    </button>
+                                </div>
                                 <div className="d-flex">
                                     {question.category && (
                                         <div className="badge bg-light text-dark p-2 me-2 fs-5">

@@ -36,6 +36,11 @@ function CardManager({ user, onQuestionAdded, onCategoryAdded }) {
     const [searchTerm, setSearchTerm] = useState('');
     const [authorFilter, setAuthorFilter] = useState('all');
     const [difficultyFilter, setDifficultyFilter] = useState('all');
+    const [reportedFilter, setReportedFilter] = useState('all');
+    const [statusFilter, setStatusFilter] = useState('all');
+    
+    // NEU: Rollenbasierte Zustandsverwaltung (PB12.1)
+    const [currentRole, setCurrentRole] = useState(dataManager.getCurrentUserRole());
 
     // NEU: Zustand für Kategorie-Navigation
     const [viewMode, setViewMode] = useState('categories'); // 'categories' oder 'category-detail'
@@ -120,7 +125,7 @@ function CardManager({ user, onQuestionAdded, onCategoryAdded }) {
 
     /**
      * Filtert Karten basierend auf Suchbegriff und Filtern
-     * NEU: Erweiterte Filterlogik mit Kategorie-Berücksichtigung
+     * NEU: Erweiterte Filterlogik mit Kategorie-Berücksichtigung und gemeldete Fragen
      * Diese Funktion wird bei jeder Änderung der Filter automatisch ausgeführt
      */
     useEffect(() => {
@@ -151,8 +156,26 @@ function CardManager({ user, onQuestionAdded, onCategoryAdded }) {
             filtered = filtered.filter(card => card.difficulty === difficultyFilter);
         }
 
+        // NEU: Gemeldet-Filter - filtert nach gemeldeten Fragen
+        if (reportedFilter !== 'all') {
+            const reportedQuestions = JSON.parse(localStorage.getItem('reported-questions') || '[]');
+            if (reportedFilter === 'reported') {
+                filtered = filtered.filter(card => reportedQuestions.includes(card.id));
+            } else if (reportedFilter === 'not-reported') {
+                filtered = filtered.filter(card => !reportedQuestions.includes(card.id));
+            }
+        }
+
+        // NEU: Status-Filter - filtert nach Housekeeping-Status (aktiv, zu prüfen, archiviert)
+        if (statusFilter !== 'all') {
+            filtered = filtered.filter(card => {
+                const status = dataManager.getCardStatus(card.id);
+                return status === statusFilter;
+            });
+        }
+
         setFilteredCards(filtered);
-    }, [searchTerm, authorFilter, difficultyFilter, cards, currentCategoryView]);
+    }, [searchTerm, authorFilter, difficultyFilter, reportedFilter, statusFilter, cards, currentCategoryView]);
 
     /**
      * Lädt alle Daten über den DataManager
@@ -500,6 +523,16 @@ function CardManager({ user, onQuestionAdded, onCategoryAdded }) {
     };
 
     /**
+     * NEU (PB12.1): Ändert die Rolle des aktuellen Nutzers (Mockup für Demo)
+     * In Produktion würde die Rolle durch Backend-Authentifizierung gesetzt
+     */
+    const handleRoleChange = (newRole) => {
+        dataManager.setCurrentUserRole(newRole);
+        setCurrentRole(newRole);
+        alert(`Rolle wurde auf "${dataManager.getRoleInfo(newRole).label}" geändert.\n\nHINWEIS: Dies ist ein Mockup. In Produktion würde die Rolle durch Backend-Authentifizierung erfolgen.`);
+    };
+
+    /**
      * Rendert die Kategorien-Übersicht - Hauptansicht mit allen Kategorien
      */
     const renderCategoriesOverview = () => (
@@ -688,6 +721,45 @@ function CardManager({ user, onQuestionAdded, onCategoryAdded }) {
                         </div>
                     </div>
 
+                    {/* NEU (PB12.1): Rollenauswahl-Box - Mockup für Demo */}
+                    <div className="alert alert-warning mb-4">
+                        <div className="row align-items-center">
+                            <div className="col-md-8">
+                                <h6 className="mb-1">
+                                    <i className={`${dataManager.getRoleInfo(currentRole).icon} me-2`}></i>
+                                    Aktuelle Rolle: {dataManager.getRoleInfo(currentRole).label}
+                                </h6>
+                                <small className="text-muted">
+                                    {dataManager.getRoleInfo(currentRole).description}
+                                </small>
+                                <p className="mb-0 mt-2">
+                                    <small>
+                                        <strong>DEMO-MODUS:</strong> Ändern Sie Ihre Rolle, um die rollenbasierten Funktionen zu testen.
+                                        In Produktion wird die Rolle durch Backend-Authentifizierung bestimmt.
+                                    </small>
+                                </p>
+                            </div>
+                            <div className="col-md-4">
+                                <label htmlFor="roleSelector" className="form-label">
+                                    <i className="fas fa-user-cog me-1"></i>
+                                    Rolle wechseln (Demo)
+                                </label>
+                                <select
+                                    id="roleSelector"
+                                    className="form-select"
+                                    value={currentRole}
+                                    onChange={(e) => handleRoleChange(e.target.value)}
+                                >
+                                    {dataManager.getAvailableRoles().map((role) => (
+                                        <option key={role.value} value={role.value}>
+                                            {role.label}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
                     {/* Erweiterte Such- und Filterbereich - Verbesserte Suche für bessere Usability */}
                     <div className="card mb-4">
                         <div className="card-header">
@@ -697,8 +769,8 @@ function CardManager({ user, onQuestionAdded, onCategoryAdded }) {
                             </h5>
                         </div>
                         <div className="card-body">
-                            <div className="row">
-                                <div className="col-md-4">
+                            <div className="row mb-3">
+                                <div className="col-md-3">
                                     <label htmlFor="searchTerm" className="form-label">
                                         Suchbegriff
                                     </label>
@@ -711,7 +783,7 @@ function CardManager({ user, onQuestionAdded, onCategoryAdded }) {
                                         placeholder="Suche in Fragen und Tags..."
                                     />
                                 </div>
-                                <div className="col-md-4">
+                                <div className="col-md-3">
                                     <label htmlFor="authorFilter" className="form-label">
                                         Autor
                                     </label>
@@ -729,7 +801,7 @@ function CardManager({ user, onQuestionAdded, onCategoryAdded }) {
                                         ))}
                                     </select>
                                 </div>
-                                <div className="col-md-4">
+                                <div className="col-md-3">
                                     <label htmlFor="difficultyFilter" className="form-label">
                                         Schwierigkeit
                                     </label>
@@ -745,7 +817,44 @@ function CardManager({ user, onQuestionAdded, onCategoryAdded }) {
                                         <option value="Schwer">Schwer</option>
                                     </select>
                                 </div>
+                                <div className="col-md-3">
+                                    <label htmlFor="reportedFilter" className="form-label">
+                                        Meldungen
+                                    </label>
+                                    <select
+                                        id="reportedFilter"
+                                        className="form-select"
+                                        value={reportedFilter}
+                                        onChange={(e) => setReportedFilter(e.target.value)}
+                                    >
+                                        <option value="all">Alle Fragen</option>
+                                        <option value="reported">Nur gemeldete</option>
+                                        <option value="not-reported">Nicht gemeldete</option>
+                                    </select>
+                                </div>
                             </div>
+                            {/* NEU (PB12.1): Housekeeping-Filter nur für Tutor/Moderator */}
+                            {dataManager.hasPermission('moderate') && (
+                                <div className="row">
+                                    <div className="col-md-12">
+                                        <label htmlFor="statusFilter" className="form-label">
+                                            <i className="fas fa-tasks me-2"></i>
+                                            Housekeeping-Status
+                                        </label>
+                                        <select
+                                            id="statusFilter"
+                                            className="form-select"
+                                            value={statusFilter}
+                                            onChange={(e) => setStatusFilter(e.target.value)}
+                                        >
+                                            <option value="all">Alle Status</option>
+                                            <option value="active">Aktiv</option>
+                                            <option value="review">Zu prüfen</option>
+                                            <option value="archived">Archiviert</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     </div>
 
@@ -754,6 +863,19 @@ function CardManager({ user, onQuestionAdded, onCategoryAdded }) {
                         <div>
                             <i className="fas fa-info-circle me-2"></i>
                             <strong>Karten in {currentCategoryView && currentCategoryView.name ? currentCategoryView.name : 'Kategorie'}:</strong> {Array.isArray(filteredCards) ? filteredCards.length : 0} von {currentCategoryView && currentCategoryView.id ? getCardCountForCategory(currentCategoryView.id) : 0} angezeigt
+                            {(() => {
+                                const reportedQuestions = JSON.parse(localStorage.getItem('reported-questions') || '[]');
+                                const reportedInCategory = cards.filter(card =>
+                                    reportedQuestions.includes(card.id) &&
+                                    (!currentCategoryView || card.categoryId === currentCategoryView.id)
+                                ).length;
+                                return reportedInCategory > 0 ? (
+                                    <span className="badge bg-warning text-dark ms-2">
+                                        <i className="fas fa-flag me-1"></i>
+                                        {reportedInCategory} gemeldet
+                                    </span>
+                                ) : null;
+                            })()}
                         </div>
                         <small className="text-muted">
                             Kategorie: {currentCategoryView && currentCategoryView.name ? currentCategoryView.name : 'Unbekannt'} •
@@ -780,29 +902,90 @@ function CardManager({ user, onQuestionAdded, onCategoryAdded }) {
                                         <div className="card-header">
                                             <div className="d-flex justify-content-between align-items-start">
                                                 <div className="flex-grow-1">
-                                                    <h6 className="mb-1">{card.question || 'Keine Frage'}</h6>
+                                                    <h6 className="mb-1">
+                                                        {card.question || 'Keine Frage'}
+                                                        {(() => {
+                                                            const reportedQuestions = JSON.parse(localStorage.getItem('reported-questions') || '[]');
+                                                            return reportedQuestions.includes(card.id) ? (
+                                                                <span className="badge bg-warning text-dark ms-2" title="Diese Frage wurde gemeldet">
+                                                                    <i className="fas fa-flag me-1"></i>
+                                                                    Gemeldet
+                                                                </span>
+                                                            ) : null;
+                                                        })()}
+                                                        {(() => {
+                                                            const cardStatus = dataManager.getCardStatus(card.id);
+                                                            if (cardStatus === 'review') {
+                                                                return (
+                                                                    <span className="badge bg-info text-white ms-2" title="Frage muss überprüft werden">
+                                                                        <i className="fas fa-exclamation-circle me-1"></i>
+                                                                        Zu prüfen
+                                                                    </span>
+                                                                );
+                                                            } else if (cardStatus === 'archived') {
+                                                                return (
+                                                                    <span className="badge bg-secondary text-white ms-2" title="Frage wurde archiviert">
+                                                                        <i className="fas fa-archive me-1"></i>
+                                                                        Archiviert
+                                                                    </span>
+                                                                );
+                                                            }
+                                                            return null;
+                                                        })()}
+                                                    </h6>
                                                     <small className="text-muted">
                                                         <i className="fas fa-tag me-1"></i>
                                                         {card.tags && Array.isArray(card.tags) && card.tags.length > 0 ?
                                                             card.tags.join(', ') : 'Keine Tags'}
                                                     </small>
                                                 </div>
-                                                {/* FIX: Einfachere Button-Implementierung ohne Bootstrap Dropdown */}
-                                                <button
-                                                    className="btn btn-sm btn-outline-secondary"
-                                                    onClick={(e) => {
-                                                        e.stopPropagation();
-                                                        const shouldEdit = window.confirm('Möchten Sie diese Karte bearbeiten?');
-                                                        if (shouldEdit) {
-                                                            startEditCard(card);
-                                                        } else if (window.confirm('Möchten Sie diese Karte stattdessen löschen?')) {
-                                                            deleteCard(card.id);
-                                                        }
-                                                    }}
-                                                    title="Karte verwalten"
-                                                >
-                                                    <i className="fas fa-cog"></i>
-                                                </button>
+                                                <div className="btn-group btn-group-sm">
+                                                    {/* NEU (PB12.1): Rollenbasierte Bearbeitungs-/Lösch-Buttons */}
+                                                    {(dataManager.hasPermission('moderate') || card.author === user.name) && (
+                                                        <button
+                                                            className="btn btn-sm btn-outline-secondary"
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                startEditCard(card);
+                                                            }}
+                                                            title="Karte bearbeiten"
+                                                        >
+                                                            <i className="fas fa-edit"></i>
+                                                        </button>
+                                                    )}
+                                                    {(dataManager.isModerator() || card.author === user.name) && (
+                                                        <button
+                                                            className="btn btn-sm btn-outline-danger"
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                deleteCard(card.id);
+                                                            }}
+                                                            title="Karte löschen"
+                                                        >
+                                                            <i className="fas fa-trash"></i>
+                                                        </button>
+                                                    )}
+                                                    <button
+                                                        className="btn btn-sm btn-outline-warning"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            const reportedQuestions = JSON.parse(localStorage.getItem('reported-questions') || '[]');
+                                                            if (!reportedQuestions.includes(card.id)) {
+                                                                if (window.confirm('Möchten Sie diese Frage als fehlerhaft oder unpassend melden?')) {
+                                                                    reportedQuestions.push(card.id);
+                                                                    localStorage.setItem('reported-questions', JSON.stringify(reportedQuestions));
+                                                                    alert('Frage wurde gemeldet.');
+                                                                    loadData();
+                                                                }
+                                                            } else {
+                                                                alert('Diese Frage wurde bereits gemeldet.');
+                                                            }
+                                                        }}
+                                                        title="Frage melden"
+                                                    >
+                                                        <i className="fas fa-flag"></i>
+                                                    </button>
+                                                </div>
                                             </div>
                                         </div>
                                         <div className="card-body">
@@ -837,7 +1020,7 @@ function CardManager({ user, onQuestionAdded, onCategoryAdded }) {
                                             )}
                                         </div>
                                         <div className="card-footer">
-                                            <div className="d-flex justify-content-between align-items-center">
+                                            <div className="d-flex justify-content-between align-items-center mb-2">
                                                 <small className="text-muted">
                                                     <i className="fas fa-user me-1"></i>
                                                     {card.author || 'Unbekannt'}
@@ -850,6 +1033,60 @@ function CardManager({ user, onQuestionAdded, onCategoryAdded }) {
                           {card.difficulty || 'Unbekannt'}
                         </span>
                                             </div>
+                                            {/* NEU (PB12.1): Rollenbasierte Moderation-Buttons */}
+                                            {dataManager.hasPermission('moderate') ? (
+                                                <div className="btn-group w-100" role="group">
+                                                    {(() => {
+                                                        const cardStatus = dataManager.getCardStatus(card.id);
+                                                        return (
+                                                            <>
+                                                                <button
+                                                                    className={`btn btn-sm ${cardStatus === 'active' ? 'btn-success' : 'btn-outline-success'}`}
+                                                                    onClick={() => {
+                                                                        dataManager.reactivateCard(card.id);
+                                                                        loadData();
+                                                                    }}
+                                                                    title="Als aktiv markieren"
+                                                                >
+                                                                    <i className="fas fa-check me-1"></i>
+                                                                    Aktiv
+                                                                </button>
+                                                                <button
+                                                                    className={`btn btn-sm ${cardStatus === 'review' ? 'btn-info' : 'btn-outline-info'}`}
+                                                                    onClick={() => {
+                                                                        const reason = prompt('Grund für die Überprüfung (optional):');
+                                                                        dataManager.markCardForReview(card.id, reason || 'Zur Überprüfung markiert');
+                                                                        loadData();
+                                                                    }}
+                                                                    title="Zur Überprüfung markieren"
+                                                                >
+                                                                    <i className="fas fa-exclamation-circle me-1"></i>
+                                                                    Prüfen
+                                                                </button>
+                                                                <button
+                                                                    className={`btn btn-sm ${cardStatus === 'archived' ? 'btn-secondary' : 'btn-outline-secondary'}`}
+                                                                    onClick={() => {
+                                                                        const reason = prompt('Grund für die Archivierung (optional):');
+                                                                        dataManager.archiveCard(card.id, reason || 'Archiviert');
+                                                                        loadData();
+                                                                    }}
+                                                                    title="Archivieren"
+                                                                >
+                                                                    <i className="fas fa-archive me-1"></i>
+                                                                    Archiv
+                                                                </button>
+                                                            </>
+                                                        );
+                                                    })()}
+                                                </div>
+                                            ) : (
+                                                <div className="alert alert-secondary mb-0 py-2">
+                                                    <small className="text-muted">
+                                                        <i className="fas fa-lock me-1"></i>
+                                                        Moderationsfunktionen nur für Tutoren und Moderatoren
+                                                    </small>
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
