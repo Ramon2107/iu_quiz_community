@@ -13,6 +13,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './styles/index.css';
+// Font Awesome 6 full CSS to restore icons
+import '@fortawesome/fontawesome-free/css/all.min.css';
 import App from './App';
 
 /**

@@ -94,7 +94,7 @@ function HomePage({ user, onNavigate }) {
                 <div className="col-md-4 mb-4">
                     <div className="card h-100">
                         <div className="card-body text-center">
-                            <i className="fas fa-cards-blank fa-3x text-success mb-3"></i>
+                            <i className="fas fa-clone fa-3x text-success mb-3"></i>
                             <h3 className="card-title">{stats.totalCards}</h3>
                             <p className="card-text">Gesamt Lernkarten</p>
                         </div>

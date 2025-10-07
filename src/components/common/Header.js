@@ -35,18 +35,18 @@ function Header({ currentView, setCurrentView, user, onLogout }) {
       <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
         <div className="container">
           {/* Logo und Titel - Klick führt zur Startseite */}
-          <a
-              className="navbar-brand"
-              href="#"
-              onClick={(e) => {
-                e.preventDefault();
+          <button
+              className="navbar-brand btn btn-link p-0"
+              type="button"
+              onClick={() => {
                 setCurrentView('home');
               }}
+              aria-label="Zur Startseite"
               style={{ cursor: 'pointer' }}
           >
-            <i className="fas fa-graduation-cap me-2"></i>
+            <i className="fas fa-graduation-cap me-2" aria-hidden="true"></i>
             IU Community Quiz
-          </a>
+          </button>
 
           {/* Mobile Navigation Toggle */}
           <button

@@ -32,7 +32,7 @@
  * @since 2025-07-15
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import QuizQuestion from './QuizQuestion';
 import QuizResults from './QuizResults';
 import QuizCategorySelector from './QuizCategorySelector';
@@ -79,6 +79,7 @@ function QuizMain({ user }) {
             case 'single-player': timePerQuestion = 2; break;
             case 'cooperative': timePerQuestion = 1; break;
             case 'competitive': timePerQuestion = 0.5; break;
+            default: timePerQuestion = 1; break;
         }
         return Math.round(questionCount * timePerQuestion);
     };
@@ -164,15 +165,14 @@ function QuizMain({ user }) {
         resetQuizState();
     };
 
-    const handleAnswer = async (answerData) => {
-        const newAnswers = [...answers, answerData];
-        setAnswers(newAnswers);
+    const handleAnswer = useCallback(async (answerData) => {
+        setAnswers(prev => [...prev, answerData]);
         if (multiplayerData.isMultiplayer) {
             const playerAnswers = await simulatedPlayersService.simulatePlayerAnswers(questions[currentQuestionIndex], currentQuestionIndex);
-            setMultiplayerData({
-                ...multiplayerData,
+            setMultiplayerData(prev => ({
+                ...prev,
                 currentPlayerAnswers: playerAnswers
-            });
+            }));
         }
         setTimeout(() => {
             if (currentQuestionIndex < questions.length - 1) {
@@ -181,7 +181,7 @@ function QuizMain({ user }) {
                 setShowResults(true);
             }
         }, 3000);
-    };
+    }, [questions, currentQuestionIndex, multiplayerData.isMultiplayer]);
 
     const getGameModeClass = () => {
         switch (gameMode) {

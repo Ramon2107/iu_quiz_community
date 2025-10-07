@@ -170,17 +170,17 @@ function Footer() {
                                                     support@iubh-quiz.de
                                                 </span>
                                                 <div className="social-links">
-                                                    <a href="#" className="text-light me-3" aria-label="Facebook">
-                                                        <i className="fab fa-facebook fa-lg"></i>
+                                                    <a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" className="text-light me-3" aria-label="Facebook">
+                                                        <i className="fab fa-facebook fa-lg" aria-hidden="true"></i>
                                                     </a>
-                                                    <a href="#" className="text-light me-3" aria-label="Twitter">
-                                                        <i className="fab fa-twitter fa-lg"></i>
+                                                    <a href="https://twitter.com/" target="_blank" rel="noopener noreferrer" className="text-light me-3" aria-label="Twitter">
+                                                        <i className="fab fa-twitter fa-lg" aria-hidden="true"></i>
                                                     </a>
-                                                    <a href="#" className="text-light me-3" aria-label="LinkedIn">
-                                                        <i className="fab fa-linkedin fa-lg"></i>
+                                                    <a href="https://www.linkedin.com/" target="_blank" rel="noopener noreferrer" className="text-light me-3" aria-label="LinkedIn">
+                                                        <i className="fab fa-linkedin fa-lg" aria-hidden="true"></i>
                                                     </a>
-                                                    <a href="#" className="text-light" aria-label="Instagram">
-                                                        <i className="fab fa-instagram fa-lg"></i>
+                                                    <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" className="text-light" aria-label="Instagram">
+                                                        <i className="fab fa-instagram fa-lg" aria-hidden="true"></i>
                                                     </a>
                                                 </div>
                                             </div>

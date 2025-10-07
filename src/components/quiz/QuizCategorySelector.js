@@ -109,6 +109,7 @@ function QuizCategorySelector({
             case 'single-player': timePerQuestion = 2; break;
             case 'cooperative': timePerQuestion = 1; break;
             case 'competitive': timePerQuestion = 0.5; break;
+            default: timePerQuestion = 1; break;
         }
         const totalMinutes = Math.round(questionCount * timePerQuestion);
         return `${totalMinutes} Min`;

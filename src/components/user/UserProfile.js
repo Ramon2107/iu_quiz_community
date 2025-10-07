@@ -17,7 +17,7 @@
  * @since 2025-07-15
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import dataManager from '../../data/dataManager';
 import { sanitizeInput } from '../../utils/xssUtils';
 
@@ -40,14 +40,11 @@ function UserProfile({ user, onLogout }) {
   const [editMode, setEditMode] = useState(false);
   const [editedUser, setEditedUser] = useState({...user});
 
-  useEffect(() => {
-    loadUserStats();
-  }, [user]);
 
   /**
    * Lädt Benutzerstatistiken
    */
-  const loadUserStats = () => {
+  const loadUserStats = useCallback(() => {
     // Simuliere Statistiken basierend auf Benutzerdaten
     const userCards = dataManager.getAllCards().filter(card => card.author === user.name);
 
@@ -59,7 +56,11 @@ function UserProfile({ user, onLogout }) {
       createdQuestions: userCards.length,
       favoriteCategory: userCards.length > 0 ? userCards[0].category : 'Noch keine Daten'
     });
-  };
+  }, [user.name]);
+
+  useEffect(() => {
+    loadUserStats();
+  }, [loadUserStats]);
 
   /**
    * Behandelt Profil-Änderungen

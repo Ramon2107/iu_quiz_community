@@ -64,9 +64,15 @@ function QuizResults({
   // UPDATE: Berechne Multiplayer-Rangliste beim Component-Mount
   useEffect(() => {
     if (multiplayerData?.isMultiplayer) {
+      const playerTotalScore = answers.reduce((acc, answer) => {
+        if (!answer || !answer.isCorrect) return acc;
+        const speedBonus = Math.max(0, 30 - (answer.timeTaken || 0));
+        return acc + 100 + speedBonus;
+      }, 0);
+
       const humanPlayerStats = {
         name: user.name,
-        score: calculatePlayerScore(),
+        score: playerTotalScore,
         correctAnswers,
         averageTime,
         isHuman: true
@@ -82,7 +88,7 @@ function QuizResults({
       console.log('Multiplayer-Rangliste:', ranking);
       console.log('Spielergebnisse:', results);
     }
-  }, [multiplayerData, correctAnswers, averageTime, user.name]);
+  }, [multiplayerData, correctAnswers, averageTime, user.name, answers]);
 
   /**
    * UPDATE: Berechnet Spieler-Punkte basierend auf Antworten und Zeit

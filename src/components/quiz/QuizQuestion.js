@@ -102,6 +102,8 @@ function QuizQuestion({
 
     // Timer-Referenz für korrektes Cleanup
     const timerRef = useRef(null);
+    // Referenz für Startzeit, um Hook-Abhängigkeiten zu vermeiden
+    const startTimeRef = useRef(null);
 
     /**
      * Berechnet die aktuellen Punkte des Spielers
@@ -220,7 +222,14 @@ function QuizQuestion({
      * Aktualisiert die Punkte-Anzeige dynamisch
      */
     useEffect(() => {
-        const newScore = calculateCurrentScore();
+        const newScore = allAnswers.reduce((total, answer) => {
+            if (!answer) return total;
+            if (answer.isCorrect) {
+                const speedBonus = Math.max(0, 30 - (answer.timeTaken || 0));
+                return total + 100 + speedBonus;
+            }
+            return total;
+        }, 0);
         if (newScore !== currentScore) {
             setScoreAnimation(true);
             setCurrentScore(newScore);
@@ -242,7 +251,9 @@ function QuizQuestion({
         }
 
         // Reset Zustand für neue Frage
-        setStartTime(Date.now());
+        const now = Date.now();
+        setStartTime(now);
+        startTimeRef.current = now;
         setSelectedAnswer(null);
         setShowExplanation(false);
         setIsAnswered(false);
@@ -273,7 +284,15 @@ function QuizQuestion({
                         setTimeout(() => {
                             setIsAnswered(current => {
                                 if (!current) {
-                                    handleTimeUp();
+                                    setShowExplanation(true);
+                                    const timeTaken = Math.round((Date.now() - startTime) / 1000);
+                                    onAnswer({
+                                        selectedAnswer: null,
+                                        isCorrect: false,
+                                        timeTaken,
+                                        questionId: question.id,
+                                        timedOut: true
+                                    });
                                     return true;
                                 }
                                 return current;
@@ -292,7 +311,7 @@ function QuizQuestion({
                 clearInterval(timerRef.current);
             }
         };
-    }, [question, gameMode]);
+    }, [question, gameMode, onAnswer]);
 
     /**
      * Effekt für Multiplayer-Nachrichten und Updates
@@ -417,6 +436,9 @@ function QuizQuestion({
      */
     const getAnswerButtonClass = (index) => {
         if (!showExplanation) {
+            if (index === selectedAnswer) {
+                return 'btn btn-primary w-100 mb-3 py-2';
+            }
             return 'btn btn-outline-primary w-100 mb-3 py-2';
         }
 
@@ -866,6 +888,17 @@ function QuizQuestion({
                                     </h6>
                                     <p className="mb-0 fs-5">
                                         Die Zeit ist abgelaufen. Die richtige Antwort war: <strong>{question.answers[question.correctAnswer]}</strong>
+                                    </p>
+                                </div>
+                            )}
+                            {showExplanation && selectedAnswer !== null && selectedAnswer !== question.correctAnswer && (
+                                <div className="mt-3 p-3 bg-light rounded shadow-sm">
+                                    <h6 className="mb-2 fs-5">
+                                        <i className="fas fa-check me-2 text-success"></i>
+                                        Richtige Antwort:
+                                    </h6>
+                                    <p className="mb-0 fs-5">
+                                        {question.answers[question.correctAnswer]}
                                     </p>
                                 </div>
                             )}
