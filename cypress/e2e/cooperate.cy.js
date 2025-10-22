@@ -1,4 +1,4 @@
-describe('Start Login and start cooperative mode', () => {
+describe('Start cooperative mode', () => {
   it('passes', () => {
     cy.visit('/')
     cy.get('.mt-3 > .btn')

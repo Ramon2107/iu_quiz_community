@@ -1,4 +1,4 @@
-describe('Start Login and open card inventory', () => {
+describe('Open card inventory', () => {
   it('passes', () => {
     cy.visit('/')
     cy.get('.mt-3 > .btn')

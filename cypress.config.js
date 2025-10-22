@@ -3,7 +3,7 @@ const { defineConfig } = require("cypress");
 module.exports = defineConfig({
   reporter: 'junit',
   reporterOptions: {
-    mochaFile: 'coverage_cy/my-cypress-output.xml',
+    mochaFile: 'coverage_cy/my-cypress-output-[suiteName].xml',
     toConsole: true,
   },
   e2e: {

@@ -1,4 +1,4 @@
-describe('Start Login and start singleplayer', () => {
+describe('Start singleplayer mode', () => {
   it('passes', () => {
     cy.visit('/')
     cy.get('.mt-3 > .btn')

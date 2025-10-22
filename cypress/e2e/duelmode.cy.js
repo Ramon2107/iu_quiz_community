@@ -1,4 +1,4 @@
-describe('Start Login and start duel mode', () => {
+describe('Start duel mode', () => {
   it('passes', () => {
     cy.visit('/')
     cy.get('.mt-3 > .btn')
