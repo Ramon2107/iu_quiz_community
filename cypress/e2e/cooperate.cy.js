@@ -1,0 +1,15 @@
+describe('Start cooperative mode', () => {
+  it('passes', () => {
+    cy.visit('/')
+    cy.get('.mt-3 > .btn')
+    .should('contain.text','Demo-Anmeldedaten anzeigen')
+    cy.get('#email').type('anna.schmidt@iu-study.org')
+    cy.get('#password').type('QuizMaster123!')
+    cy.get('form > .btn').click()
+    cy.get('.btn-light').click()
+    cy.get(':nth-child(2) > .card > .card-body > .btn').click()
+    cy.get('.btn-success').click()
+    cy.get(':nth-child(2) > .card > .card-body > .card-footer > small').click()
+    cy.get('.card-header > .justify-content-between > .mb-0').should('contain.text','Frage 1 von 10')
+  })
+})
