@@ -2,22 +2,35 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: services/SimulatedPlayersService.js</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>services/SimulatedPlayersService.js - Documentation</title>
 
-    <script src="scripts/prettify/prettify.js"> </script>
-    <script src="scripts/prettify/lang-css.js"> </script>
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
     <!--[if lt IE 9]>
       <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
     <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
 </head>
-
 <body>
 
-<div id="main">
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
 
-    <h1 class="page-title">Source: services/SimulatedPlayersService.js</h1>
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <li class="nav-link nav-home-link"><a href="index.html">Home</a></li><li class="nav-heading">Classes</li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="DataManager.html">DataManager</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.archiveCard">archiveCard</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.deleteCard">deleteCard</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.deleteCategory">deleteCategory</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.exportData">exportData</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.extractTagsFromQuestion">extractTagsFromQuestion</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.getAllCards">getAllCards</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.getAllCategories">getAllCategories</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.getAvailableRoles">getAvailableRoles</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.getCardStatus">getCardStatus</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.getCardStatusInfo">getCardStatusInfo</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.getCardsByCategory">getCardsByCategory</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.getCardsByCategoryName">getCardsByCategoryName</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.getCardsByStatus">getCardsByStatus</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.getCategoriesForQuiz">getCategoriesForQuiz</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.getCategoryIdByName">getCategoryIdByName</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.getCurrentUserRole">getCurrentUserRole</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.getQuestionsForQuiz">getQuestionsForQuiz</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.getRoleInfo">getRoleInfo</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.getUniqueAuthors">getUniqueAuthors</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.hasPermission">hasPermission</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.importData">importData</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.initializeData">initializeData</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.isModerator">isModerator</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.isPrivilegedUser">isPrivilegedUser</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.loadMockCategories">loadMockCategories</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.loadMockQuestions">loadMockQuestions</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.markCardForReview">markCardForReview</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.reactivateCard">reactivateCard</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.reloadMockData">reloadMockData</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.resetAllData">resetAllData</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.saveCard">saveCard</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.saveCategory">saveCategory</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.searchCards">searchCards</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.setCardStatus">setCardStatus</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.setCurrentUserRole">setCurrentUserRole</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.updateCard">updateCard</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.updateCategory">updateCategory</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.updateCategoryCardCounts">updateCategoryCardCounts</a></span></li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="SimulatedPlayersService.html">SimulatedPlayersService</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="SimulatedPlayersService.html#.calculateFinalRanking">calculateFinalRanking</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="SimulatedPlayersService.html#.calculatePerformanceRating">calculatePerformanceRating</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="SimulatedPlayersService.html#.generateCompetitiveUpdates">generateCompetitiveUpdates</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="SimulatedPlayersService.html#.generateCooperativeMessages">generateCooperativeMessages</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="SimulatedPlayersService.html#.generateLiveComments">generateLiveComments</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="SimulatedPlayersService.html#.getActivePlayers">getActivePlayers</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="SimulatedPlayersService.html#.getPlayerStatistics">getPlayerStatistics</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="SimulatedPlayersService.html#.getRandomWrongAnswer">getRandomWrongAnswer</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="SimulatedPlayersService.html#.initializePlayers">initializePlayers</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="SimulatedPlayersService.html#.reset">reset</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="SimulatedPlayersService.html#.simulatePlayerAnswer">simulatePlayerAnswer</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="SimulatedPlayersService.html#.simulatePlayerAnswers">simulatePlayerAnswers</a></span></li><li class="nav-heading">Namespaces</li><li class="nav-heading"><span class="nav-item-type type-namespace">N</span><span class="nav-item-name"><a href="Data.Mockdata.html">Mockdata</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Data.Mockdata.html#.getCategoriesWithCardCount">getCategoriesWithCardCount</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Data.Mockdata.html#.getCategoryById">getCategoryById</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Data.Mockdata.html#.getQuestionById">getQuestionById</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Data.Mockdata.html#.getQuestionsByCategory">getQuestionsByCategory</a></span></li><li class="nav-heading"><span class="nav-item-type type-namespace">N</span><span class="nav-item-name"><a href="Utils.Security.html">Security</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Utils.Security.html#.sanitizeAttribute">sanitizeAttribute</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Utils.Security.html#.sanitizeHtml">sanitizeHtml</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Utils.Security.html#.sanitizeInput">sanitizeInput</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Utils.Security.html#.sanitizeUrlParam">sanitizeUrlParam</a></span></li><li class="nav-heading"><a href="global.html">Globals</a></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#App">App</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#CardManager">CardManager</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#Community">Community</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#CooperativeLobby">CooperativeLobby</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#Footer">Footer</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#Header">Header</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#HomePage">HomePage</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#Imprint">Imprint</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#LiveChat">LiveChat</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#LoginForm">LoginForm</a></span></li><li class="nav-item"><span class="nav-item-type type-member">M</span><span class="nav-item-name"><a href="global.html#MOCK_USERS">MOCK_USERS</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#PointsInfo">PointsInfo</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#PrivacyPolicy">PrivacyPolicy</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#QuestionEditor">QuestionEditor</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#QuizCategorySelector">QuizCategorySelector</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#QuizMain">QuizMain</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#QuizQuestio">QuizQuestio</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#QuizResults">QuizResults</a></span></li><li class="nav-item"><span class="nav-item-type type-member">M</span><span class="nav-item-name"><a href="global.html#SIMULATED_PLAYERS">SIMULATED_PLAYERS</a></span></li><li class="nav-item"><span class="nav-item-type type-member">M</span><span class="nav-item-name"><a href="global.html#SecurityUtils">SecurityUtils</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#UserProfile">UserProfile</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html">handleLogin</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html">handleLogout</a></span></li><li class="nav-item"><span class="nav-item-type type-member">M</span><span class="nav-item-name"><a href="global.html#mockCategories">mockCategories</a></span></li><li class="nav-item"><span class="nav-item-type type-member">M</span><span class="nav-item-name"><a href="global.html#mockQuestions">mockQuestions</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#render">render</a></span></li><li class="nav-item"><span class="nav-item-type type-member">M</span><span class="nav-item-name"><a href="global.html#root">root</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html">useEffect</a></span></li>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">services/SimulatedPlayersService.js</h1>
+    
 
     
 
@@ -27,23 +40,13 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>/**
- * SimulatedPlayers-Service - Simulation von Mitspielern
- *
- * Dieser Service simuliert realistische Mitstudierende für kooperative
- * und kompetitive Quiz-Modi mit verschiedenen Schwierigkeitsgraden.
- *
- * FEATURES:
- * - Realistische Spieler-Profile mit verschiedenen Fähigkeiten
- * - Adaptive Antwortzeiten basierend auf Fragenschwierigkeit
- * - Verschiedene Spielertypen (Schnell, Genau, Durchschnitt)
- * - Kooperative und kompetitive Modi-Unterstützung
- * - Statistische Auswertung und Ranglisten
- *
- * UPDATE: Neue Implementierung für Multiplayer-Simulation
- */
-
-/**
  * Simulierte Spieler-Profile mit verschiedenen Charakteristiken
+ *
+ * Diese Konstante enthält vordefinierte Spieler-Profile mit individuellen
+ * Eigenschaften wie Fähigkeitslevel, Geschwindigkeit und Persönlichkeit.
+ * Jeder Spieler hat Stärken und Schwächen in verschiedenen Kategorien.
+ *
+ * @const {Array&lt;Object>} SIMULATED_PLAYERS
  */
 const SIMULATED_PLAYERS = [
     {
@@ -114,9 +117,33 @@ const SIMULATED_PLAYERS = [
 ];
 
 /**
- * SimulatedPlayers-Service-Klasse
+ * SimulatedPlayersService - Simulation realistischer Mitspieler
+ *
+ * Dieser Service simuliert realistische Mitstudierende für kooperative
+ * und kompetitive Quiz-Modi mit verschiedenen Fähigkeiten und Verhaltensweisen.
+ *
+ * Hauptfunktionen:
+ * - Realistische Spieler-Profile mit individuellen Fähigkeiten und Persönlichkeiten
+ * - Adaptive Antwortzeiten basierend auf Fragenschwierigkeit und Spielerfähigkeit
+ * - Verschiedene Spielertypen (Schnell, Genau, Durchschnittlich, Langsam)
+ * - Unterstützung für kooperative und kompetitive Modi
+ * - Statistische Auswertung und dynamische Ranglisten
+ * - Spezialgebiete und Schwächen für realistische Fehlerquoten
+ * - Zufällige Auswahl von Spielern für jede Session
+ *
+ * @class SimulatedPlayersService
+ * @author Projektteam IU Community Quiz
+ * @version 1.2.0
  */
 class SimulatedPlayersService {
+    /**
+     * Konstruktor - Initialisiert den Service
+     *
+     * Erstellt eine neue Instanz des SimulatedPlayersService und
+     * initialisiert die internen Zustandsvariablen.
+     *
+     * @constructor
+     */
     constructor() {
         this.activePlayers = [];
         this.gameMode = null;
@@ -125,10 +152,20 @@ class SimulatedPlayersService {
 
     /**
      * Initialisiert Spieler für eine Quiz-Runde
-     * @param {string} gameMode - 'cooperative' oder 'competitive'
-     * @param {string} category - Kategorie für Spezialisierung
-     * @param {number} playerCount - Anzahl der Mitspieler (2-4)
-     * @returns {Array} Array von Spielern
+     *
+     * Wählt zufällig die angegebene Anzahl von Spielern aus dem Pool aus
+     * und initialisiert ihre Statistiken (Score, Antworten, Zeit). Die Spieler
+     * werden für den angegebenen Spielmodus und die Kategorie vorbereitet.
+     *
+     * @method initializePlayers
+     * @memberof SimulatedPlayersService
+     * @param {string} gameMode - Spielmodus: 'cooperative' oder 'competitive'
+     * @param {string} category - Kategorie für Spezialisierung (beeinflusst Erfolgswahrscheinlichkeit)
+     * @param {number} [playerCount=3] - Anzahl der zu initialisierenden Mitspieler (2-4)
+     * @returns {Array&lt;Object>} Array mit initialisierten Spieler-Objekten
+     * @example
+     * const players = service.initializePlayers('competitive', 'Programmierung', 3);
+     * console.log(players.length); // 3
      */
     initializePlayers(gameMode, category, playerCount = 3) {
         this.gameMode = gameMode;
@@ -151,10 +188,20 @@ class SimulatedPlayersService {
     }
 
     /**
-     * Simuliert Antworten der KI-Spieler
-     * @param {Object} question - Aktuelle Frage
-     * @param {number} questionIndex - Index der Frage
-     * @returns {Promise&lt;Array>} Array mit Spieler-Antworten
+     * Simuliert Antworten aller aktiven KI-Spieler
+     *
+     * Iteriert über alle aktiven Spieler und simuliert für jeden eine Antwort
+     * auf die aktuelle Frage. Die Methode arbeitet asynchron, um realistische
+     * Antwortzeiten zu simulieren.
+     *
+     * @method simulatePlayerAnswers
+     * @memberof SimulatedPlayersService
+     * @param {Object} question - Aktuelles Frage-Objekt mit question, answers, correctAnswer, etc.
+     * @param {number} questionIndex - Index der aktuellen Frage im Quiz
+     * @returns {Promise&lt;Array&lt;Object>>} Promise mit Array von Antwort-Objekten aller Spieler
+     * @example
+     * const answers = await service.simulatePlayerAnswers(question, 0);
+     * console.log(answers[0].isCorrect); // true oder false
      */
     async simulatePlayerAnswers(question, questionIndex) {
         const playerAnswers = [];
@@ -169,10 +216,21 @@ class SimulatedPlayersService {
 
     /**
      * Simuliert eine individuelle Spieler-Antwort
-     * @param {Object} player - Spieler-Objekt
-     * @param {Object} question - Frage-Objekt
-     * @param {number} questionIndex - Frage-Index
-     * @returns {Promise&lt;Object>} Antwort-Objekt
+     *
+     * Diese Methode berechnet eine realistische Antwort für einen einzelnen Spieler
+     * basierend auf dessen Fähigkeiten, Geschwindigkeit, Spezialisierungen und der
+     * Fragenschwierigkeit. Die Erfolgswahrscheinlichkeit wird dynamisch angepasst.
+     * Spieler-Statistiken werden automatisch aktualisiert.
+     *
+     * @method simulatePlayerAnswer
+     * @memberof SimulatedPlayersService
+     * @param {Object} player - Spieler-Objekt mit skillLevel, speedFactor, specialties, etc.
+     * @param {Object} question - Frage-Objekt mit question, answers, correctAnswer, difficulty, category
+     * @param {number} questionIndex - Index der aktuellen Frage
+     * @returns {Promise&lt;Object>} Promise mit Antwort-Objekt (playerId, isCorrect, timeTaken, etc.)
+     * @example
+     * const answer = await service.simulatePlayerAnswer(player, question, 0);
+     * console.log(`${answer.playerName}: ${answer.isCorrect ? 'Richtig' : 'Falsch'} in ${answer.timeTaken}s`);
      */
     async simulatePlayerAnswer(player, question, questionIndex) {
         // Berechne Antwortzeit basierend auf Spieler-Geschwindigkeit
@@ -237,9 +295,18 @@ class SimulatedPlayersService {
 
     /**
      * Generiert eine zufällige falsche Antwort
-     * @param {number} correctAnswer - Index der richtigen Antwort
-     * @param {number} totalAnswers - Gesamtanzahl der Antworten
-     * @returns {number} Index der falschen Antwort
+     *
+     * Wählt zufällig einen Antwortindex aus, der nicht dem korrekten entspricht.
+     * Wird verwendet, wenn ein Spieler eine falsche Antwort geben soll.
+     *
+     * @method getRandomWrongAnswer
+     * @memberof SimulatedPlayersService
+     * @param {number} correctAnswer - Index der richtigen Antwort (wird ausgeschlossen)
+     * @param {number} totalAnswers - Gesamtanzahl der verfügbaren Antworten
+     * @returns {number} Index einer zufälligen falschen Antwort
+     * @example
+     * const wrongIndex = service.getRandomWrongAnswer(2, 4);
+     * console.log(wrongIndex); // 0, 1 oder 3 (aber nie 2)
      */
     getRandomWrongAnswer(correctAnswer, totalAnswers) {
         let wrongAnswer;
@@ -250,9 +317,19 @@ class SimulatedPlayersService {
     }
 
     /**
-     * Berechnet finale Rangliste
-     * @param {Object} humanPlayer - Menschlicher Spieler
-     * @returns {Array} Sortierte Rangliste
+     * Berechnet die finale Rangliste aller Spieler
+     *
+     * Kombiniert den menschlichen Spieler mit allen KI-Spielern und erstellt
+     * eine sortierte Rangliste basierend auf Punktzahl (primär) und durchschnittlicher
+     * Antwortzeit (sekundär bei Gleichstand).
+     *
+     * @method calculateFinalRanking
+     * @memberof SimulatedPlayersService
+     * @param {Object} humanPlayer - Objekt mit Daten des menschlichen Spielers (name, score, correctAnswers, averageTime)
+     * @returns {Array&lt;Object>} Sortiertes Array aller Spieler (höchste Punktzahl zuerst)
+     * @example
+     * const ranking = service.calculateFinalRanking({name: 'Max', score: 500, correctAnswers: 8, averageTime: 15});
+     * console.log(ranking[0].name); // Name des Gewinners
      */
     calculateFinalRanking(humanPlayer) {
         const allPlayers = [
@@ -281,10 +358,20 @@ class SimulatedPlayersService {
     }
 
     /**
-     * Generiert Spieler-Nachrichten für kooperativen Modus
-     * @param {Object} question - Aktuelle Frage
-     * @param {Array} playerAnswers - Antworten der Spieler
-     * @returns {Array} Nachrichten-Array
+     * Generiert hilfreiche Nachrichten für den kooperativen Modus
+     *
+     * Spieler mit kooperativer Persönlichkeit teilen mit einer gewissen Wahrscheinlichkeit
+     * ihre Gedanken zur Frage mit. Die Nachrichten sind realistisch formuliert und
+     * helfen dem menschlichen Spieler bei der Entscheidungsfindung.
+     *
+     * @method generateCooperativeMessages
+     * @memberof SimulatedPlayersService
+     * @param {Object} question - Aktuelles Frage-Objekt mit answers-Array
+     * @param {Array&lt;Object>} playerAnswers - Array mit Antworten aller Spieler
+     * @returns {Array&lt;Object>} Array mit Nachrichten-Objekten (playerId, playerName, message, timestamp, isHelpful)
+     * @example
+     * const messages = service.generateCooperativeMessages(question, playerAnswers);
+     * messages.forEach(msg => console.log(`${msg.playerName}: ${msg.message}`));
      */
     generateCooperativeMessages(question, playerAnswers) {
         const messages = [];
@@ -294,14 +381,20 @@ class SimulatedPlayersService {
             const playerAnswer = playerAnswers.find(a => a.playerId === player.id);
 
             if (playerAnswer &amp;&amp; Math.random() &lt; 0.3) { // 30% Chance für Nachricht
+                // Prüfe, ob question und question.answers definiert sind, um Fehler zu vermeiden
+                // Wenn nicht definiert, verwende einen Platzhaltertext
+                const answerText = question &amp;&amp; question.answers &amp;&amp; question.answers[playerAnswer.selectedAnswer] 
+                    ? question.answers[playerAnswer.selectedAnswer] 
+                    : "eine der Antwortmöglichkeiten";
+                
                 const messageTemplates = playerAnswer.isCorrect ? [
-                    `Ich denke, die Antwort ist ${question.answers[playerAnswer.selectedAnswer]}`,
-                    `Meiner Meinung nach ist es ${question.answers[playerAnswer.selectedAnswer]}`,
-                    `Ich bin mir ziemlich sicher: ${question.answers[playerAnswer.selectedAnswer]}`
+                    `Ich denke, die Antwort ist ${answerText}`,
+                    `Meiner Meinung nach ist es ${answerText}`,
+                    `Ich bin mir ziemlich sicher: ${answerText}`
                 ] : [
-                    `Ich bin mir nicht sicher... vielleicht ${question.answers[playerAnswer.selectedAnswer]}?`,
-                    `Hmm, schwierige Frage. Ich tippe auf ${question.answers[playerAnswer.selectedAnswer]}`,
-                    `Könnte ${question.answers[playerAnswer.selectedAnswer]} sein, aber ich bin nicht sicher`
+                    `Ich bin mir nicht sicher... vielleicht ${answerText}?`,
+                    `Hmm, schwierige Frage. Ich tippe auf ${answerText}`,
+                    `Könnte ${answerText} sein, aber ich bin nicht sicher`
                 ];
 
                 messages.push({
@@ -318,70 +411,213 @@ class SimulatedPlayersService {
     }
 
     /**
-     * Generiert Live-Updates für kompetitiven Modus
-     * @param {Array} playerAnswers - Antworten der Spieler
-     * @returns {Array} Update-Nachrichten
+     * Generiert Live-Updates für die kompetitive Ranglisten-Anzeige
+     *
+     * Erstellt detaillierte Status-Updates für jeden Spieler inklusive aktueller
+     * Punktzahl, Genauigkeit, durchschnittlicher Zeit und Performance-Rating.
+     * Die Updates sind nach Punktzahl sortiert für eine Live-Rangliste.
+     *
+     * @method generateCompetitiveUpdates
+     * @memberof SimulatedPlayersService
+     * @param {Array&lt;Object>} playerAnswers - Array mit Antworten aller Spieler der aktuellen Runde
+     * @returns {Array&lt;Object>} Sortiertes Array mit detaillierten Spieler-Updates
+     * @example
+     * const updates = service.generateCompetitiveUpdates(playerAnswers);
+     * console.log(updates[0].playerName, updates[0].currentScore); // Führender Spieler
      */
     generateCompetitiveUpdates(playerAnswers) {
         const updates = [];
 
-        // Sortiere Spieler nach Antwortzeit
-        const sortedAnswers = [...playerAnswers].sort((a, b) => a.timeTaken - b.timeTaken);
-
-        sortedAnswers.forEach((answer, index) => {
+        playerAnswers.forEach(answer => {
             const player = this.activePlayers.find(p => p.id === answer.playerId);
-            if (!player) return;
-
-            let status = '';
-            if (index === 0) {
-                status = 'Erste Antwort!';
-            } else if (answer.isCorrect) {
-                status = 'Richtig beantwortet';
-            } else {
-                status = 'Falsche Antwort';
+            if (player) {
+                updates.push({
+                    playerId: answer.playerId,
+                    playerName: answer.playerName,
+                    isCorrect: answer.isCorrect,
+                    timeTaken: answer.timeTaken,
+                    currentScore: player.score,
+                    averageTime: player.averageTime,
+                    correctAnswers: player.correctAnswers,
+                    totalAnswers: player.answeredQuestions,
+                    accuracy: Math.round((player.correctAnswers / player.answeredQuestions) * 100),
+                    statusMessage: answer.isCorrect ?
+                        `Richtig! (${answer.timeTaken}s)` :
+                        `Falsch (${answer.timeTaken}s)`,
+                    performance: this.calculatePerformanceRating(player)
+                });
             }
-
-            updates.push({
-                playerId: player.id,
-                playerName: player.name,
-                status,
-                time: answer.timeTaken,
-                score: player.score,
-                isCorrect: answer.isCorrect
-            });
         });
 
-        return updates;
+        // Sortiere nach aktueller Punktzahl
+        return updates.sort((a, b) => b.currentScore - a.currentScore);
     }
 
     /**
-     * Gibt aktuelle Spieler-Statistiken zurück
-     * @returns {Array} Spieler-Statistiken
+     * Berechnet das Performance-Rating eines Spielers
+     *
+     * Kombiniert Genauigkeit (correctAnswers/answeredQuestions) und Geschwindigkeit
+     * (averageTime) zu einem Gesamt-Rating. Das Rating wird in vier Stufen klassifiziert.
+     *
+     * @method calculatePerformanceRating
+     * @memberof SimulatedPlayersService
+     * @param {Object} player - Spieler-Objekt mit correctAnswers, answeredQuestions, averageTime
+     * @returns {string} Performance-Rating: 'excellent', 'good', 'average' oder 'needs_improvement'
+     * @example
+     * const rating = service.calculatePerformanceRating(player);
+     * console.log(`Performance: ${rating}`); // z.B. 'excellent'
      */
-    getPlayerStats() {
-        return this.activePlayers.map(player => ({
-            id: player.id,
-            name: player.name,
-            score: player.score,
-            correctAnswers: player.correctAnswers,
-            answeredQuestions: player.answeredQuestions,
-            averageTime: player.averageTime,
-            accuracy: player.answeredQuestions > 0 ?
-                Math.round((player.correctAnswers / player.answeredQuestions) * 100) : 0
-        }));
+    calculatePerformanceRating(player) {
+        const accuracy = player.correctAnswers / player.answeredQuestions;
+        const speedRating = player.averageTime &lt;= 15 ? 1 : (player.averageTime &lt;= 25 ? 0.5 : 0);
+        const overallRating = (accuracy + speedRating) / 2;
+
+        if (overallRating >= 0.8) return 'excellent';
+        if (overallRating >= 0.6) return 'good';
+        if (overallRating >= 0.4) return 'average';
+        return 'needs_improvement';
     }
 
     /**
-     * Setzt Service für neues Spiel zurück
+     * Generiert spontane Live-Kommentare für den kompetitiven Modus
+     *
+     * Kompetitive Spieler äußern sich gelegentlich zu ihren Antworten.
+     * Die Kommentare variieren je nach Erfolg und Geschwindigkeit der Antwort
+     * und sorgen für eine lebendige Atmosphäre im Quiz.
+     *
+     * @method generateLiveComments
+     * @memberof SimulatedPlayersService
+     * @param {Array&lt;Object>} playerAnswers - Array mit Antworten aller Spieler der aktuellen Runde
+     * @returns {Array&lt;Object>} Array mit Kommentar-Objekten (playerId, playerName, comment, timestamp, type)
+     * @example
+     * const comments = service.generateLiveComments(playerAnswers);
+     * comments.forEach(c => console.log(`${c.playerName}: ${c.comment}`));
+     */
+    generateLiveComments(playerAnswers) {
+        const comments = [];
+        const competitivePlayers = this.activePlayers.filter(p => p.personality === 'competitive');
+
+        competitivePlayers.forEach(player => {
+            const playerAnswer = playerAnswers.find(a => a.playerId === player.id);
+
+            if (playerAnswer &amp;&amp; Math.random() &lt; 0.25) { // 25% Chance für Kommentar
+                const commentTemplates = {
+                    correct_fast: [
+                        "Ja! Das war einfach!",
+                        "Geschafft in Rekordzeit!",
+                        "Zu leicht für mich!"
+                    ],
+                    correct_slow: [
+                        "Endlich... das war knapp!",
+                        "Puh, gerade noch richtig!",
+                        "Das war schwerer als gedacht..."
+                    ],
+                    incorrect: [
+                        "Ach nein... das war ein Fehler!",
+                        "Verdammt, falscher Klick!",
+                        "Das nächste Mal klappt's besser!"
+                    ]
+                };
+
+                let templateType;
+                if (playerAnswer.isCorrect &amp;&amp; playerAnswer.timeTaken &lt;= 10) {
+                    templateType = 'correct_fast';
+                } else if (playerAnswer.isCorrect) {
+                    templateType = 'correct_slow';
+                } else {
+                    templateType = 'incorrect';
+                }
+
+                const templates = commentTemplates[templateType];
+                const comment = templates[Math.floor(Math.random() * templates.length)];
+
+                comments.push({
+                    playerId: player.id,
+                    playerName: player.name,
+                    comment,
+                    timestamp: new Date().toISOString(),
+                    type: templateType
+                });
+            }
+        });
+
+        return comments;
+    }
+
+    /**
+     * Setzt den Service vollständig zurück
+     *
+     * Bereinigt alle Spieler-Daten und Zustandsvariablen. Wird typischerweise
+     * am Ende eines Quiz oder beim Start eines neuen Quiz aufgerufen.
+     *
+     * @method reset
+     * @memberof SimulatedPlayersService
+     * @returns {void}
+     * @example
+     * service.reset();
+     * console.log('Service wurde zurückgesetzt');
      */
     reset() {
         this.activePlayers = [];
         this.gameMode = null;
         this.currentCategory = null;
+        console.log('SimulatedPlayersService wurde vollständig zurückgesetzt');
+    }
+
+    /**
+     * Gibt detaillierte Statistiken aller aktiven Spieler zurück
+     *
+     * Erstellt für jeden aktiven Spieler ein Statistik-Objekt mit Score,
+     * Genauigkeit, durchschnittlicher Antwortzeit und Performance-Rating.
+     *
+     * @method getPlayerStatistics
+     * @memberof SimulatedPlayersService
+     * @returns {Array&lt;Object>} Array mit Statistik-Objekten für jeden Spieler
+     * @example
+     * const stats = service.getPlayerStatistics();
+     * stats.forEach(s => console.log(`${s.name}: ${s.accuracy}% korrekt`));
+     */
+    getPlayerStatistics() {
+        return this.activePlayers.map(player => ({
+            id: player.id,
+            name: player.name,
+            score: player.score,
+            correctAnswers: player.correctAnswers,
+            totalAnswers: player.answeredQuestions,
+            accuracy: player.answeredQuestions > 0 ?
+                Math.round((player.correctAnswers / player.answeredQuestions) * 100) : 0,
+            averageTime: player.averageTime,
+            performance: this.calculatePerformanceRating(player)
+        }));
+    }
+
+    /**
+     * Gibt Basis-Informationen aller aktiven Spieler zurück
+     *
+     * Liefert grundlegende Informationen wie Name, Studiengang, Semester und Avatar
+     * für alle aktiven Spieler. Nützlich für die Anzeige von Spieler-Karten.
+     *
+     * @method getActivePlayers
+     * @memberof SimulatedPlayersService
+     * @returns {Array&lt;Object>} Array mit Basis-Informationen der aktiven Spieler
+     * @example
+     * const players = service.getActivePlayers();
+     * players.forEach(p => console.log(`${p.name} - ${p.studyProgram}`));
+     */
+    getActivePlayers() {
+        return this.activePlayers.map(player => ({
+            id: player.id,
+            name: player.name,
+            studyProgram: player.studyProgram,
+            semester: player.semester,
+            avatar: player.avatar,
+            color: player.color,
+            isActive: player.isActive
+        }));
     }
 }
 
-// Exportiere Singleton-Instanz
+// Exportiere eine Singleton-Instanz
 const simulatedPlayersService = new SimulatedPlayersService();
 export default simulatedPlayersService;</code></pre>
         </article>
@@ -392,17 +628,13 @@ export default simulatedPlayersService;</code></pre>
 
 </div>
 
-<nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="DataManager.html">DataManager</a></li><li><a href="SimulatedPlayersService.html">SimulatedPlayersService</a></li></ul><h3>Global</h3><ul><li><a href="global.html#App">App</a></li><li><a href="global.html#Footer">Footer</a></li><li><a href="global.html#Header">Header</a></li><li><a href="global.html#LoginForm">LoginForm</a></li><li><a href="global.html#MOCK_USERS">MOCK_USERS</a></li><li><a href="global.html#QuestionEditor">QuestionEditor</a></li><li><a href="global.html#QuizQuestion">QuizQuestion</a></li><li><a href="global.html#QuizResults">QuizResults</a></li><li><a href="global.html#SIMULATED_PLAYERS">SIMULATED_PLAYERS</a></li><li><a href="global.html#SecurityUtils">SecurityUtils</a></li><li><a href="global.html#UserProfile">UserProfile</a></li><li><a href="global.html#mockCategories">mockCategories</a></li><li><a href="global.html#root">root</a></li></ul>
-</nav>
-
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Mon Jul 14 2025 22:44:25 GMT+0200 (Mitteleuropäische Sommerzeit)
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.5</a> on Mon Oct 27 2025 23:45:33 GMT+0100 (Mitteleuropäische Normalzeit) using the Minami theme.
 </footer>
 
-<script> prettyPrint(); </script>
-<script src="scripts/linenumber.js"> </script>
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
 </body>
 </html>

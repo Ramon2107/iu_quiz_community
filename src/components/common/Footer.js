@@ -1,9 +1,16 @@
+/**
+ * Footer mit Card-Struktur, Modals und rechtlichen Informationen.
+ *
+ * @author Projektteam IU Community Quiz
+ * @version 1.1.0
+ */
+
 import React, { useState } from 'react';
 import PrivacyPolicy from './PrivacyPolicy';
 import Imprint from './Imprint';
 
 /**
- * Footer-Komponente - Kompakt und funktional mit Card-basierter Struktur
+ * Footer - Kompakt und funktional mit Card-basierter Struktur
  *
  * Diese Komponente stellt den Footer der Anwendung dar und bietet:
  * - Card-basierte einheitliche Struktur für bessere mobile Darstellung
@@ -15,11 +22,10 @@ import Imprint from './Imprint';
  * - Vollständige Inhalte für Hilfe, Datenschutz, Impressum und Nutzungsbedingungen
  * - Social Media Links und Kontaktinformationen
  *
- * @author Projektteam IU Community Quiz
- * @version 1.1.0
- * @since 2025-07-15
- *
- * @returns {JSX.Element} Die gerenderte Footer-Komponente
+ * @function Footer
+ * @returns {React.ReactElement} Die gerenderte Footer-Komponente
+ * @example
+ * <Footer />
  */
 function Footer() {
     const [showPrivacyModal, setShowPrivacyModal] = useState(false);

@@ -1,21 +1,8 @@
 /**
- * LoginForm-Komponente - Prototypisches Login-System
- *
- * Diese Komponente stellt ein authentisches Login-Formular bereit,
- * das realistische Validierung und Sicherheitsmaßnahmen simuliert.
- *
- * SICHERHEITSFEATURES:
- * - Input-Validierung gegen SQL-Injection
- * - XSS-Schutz durch HTML-Escaping
- * - Realistische Passwort-Validierung
- * - Fehlerbehandlung und Benutzer-Feedback
- * - Simulierte Authentifizierung mit echten Benutzern
- *
- * UPDATE: Implementierung eines prototypischen aber authentischen Login-Systems
+ * Authentifizierungsformular mit umfassenden Sicherheitsmaßnahmen.
  *
  * @author Projektteam IU Community Quiz
  * @version 1.1.0
- * @since 2025-07-15
  */
 
 import React, { useState } from 'react';
@@ -77,7 +64,8 @@ const SecurityUtils = {
      * 
      * Diese Funktion kombiniert XSS-Schutz durch HTML-Entitäten mit
      * SQL-Injection-Schutz und Längenbegrenzung für maximale Sicherheit.
-     * 
+     *
+
      * @param {string} input - Zu bereinigende Eingabe
      * @returns {string} Bereinigte Eingabe
      */
@@ -120,8 +108,25 @@ const SecurityUtils = {
 };
 
 /**
- * LoginForm-Komponente
- * @param {Function} onLogin - Callback-Funktion für erfolgreiche Anmeldung
+ * LoginForm - Authentifizierungsformular mit Sicherheitsmaßnahmen
+ *
+ * Diese Komponente stellt ein authentisches Login-Formular mit umfassenden
+ * Sicherheitsfeatures und realistischer Validierung bereit.
+ *
+ * Implementierte Sicherheitsfeatures:
+ * - Input-Validierung gegen SQL-Injection-Versuche
+ * - XSS-Schutz durch automatisches HTML-Escaping
+ * - Realistische Passwort-Validierung mit Komplexitätsanforderungen
+ * - Fehlerbehandlung mit benutzerfreundlichem Feedback
+ * - Simulierte Authentifizierung mit verschiedenen Benutzertypen
+ * - Session-Management über localStorage
+ *
+ * @function LoginForm
+ * @param {Object} props - Component properties
+ * @param {Function} props.onLogin - Callback bei erfolgreicher Anmeldung
+ * @returns {React.ReactElement} Die gerenderte LoginForm-Komponente
+ * @example
+ * <LoginForm onLogin={handleLogin} />
  */
 function LoginForm({ onLogin }) {
     const [formData, setFormData] = useState({

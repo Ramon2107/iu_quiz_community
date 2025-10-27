@@ -1,23 +1,37 @@
 /**
  * Mock-Daten für das Quiz-System
+ * @description Vordefinierte Beispieldaten für Entwicklung, Tests und initiale Datenbankbefüllung
  *
- * Diese Datei enthält Beispieldaten für die Entwicklung und Tests.
- * Sie bietet eine umfangreiche Sammlung von Kategorien und Fragen.
+ * Diese Datei enthält umfangreiche Beispieldaten für die Entwicklung und Tests.
+ * Sie bietet eine realistische Sammlung von Kategorien und Fragen für verschiedene
+ * Studienrichtungen der IU Internationale Hochschule.
  *
- * ERWEITERT: Deutlich mehr Karten pro Kategorie (10-20 Karten)
- * ERWEITERT: Realistische Fragen für verschiedene Studienbereiche
- * ERWEITERT: Bessere Verteilung der Schwierigkeitsgrade
+ * Erweiterungen:
+ * - 10-20 Karten pro Kategorie für ausreichende Quiz-Länge
+ * - Realistische Fragen für verschiedene Studienbereiche
+ * - Ausgewogene Verteilung der Schwierigkeitsgrade (Leicht, Mittel, Schwer)
+ * - Detaillierte Erklärungen für jede Antwort
+ * - Tags für bessere Filterung und Suche
  *
  * Struktur:
- * - categories: Array mit Kategorien und deren Eigenschaften
- * - questions: Array mit Fragen und deren Antworten
+ * - mockCategories: Array mit Kategorie-Objekten
+ * - mockQuestions: Array mit Fragen-Objekten
+ * - Hilfsfunktionen für Datenzugriff
  *
+ * @namespace Data.Mockdata
  * @author Projektteam IU Community Quiz
  * @version 1.3.0
- * * @since 2025-07-15
- *
+ * @since 2025-07-15
  */
 
+/**
+ * Vordefinierte Quiz-Kategorien
+ *
+ * Enthält 6 Hauptkategorien für verschiedene Studienbereiche mit jeweils
+ * 11-18 Fragen. Jede Kategorie hat ein eigenes Farbschema und Icon.
+ *
+ * @const {Array<Object>} mockCategories
+ */
 export const mockCategories = [
   {
     id: 'cat1',
@@ -93,6 +107,23 @@ export const mockCategories = [
   }
 ];
 
+/**
+ * Vordefinierte Quiz-Fragen
+ *
+ * Umfassende Sammlung von 86 Fragen verteilt auf 6 Kategorien.
+ * Jede Frage enthält Multiple-Choice-Antworten, Schwierigkeitsgrad,
+ * ausführliche Erklärung und Tags für die Kategorisierung.
+ *
+ * Verteilung:
+ * - Programmierung: 15 Fragen
+ * - Mathematik: 18 Fragen
+ * - Datenbanken: 12 Fragen
+ * - Projektmanagement: 14 Fragen
+ * - Wirtschaftsinformatik: 16 Fragen
+ * - Netzwerke: 11 Fragen
+ *
+ * @const {Array<Object>} mockQuestions
+ */
 export const mockQuestions = [
   // Programmierung (15 Fragen)
   {
@@ -1686,7 +1717,20 @@ export const mockQuestions = [
   }
 ];
 
-// Hilfsfunktionen
+/**
+ * Hilfsfunktion: Gibt Kategorien mit aktualisierter Kartenanzahl zurück
+ *
+ * Zählt für jede Kategorie die zugehörigen Fragen und fügt die Anzahl
+ * als cardCount-Eigenschaft hinzu. Nützlich für die Anzeige von Kategorien
+ * mit der korrekten Anzahl verfügbarer Fragen.
+ *
+ * @function getCategoriesWithCardCount
+ * @memberOf Data.Mockdata
+ * @returns {Array<Object>} Array mit Kategorien inkl. cardCount-Eigenschaft
+ * @example
+ * const categories = getCategoriesWithCardCount();
+ * console.log(categories[0].cardCount); // z.B. 15
+ */
 export const getCategoriesWithCardCount = () => {
   return mockCategories.map(category => ({
     ...category,
@@ -1694,14 +1738,56 @@ export const getCategoriesWithCardCount = () => {
   }));
 };
 
+/**
+ * Hilfsfunktion: Gibt alle Fragen einer bestimmten Kategorie zurück
+ *
+ * Filtert die Mock-Fragen nach der angegebenen Kategorie-ID und gibt
+ * nur die Fragen zurück, die zu dieser Kategorie gehören.
+ *
+ * @function getQuestionsByCategory
+ * @memberOf Data.Mockdata
+ * @param {string} categoryId - ID der Kategorie (z.B. 'cat1' für Programmierung)
+ * @returns {Array<Object>} Array mit Fragen der angegebenen Kategorie
+ * @example
+ * const questions = getQuestionsByCategory('cat1');
+ * console.log(questions.length); // Anzahl der Programmierungs-Fragen
+ */
 export const getQuestionsByCategory = (categoryId) => {
   return mockQuestions.filter(q => q.categoryId === categoryId);
 };
 
+/**
+ * Hilfsfunktion: Gibt eine einzelne Frage anhand ihrer ID zurück
+ *
+ * Sucht in den Mock-Fragen nach einer Frage mit der angegebenen ID
+ * und gibt diese zurück, falls vorhanden.
+ *
+ * @function getQuestionById
+ * @memberOf Data.Mockdata
+ * @param {string} questionId - ID der gesuchten Frage (z.B. 'q1')
+ * @returns {Object|undefined} Frage-Objekt oder undefined, falls nicht gefunden
+ * @example
+ * const question = getQuestionById('q1');
+ * console.log(question.question); // "Was ist ein Algorithmus?"
+ */
 export const getQuestionById = (questionId) => {
   return mockQuestions.find(q => q.id === questionId);
 };
 
+/**
+ * Hilfsfunktion: Gibt eine einzelne Kategorie anhand ihrer ID zurück
+ *
+ * Sucht in den Mock-Kategorien nach einer Kategorie mit der angegebenen ID
+ * und gibt diese zurück, falls vorhanden.
+ *
+ * @function getCategoryById
+ * @memberOf Data.Mockdata
+ * @param {string} categoryId - ID der gesuchten Kategorie (z.B. 'cat1')
+ * @returns {Object|undefined} Kategorie-Objekt oder undefined, falls nicht gefunden
+ * @example
+ * const category = getCategoryById('cat1');
+ * console.log(category.name); // "Programmierung"
+ */
 export const getCategoryById = (categoryId) => {
   return mockCategories.find(c => c.id === categoryId);
 };

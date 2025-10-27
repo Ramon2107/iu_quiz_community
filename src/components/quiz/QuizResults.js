@@ -1,41 +1,49 @@
 /**
- * QuizResults-Komponente - Anzeige der Quiz-Ergebnisse
+ * Anzeige der Quiz-Ergebnisse mit Statistiken und Rangliste.
+ * @author Projektteam IU Community Quiz
+ * @version 1.2.0
+ */
+
+import React, { useState, useEffect } from 'react';
+import simulatedPlayersService from '../../services/SimulatedPlayersService'; // Import für Multiplayer-Auswertung
+
+/**
+ * QuizResults - Anzeige der Quiz-Ergebnisse
  *
  * Diese Komponente zeigt die Ergebnisse des abgeschlossenen Quiz an,
  * einschließlich Statistiken, Antworten und Bewertungen.
  *
  * Features:
- * - Detaillierte Ergebnisübersicht
- * - Antworten-Review mit Erklärungen
- * - Statistiken und Leistungsmetriken
- * - Responsive Design
- * - Optionen für Wiederholung
+ * - Detaillierte Ergebnisübersicht mit Punkten und Genauigkeit
+ * - Antworten-Review mit ausführlichen Erklärungen
+ * - Statistiken und Leistungsmetriken für Spieler
+ * - Responsive Design für alle Endgeräte
+ * - Optionen für Wiederholung (gleiche oder neue Kategorie)
+ * - Multiplayer-Rangliste für kooperative und kompetitive Modi
+ * - Gewinner-Ermittlung und Gleichstands-Behandlung
+ * - Farbcodierte Performance-Bewertung
  *
- * UPDATE: Multiplayer-Rangliste für kooperative und kompetitive Modi
- * UPDATE: Gewinner-Ermittlung und Gleichstände
- *
- * @author Projektteam IU Community Quiz
- * @version 1.2.0
- * @since 2025-07-15
- *
- */
-
-import React, { useState, useEffect } from 'react';
-import simulatedPlayersService from '../../services/SimulatedPlayersService'; // UPDATE: Import für Multiplayer-Auswertung
-
-/**
- * QuizResults-Komponente
- *
- * @param {Object} props - Komponenteneigenschaften
- * @param {Array} props.questions - Quiz-Fragen
- * @param {Array} props.answers - Benutzerantworten
+ * @function QuizResults
+ * @param {Object} props - Component properties
+ * @param {Array} props.questions - Alle Quiz-Fragen
+ * @param {Array} props.answers - Alle gegebenen Antworten
  * @param {string} props.gameMode - Spielmodus
- * @param {Object} props.category - Gewählte Kategorie
+ * @param {Object} props.category - Ausgewählte Kategorie
  * @param {Object} props.user - Benutzerdaten
  * @param {Function} props.onRestart - Callback für Neustart
- * @param {Function} props.onRestartSameCategory - Callback für Neustart mit gleicher Kategorie
+ * @param {Function} props.onRestartSameCategory - Callback für Wiederholung
  * @param {Function} props.onBackToCategorySelection - Callback für Kategorieauswahl
- * @param {Object} props.multiplayerData - UPDATE: Multiplayer-Daten
+ * @param {Object} props.multiplayerData - Multiplayer-Daten
+ * @returns {React.ReactElement} Die gerenderte QuizResults-Komponente
+ * @example
+ * <QuizResults
+ *   questions={quizQuestions}
+ *   answers={userAnswers}
+ *   gameMode="cooperative"
+ *   category={selectedCategory}
+ *   user={currentUser}
+ *   onRestart={handleRestart}
+ * />
  */
 function QuizResults({
                        questions,
@@ -46,11 +54,11 @@ function QuizResults({
                        onRestart,
                        onRestartSameCategory,
                        onBackToCategorySelection,
-                       multiplayerData // UPDATE: Neue Prop für Multiplayer-Daten
+                       multiplayerData // Neue Prop für Multiplayer-Daten
                      }) {
   const [showDetailedResults, setShowDetailedResults] = useState(false);
-  const [multiplayerRanking, setMultiplayerRanking] = useState([]); // UPDATE: Rangliste für Multiplayer
-  const [gameResults, setGameResults] = useState(null); // UPDATE: Spielergebnisse
+  const [multiplayerRanking, setMultiplayerRanking] = useState([]); // Rangliste für Multiplayer
+  const [gameResults, setGameResults] = useState(null); // Spielergebnisse
 
   // Berechne Basis-Statistiken
   // Prüfe, ob answer definiert ist, bevor auf isCorrect zugegriffen wird, um Fehler zu vermeiden
@@ -61,7 +69,7 @@ function QuizResults({
   const totalTime = answers.reduce((sum, answer) => sum + (answer && answer.timeTaken ? answer.timeTaken : 0), 0);
   const averageTime = Math.round(totalTime / totalQuestions);
 
-  // UPDATE: Berechne Multiplayer-Rangliste beim Component-Mount
+  // Berechne Multiplayer-Rangliste beim Component-Mount
   useEffect(() => {
     if (multiplayerData?.isMultiplayer) {
       const playerTotalScore = answers.reduce((acc, answer) => {
@@ -91,21 +99,7 @@ function QuizResults({
   }, [multiplayerData, correctAnswers, averageTime, user.name, answers]);
 
   /**
-   * UPDATE: Berechnet Spieler-Punkte basierend auf Antworten und Zeit
-   */
-  const calculatePlayerScore = () => {
-    let totalScore = 0;
-    answers.forEach(answer => {
-      if (answer.isCorrect) {
-        const speedBonus = Math.max(0, 30 - answer.timeTaken);
-        totalScore += 100 + speedBonus;
-      }
-    });
-    return totalScore;
-  };
-
-  /**
-   * UPDATE: Analysiert Spielergebnisse für Multiplayer-Modi
+   * Analysiert Spielergebnisse für Multiplayer-Modi
    */
   const analyzeGameResults = (ranking) => {
     if (!ranking || ranking.length === 0) return null;
@@ -222,7 +216,7 @@ function QuizResults({
                 </h2>
               </div>
               <div className="card-body">
-                {/* UPDATE: Multiplayer-Ergebnisse */}
+                {/* Multiplayer-Ergebnisse */}
                 {multiplayerData?.isMultiplayer && gameResults && (
                     <div className={`alert alert-${gameResults.color} mb-4`}>
                       <div className="d-flex align-items-center">
@@ -413,7 +407,7 @@ function QuizResults({
               </div>
             </div>
 
-            {/* UPDATE: Multiplayer-Rangliste */}
+            {/* Multiplayer-Rangliste */}
             {multiplayerData?.isMultiplayer && multiplayerRanking.length > 0 && (
                 <div className="card">
                   <div className={`card-header ${getGameModeClass()} text-white py-1`}>

@@ -1,0 +1,60 @@
+/* Custom CSS für JSDoc Template - Sehr breite Navigation */
+
+/* Navigation deutlich breiter machen */
+nav {
+    width: 600px !important;
+    min-width: 600px !important;
+    font-size: 14px !important;
+}
+
+/* Hauptinhalt anpassen für breitere Navigation */
+#main {
+    margin-left: 620px !important;
+}
+
+/* Mobile Ansicht nicht betroffen */
+@media only screen and (max-width: 680px) {
+    nav {
+        width: 250px !important;
+        min-width: 250px !important;
+    }
+
+    #main {
+        margin-left: 0 !important;
+    }
+}
+
+/* Bessere Lesbarkeit der Navigationselemente */
+nav .nav-item-name {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    font-size: 13px;
+}
+
+/* Mehr Abstand für verschachtelte Items */
+nav .nav-item {
+    padding-left: 20px;
+    line-height: 1.6;
+}
+
+nav .nav-heading {
+    padding-left: 10px;
+    font-weight: bold;
+    margin-top: 15px;
+    font-size: 14px;
+}
+
+/* Home Link hervorheben */
+nav .nav-home-link {
+    background-color: #f4f4f4;
+    padding: 10px;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+/* Klassen und Methoden besser strukturieren */
+.nav-heading + .nav-heading {
+    margin-top: 20px;
+    border-top: 1px solid #ddd;
+    padding-top: 15px;
+}

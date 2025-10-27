@@ -1,5 +1,9 @@
 /**
- * LiveChat-Komponente
+ * @description Live-Chat für Multiplayer-Quiz-Modi mit Nachrichtenverlauf
+ */
+
+/**
+ * LiveChat - Echtzeit-Chat für Multiplayer-Modi
  *
  * Ein vollständiger Live-Chat für Multiplayer-Quiz-Modi mit persistenten Nachrichten
  * über alle Fragen hinweg.
@@ -12,15 +16,19 @@
 import React, { useState, useEffect, useRef } from 'react';
 
 /**
- * LiveChat-Komponente
+ * LiveChat - Chat mit Nachrichtenverlauf und Player-Identifikation
  *
- * @param {Object} props - Komponenteneigenschaften
+ * Ermöglicht Echtzeit-Kommunikation zwischen Spielern mit
+ * farbcodierten Nachrichten und Spieler-Icons.
+ *
+ * @function LiveChat
+ * @param {Object} props - Component properties
  * @param {Array} props.messages - Alle Chat-Nachrichten
  * @param {Object} props.user - Aktueller Benutzer
  * @param {Function} props.onSendMessage - Callback für neue Nachrichten
  * @param {Array} props.players - Liste aller Spieler
  * @param {string} props.gameMode - Aktueller Spielmodus
- * @returns {JSX.Element} LiveChat-Komponente
+ * @returns {React.ReactElement} LiveChat-Komponente
  */
 function LiveChat({ messages, user, onSendMessage, players, gameMode }) {
     const [chatInput, setChatInput] = useState('');

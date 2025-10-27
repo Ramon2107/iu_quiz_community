@@ -1,32 +1,51 @@
 /**
- * CardManager-Komponente
- *
- * Diese Komponente verwaltet alle Karten (Fragen) und Kategorien im System.
- * Sie bietet erweiterte Such-, Filter- und Verwaltungsfunktionen.
- *
- * NEU: Kategorien-basierte Navigation - Karten werden in Kategorien organisiert
- * NEU: Drill-Down-Funktionalität - Klick auf Kategorie zeigt zugehörige Karten
- * NEU: Erweiterte Mock-Daten mit 10-20 Karten pro Kategorie
- * NEU: Bessere Suchfunktion mit Kategorie-Anzeige
- * FIX: Dropdown-Menüs für Kategorie- und Karten-Aktionen repariert
- *
- * Hauptfunktionen:
- * - Hierarchische Übersicht (Kategorien → Karten)
- * - Drill-Down Navigation in Kategorien
- * - Erweiterte Such- und Filterfunktionen
- * - Erstellen neuer Karten und Kategorien
- * - Bearbeiten bestehender Einträge
- * - Löschen von Karten und Kategorien
- * - Kollaborative Features
- *
+ * Verwaltungsoberfläche für Fragen und Kategorien mit rollenbasierter Zugriffskontrolle.
  * @author Projektteam IU Community Quiz
- * @version 1.4.1
- * @since 2025-07-15
+ * @version 1.5.0
  */
 
 import React, { useState, useEffect } from 'react';
 import dataManager from '../../data/dataManager';
 
+/**
+ * CardManager - Komponente zur Verwaltung von Fragen und Kategorien
+ *
+ * Diese Komponente bietet eine umfassende Verwaltungsoberfläche für das Quizsystem:
+ *
+ * **Kategorien-Management:**
+ * - Hierarchische Navigation durch Kategorien
+ * - Erstellen, Bearbeiten und Löschen von Kategorien
+ * - Drill-Down-Funktionalität für detaillierte Ansichten
+ *
+ * **Karten-Management:**
+ * - Erstellen neuer Fragenkarten
+ * - Bearbeiten bestehender Karten
+ * - Löschen von Karten mit Berechtigungsprüfung
+ * - Zuordnung zu Kategorien
+ *
+ * **Such- und Filterfunktionen:**
+ * - Volltextsuche über Fragen
+ * - Filterung nach Autor, Schwierigkeitsgrad, Status
+ * - Anzeige gemeldeter Inhalte
+ *
+ * **Kollaborative Features:**
+ * - Rollenbasierte Zugriffskontrolle (Admin, Moderator, Editor)
+ * - Kollaborator-Verwaltung für Kategorien
+ * - Öffentliche/Private Inhalte
+ *
+ * @function CardManager
+ * @param {Object} props - Component properties
+ * @param {Object} props.user - Aktueller Benutzer
+ * @param {Function} props.onQuestionAdded - Callback bei neuer Frage
+ * @param {Function} props.onCategoryAdded - Callback bei neuer Kategorie
+ * @returns {React.ReactElement} Die gerenderte CardManager-Komponente
+ * @example
+ * <CardManager
+ *   user={currentUser}
+ *   onQuestionAdded={handleQuestionAdded}
+ *   onCategoryAdded={handleCategoryAdded}
+ * />
+ */
 function CardManager({ user, onQuestionAdded, onCategoryAdded }) {
     // Zustandsverwaltung für Kategorien und Karten
     const [categories, setCategories] = useState([]);
@@ -39,16 +58,16 @@ function CardManager({ user, onQuestionAdded, onCategoryAdded }) {
     const [reportedFilter, setReportedFilter] = useState('all');
     const [statusFilter, setStatusFilter] = useState('all');
     
-    // NEU: Rollenbasierte Zustandsverwaltung (PB12.1)
+    // Rollenbasierte Zustandsverwaltung
     const [currentRole, setCurrentRole] = useState(dataManager.getCurrentUserRole());
 
-    // NEU: Zustand für Kategorie-Navigation
+    // Zustand für Kategorie-Navigation
     const [viewMode, setViewMode] = useState('categories'); // 'categories' oder 'category-detail'
     const [currentCategoryView, setCurrentCategoryView] = useState(null);
 
     // Zustandsverwaltung für Bearbeitung
     /**
-     * @type {[null|CardState, React.Dispatch<React.SetStateAction<null|CardState>>]}
+     * @type {null|CardState}
      */
     const [editingCard, setEditingCard] = useState(null);
 
@@ -76,7 +95,7 @@ function CardManager({ user, onQuestionAdded, onCategoryAdded }) {
      */
 
     /**
-     * @type {[CardState, React.Dispatch<React.SetStateAction<CardState>>]}
+     * @type {CardState}
      */
     const [newCard, setNewCard] = useState({
         categoryId: '',
@@ -125,7 +144,7 @@ function CardManager({ user, onQuestionAdded, onCategoryAdded }) {
 
     /**
      * Filtert Karten basierend auf Suchbegriff und Filtern
-     * NEU: Erweiterte Filterlogik mit Kategorie-Berücksichtigung und gemeldete Fragen
+     * Erweiterte Filterlogik mit Kategorie-Berücksichtigung und gemeldete Fragen
      * Diese Funktion wird bei jeder Änderung der Filter automatisch ausgeführt
      */
     useEffect(() => {
@@ -156,7 +175,7 @@ function CardManager({ user, onQuestionAdded, onCategoryAdded }) {
             filtered = filtered.filter(card => card.difficulty === difficultyFilter);
         }
 
-        // NEU: Gemeldet-Filter - filtert nach gemeldeten Fragen
+        // Gemeldet-Filter - filtert nach gemeldeten Fragen
         if (reportedFilter !== 'all') {
             const reportedQuestions = JSON.parse(localStorage.getItem('reported-questions') || '[]');
             if (reportedFilter === 'reported') {
@@ -166,7 +185,7 @@ function CardManager({ user, onQuestionAdded, onCategoryAdded }) {
             }
         }
 
-        // NEU: Status-Filter - filtert nach Housekeeping-Status (aktiv, zu prüfen, archiviert)
+        // Status-Filter - filtert nach Housekeeping-Status (aktiv, zu prüfen, archiviert)
         if (statusFilter !== 'all') {
             filtered = filtered.filter(card => {
                 const status = dataManager.getCardStatus(card.id);
@@ -201,7 +220,7 @@ function CardManager({ user, onQuestionAdded, onCategoryAdded }) {
     };
 
     /**
-     * NEU: Wechselt zur Kategorie-Detail-Ansicht - Navigation in spezifische Kategorie
+     * Wechselt zur Kategorie-Detail-Ansicht - Navigation in spezifische Kategorie
      */
     const enterCategoryView = (category) => {
         setCurrentCategoryView(category);
@@ -210,7 +229,7 @@ function CardManager({ user, onQuestionAdded, onCategoryAdded }) {
     };
 
     /**
-     * NEU: Kehrt zur Kategorien-Übersicht zurück - Navigation zurück zur Hauptansicht
+     * Kehrt zur Kategorien-Übersicht zurück - Navigation zurück zur Hauptansicht
      */
     const exitCategoryView = () => {
         setCurrentCategoryView(null);
@@ -219,7 +238,7 @@ function CardManager({ user, onQuestionAdded, onCategoryAdded }) {
     };
 
     /**
-     * NEU: Gibt die Anzahl der Karten für eine Kategorie zurück - Statistik-Funktion
+     * Gibt die Anzahl der Karten für eine Kategorie zurück - Statistik-Funktion
      */
     const getCardCountForCategory = (categoryId) => {
         if (!categoryId || !Array.isArray(cards)) return 0;
@@ -523,7 +542,7 @@ function CardManager({ user, onQuestionAdded, onCategoryAdded }) {
     };
 
     /**
-     * NEU (PB12.1): Ändert die Rolle des aktuellen Nutzers (Mockup für Demo)
+     * Ändert die Rolle des aktuellen Nutzers (Mockup für Demo)
      * In Produktion würde die Rolle durch Backend-Authentifizierung gesetzt
      */
     const handleRoleChange = (newRole) => {
@@ -680,7 +699,7 @@ function CardManager({ user, onQuestionAdded, onCategoryAdded }) {
     );
 
     /**
-     * NEU: Rendert die Karten einer bestimmten Kategorie - Detailansicht für spezifische Kategorie
+     * Rendert die Karten einer bestimmten Kategorie - Detailansicht für spezifische Kategorie
      */
     const renderCategoryDetail = () => (
         <div className="container mt-4">
@@ -721,7 +740,7 @@ function CardManager({ user, onQuestionAdded, onCategoryAdded }) {
                         </div>
                     </div>
 
-                    {/* NEU (PB12.1): Rollenauswahl-Box - Mockup für Demo */}
+                    {/* Rollenauswahl-Box - Mockup für Demo */}
                     <div className="alert alert-warning mb-4">
                         <div className="row align-items-center">
                             <div className="col-md-8">
@@ -833,7 +852,7 @@ function CardManager({ user, onQuestionAdded, onCategoryAdded }) {
                                     </select>
                                 </div>
                             </div>
-                            {/* NEU (PB12.1): Housekeeping-Filter nur für Tutor/Moderator */}
+                            {/* Housekeeping-Filter nur für Tutor/Moderator */}
                             {dataManager.hasPermission('moderate') && (
                                 <div className="row">
                                     <div className="col-md-12">
@@ -940,7 +959,7 @@ function CardManager({ user, onQuestionAdded, onCategoryAdded }) {
                                                     </small>
                                                 </div>
                                                 <div className="btn-group btn-group-sm">
-                                                    {/* NEU (PB12.1): Rollenbasierte Bearbeitungs-/Lösch-Buttons */}
+                                                    {/* Rollenbasierte Bearbeitungs-/Lösch-Buttons */}
                                                     {(dataManager.hasPermission('moderate') || card.author === user.name) && (
                                                         <button
                                                             className="btn btn-sm btn-outline-secondary"
@@ -1033,7 +1052,7 @@ function CardManager({ user, onQuestionAdded, onCategoryAdded }) {
                           {card.difficulty || 'Unbekannt'}
                         </span>
                                             </div>
-                                            {/* NEU (PB12.1): Rollenbasierte Moderation-Buttons */}
+                                            {/* Rollenbasierte Moderation-Buttons */}
                                             {dataManager.hasPermission('moderate') ? (
                                                 <div className="btn-group w-100" role="group">
                                                     {(() => {
@@ -1241,7 +1260,7 @@ function CardManager({ user, onQuestionAdded, onCategoryAdded }) {
     );
 
     /**
-     * NEU: Rendert das Formular zum Bearbeiten einer Kategorie
+     * Rendert das Formular zum Bearbeiten einer Kategorie
      */
     const renderEditCategory = () => (
         <div className="container mt-4">
@@ -1653,10 +1672,10 @@ function CardManager({ user, onQuestionAdded, onCategoryAdded }) {
                                       name="editCorrectAnswer"
                                       checked={editingCard.correctAnswer === index}
                                       onChange={() => {
-                                          // Explicitly update correctAnswer as number to match the CardState type
+                                          // Aktualisiert correctAnswer als Zahl entsprechend dem CardState-Typ
                                           const updatedCard = {
                                               ...editingCard,
-                                              correctAnswer: index // index is a number, which is compatible with null|number type
+                                              correctAnswer: index // Index ist eine Zahl, kompatibel mit null|number Typ
                                           };
                                           setEditingCard(updatedCard);
                                       }}

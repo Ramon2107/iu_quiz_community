@@ -2,22 +2,35 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: components/quiz/QuizResults.js</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>components/quiz/QuizResults.js - Documentation</title>
 
-    <script src="scripts/prettify/prettify.js"> </script>
-    <script src="scripts/prettify/lang-css.js"> </script>
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
     <!--[if lt IE 9]>
       <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
     <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
 </head>
-
 <body>
 
-<div id="main">
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
 
-    <h1 class="page-title">Source: components/quiz/QuizResults.js</h1>
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <li class="nav-link nav-home-link"><a href="index.html">Home</a></li><li class="nav-heading">Classes</li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="DataManager.html">DataManager</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.archiveCard">archiveCard</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.deleteCard">deleteCard</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.deleteCategory">deleteCategory</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.exportData">exportData</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.extractTagsFromQuestion">extractTagsFromQuestion</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.getAllCards">getAllCards</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.getAllCategories">getAllCategories</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.getAvailableRoles">getAvailableRoles</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.getCardStatus">getCardStatus</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.getCardStatusInfo">getCardStatusInfo</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.getCardsByCategory">getCardsByCategory</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.getCardsByCategoryName">getCardsByCategoryName</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.getCardsByStatus">getCardsByStatus</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.getCategoriesForQuiz">getCategoriesForQuiz</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.getCategoryIdByName">getCategoryIdByName</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.getCurrentUserRole">getCurrentUserRole</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.getQuestionsForQuiz">getQuestionsForQuiz</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.getRoleInfo">getRoleInfo</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.getUniqueAuthors">getUniqueAuthors</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.hasPermission">hasPermission</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.importData">importData</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.initializeData">initializeData</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.isModerator">isModerator</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.isPrivilegedUser">isPrivilegedUser</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.loadMockCategories">loadMockCategories</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.loadMockQuestions">loadMockQuestions</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.markCardForReview">markCardForReview</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.reactivateCard">reactivateCard</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.reloadMockData">reloadMockData</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.resetAllData">resetAllData</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.saveCard">saveCard</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.saveCategory">saveCategory</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.searchCards">searchCards</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.setCardStatus">setCardStatus</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.setCurrentUserRole">setCurrentUserRole</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.updateCard">updateCard</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.updateCategory">updateCategory</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.updateCategoryCardCounts">updateCategoryCardCounts</a></span></li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="SimulatedPlayersService.html">SimulatedPlayersService</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="SimulatedPlayersService.html#.calculateFinalRanking">calculateFinalRanking</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="SimulatedPlayersService.html#.calculatePerformanceRating">calculatePerformanceRating</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="SimulatedPlayersService.html#.generateCompetitiveUpdates">generateCompetitiveUpdates</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="SimulatedPlayersService.html#.generateCooperativeMessages">generateCooperativeMessages</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="SimulatedPlayersService.html#.generateLiveComments">generateLiveComments</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="SimulatedPlayersService.html#.getActivePlayers">getActivePlayers</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="SimulatedPlayersService.html#.getPlayerStatistics">getPlayerStatistics</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="SimulatedPlayersService.html#.getRandomWrongAnswer">getRandomWrongAnswer</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="SimulatedPlayersService.html#.initializePlayers">initializePlayers</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="SimulatedPlayersService.html#.reset">reset</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="SimulatedPlayersService.html#.simulatePlayerAnswer">simulatePlayerAnswer</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="SimulatedPlayersService.html#.simulatePlayerAnswers">simulatePlayerAnswers</a></span></li><li class="nav-heading">Namespaces</li><li class="nav-heading"><span class="nav-item-type type-namespace">N</span><span class="nav-item-name"><a href="Data.Mockdata.html">Mockdata</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Data.Mockdata.html#.getCategoriesWithCardCount">getCategoriesWithCardCount</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Data.Mockdata.html#.getCategoryById">getCategoryById</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Data.Mockdata.html#.getQuestionById">getQuestionById</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Data.Mockdata.html#.getQuestionsByCategory">getQuestionsByCategory</a></span></li><li class="nav-heading"><span class="nav-item-type type-namespace">N</span><span class="nav-item-name"><a href="Utils.Security.html">Security</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Utils.Security.html#.sanitizeAttribute">sanitizeAttribute</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Utils.Security.html#.sanitizeHtml">sanitizeHtml</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Utils.Security.html#.sanitizeInput">sanitizeInput</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Utils.Security.html#.sanitizeUrlParam">sanitizeUrlParam</a></span></li><li class="nav-heading"><a href="global.html">Globals</a></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#App">App</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#CardManager">CardManager</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#Community">Community</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#CooperativeLobby">CooperativeLobby</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#Footer">Footer</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#Header">Header</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#HomePage">HomePage</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#Imprint">Imprint</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#LiveChat">LiveChat</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#LoginForm">LoginForm</a></span></li><li class="nav-item"><span class="nav-item-type type-member">M</span><span class="nav-item-name"><a href="global.html#MOCK_USERS">MOCK_USERS</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#PointsInfo">PointsInfo</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#PrivacyPolicy">PrivacyPolicy</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#QuestionEditor">QuestionEditor</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#QuizCategorySelector">QuizCategorySelector</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#QuizMain">QuizMain</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#QuizQuestio">QuizQuestio</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#QuizResults">QuizResults</a></span></li><li class="nav-item"><span class="nav-item-type type-member">M</span><span class="nav-item-name"><a href="global.html#SIMULATED_PLAYERS">SIMULATED_PLAYERS</a></span></li><li class="nav-item"><span class="nav-item-type type-member">M</span><span class="nav-item-name"><a href="global.html#SecurityUtils">SecurityUtils</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#UserProfile">UserProfile</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html">handleLogin</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html">handleLogout</a></span></li><li class="nav-item"><span class="nav-item-type type-member">M</span><span class="nav-item-name"><a href="global.html#mockCategories">mockCategories</a></span></li><li class="nav-item"><span class="nav-item-type type-member">M</span><span class="nav-item-name"><a href="global.html#mockQuestions">mockQuestions</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#render">render</a></span></li><li class="nav-item"><span class="nav-item-type type-member">M</span><span class="nav-item-name"><a href="global.html#root">root</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html">useEffect</a></span></li>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">components/quiz/QuizResults.js</h1>
+    
 
     
 
@@ -27,38 +40,51 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>/**
- * QuizResults-Komponente - Anzeige der Quiz-Ergebnisse
+ * Anzeige der Quiz-Ergebnisse mit Statistiken und Rangliste.
+ * @author Projektteam IU Community Quiz
+ * @version 1.2.0
+ */
+
+import React, { useState, useEffect } from 'react';
+import simulatedPlayersService from '../../services/SimulatedPlayersService'; // Import für Multiplayer-Auswertung
+
+/**
+ * QuizResults - Anzeige der Quiz-Ergebnisse
  *
  * Diese Komponente zeigt die Ergebnisse des abgeschlossenen Quiz an,
  * einschließlich Statistiken, Antworten und Bewertungen.
  *
  * Features:
- * - Detaillierte Ergebnisübersicht
- * - Antworten-Review mit Erklärungen
- * - Statistiken und Leistungsmetriken
- * - Responsive Design
- * - Optionen für Wiederholung
+ * - Detaillierte Ergebnisübersicht mit Punkten und Genauigkeit
+ * - Antworten-Review mit ausführlichen Erklärungen
+ * - Statistiken und Leistungsmetriken für Spieler
+ * - Responsive Design für alle Endgeräte
+ * - Optionen für Wiederholung (gleiche oder neue Kategorie)
+ * - Multiplayer-Rangliste für kooperative und kompetitive Modi
+ * - Gewinner-Ermittlung und Gleichstands-Behandlung
+ * - Farbcodierte Performance-Bewertung
  *
- * UPDATE: Multiplayer-Rangliste für kooperative und kompetitive Modi
- * UPDATE: Gewinner-Ermittlung und Gleichstände
- */
-
-import React, { useState, useEffect } from 'react';
-import simulatedPlayersService from '../../services/SimulatedPlayersService'; // UPDATE: Import für Multiplayer-Auswertung
-
-/**
- * QuizResults-Komponente
- *
- * @param {Object} props - Komponenteneigenschaften
- * @param {Array} props.questions - Quiz-Fragen
- * @param {Array} props.answers - Benutzerantworten
+ * @function QuizResults
+ * @param {Object} props - Component properties
+ * @param {Array} props.questions - Alle Quiz-Fragen
+ * @param {Array} props.answers - Alle gegebenen Antworten
  * @param {string} props.gameMode - Spielmodus
- * @param {Object} props.category - Gewählte Kategorie
+ * @param {Object} props.category - Ausgewählte Kategorie
  * @param {Object} props.user - Benutzerdaten
  * @param {Function} props.onRestart - Callback für Neustart
- * @param {Function} props.onRestartSameCategory - Callback für Neustart mit gleicher Kategorie
+ * @param {Function} props.onRestartSameCategory - Callback für Wiederholung
  * @param {Function} props.onBackToCategorySelection - Callback für Kategorieauswahl
- * @param {Object} props.multiplayerData - UPDATE: Multiplayer-Daten
+ * @param {Object} props.multiplayerData - Multiplayer-Daten
+ * @returns {React.ReactElement} Die gerenderte QuizResults-Komponente
+ * @example
+ * &lt;QuizResults
+ *   questions={quizQuestions}
+ *   answers={userAnswers}
+ *   gameMode="cooperative"
+ *   category={selectedCategory}
+ *   user={currentUser}
+ *   onRestart={handleRestart}
+ * />
  */
 function QuizResults({
                        questions,
@@ -69,25 +95,33 @@ function QuizResults({
                        onRestart,
                        onRestartSameCategory,
                        onBackToCategorySelection,
-                       multiplayerData // UPDATE: Neue Prop für Multiplayer-Daten
+                       multiplayerData // Neue Prop für Multiplayer-Daten
                      }) {
   const [showDetailedResults, setShowDetailedResults] = useState(false);
-  const [multiplayerRanking, setMultiplayerRanking] = useState([]); // UPDATE: Rangliste für Multiplayer
-  const [gameResults, setGameResults] = useState(null); // UPDATE: Spielergebnisse
+  const [multiplayerRanking, setMultiplayerRanking] = useState([]); // Rangliste für Multiplayer
+  const [gameResults, setGameResults] = useState(null); // Spielergebnisse
 
   // Berechne Basis-Statistiken
-  const correctAnswers = answers.filter(answer => answer.isCorrect).length;
+  // Prüfe, ob answer definiert ist, bevor auf isCorrect zugegriffen wird, um Fehler zu vermeiden
+  const correctAnswers = answers.filter(answer => answer &amp;&amp; answer.isCorrect).length;
   const totalQuestions = questions.length;
   const score = Math.round((correctAnswers / totalQuestions) * 100);
-  const totalTime = answers.reduce((sum, answer) => sum + answer.timeTaken, 0);
+  // Prüfe, ob answer definiert ist, bevor auf timeTaken zugegriffen wird, um Fehler zu vermeiden
+  const totalTime = answers.reduce((sum, answer) => sum + (answer &amp;&amp; answer.timeTaken ? answer.timeTaken : 0), 0);
   const averageTime = Math.round(totalTime / totalQuestions);
 
-  // UPDATE: Berechne Multiplayer-Rangliste beim Component-Mount
+  // Berechne Multiplayer-Rangliste beim Component-Mount
   useEffect(() => {
     if (multiplayerData?.isMultiplayer) {
+      const playerTotalScore = answers.reduce((acc, answer) => {
+        if (!answer || !answer.isCorrect) return acc;
+        const speedBonus = Math.max(0, 30 - (answer.timeTaken || 0));
+        return acc + 100 + speedBonus;
+      }, 0);
+
       const humanPlayerStats = {
         name: user.name,
-        score: calculatePlayerScore(),
+        score: playerTotalScore,
         correctAnswers,
         averageTime,
         isHuman: true
@@ -103,29 +137,15 @@ function QuizResults({
       console.log('Multiplayer-Rangliste:', ranking);
       console.log('Spielergebnisse:', results);
     }
-  }, [multiplayerData, correctAnswers, averageTime, user.name]);
+  }, [multiplayerData, correctAnswers, averageTime, user.name, answers]);
 
   /**
-   * UPDATE: Berechnet Spieler-Punkte basierend auf Antworten und Zeit
-   */
-  const calculatePlayerScore = () => {
-    let totalScore = 0;
-    answers.forEach(answer => {
-      if (answer.isCorrect) {
-        const speedBonus = Math.max(0, 30 - answer.timeTaken);
-        totalScore += 100 + speedBonus;
-      }
-    });
-    return totalScore;
-  };
-
-  /**
-   * UPDATE: Analysiert Spielergebnisse für Multiplayer-Modi
+   * Analysiert Spielergebnisse für Multiplayer-Modi
    */
   const analyzeGameResults = (ranking) => {
     if (!ranking || ranking.length === 0) return null;
 
-    const humanPlayer = ranking.find(p => p.isHuman);
+    // Finde Position des menschlichen Spielers
     const humanPosition = ranking.findIndex(p => p.isHuman) + 1;
     const winner = ranking[0];
     const isHumanWinner = winner.isHuman;
@@ -135,9 +155,8 @@ function QuizResults({
     const winners = ranking.filter(p => p.score === winnerScore);
     const isTie = winners.length > 1;
 
-    let resultType = '';
-    let resultMessage = '';
-    let resultColor = '';
+    // Variablen für Ergebnistyp, Nachricht und Farbe
+    let resultType, resultMessage, resultColor;
 
     if (isTie) {
       if (winners.some(w => w.isHuman)) {
@@ -238,7 +257,7 @@ function QuizResults({
                 &lt;/h2>
               &lt;/div>
               &lt;div className="card-body">
-                {/* UPDATE: Multiplayer-Ergebnisse */}
+                {/* Multiplayer-Ergebnisse */}
                 {multiplayerData?.isMultiplayer &amp;&amp; gameResults &amp;&amp; (
                     &lt;div className={`alert alert-${gameResults.color} mb-4`}>
                       &lt;div className="d-flex align-items-center">
@@ -324,33 +343,39 @@ function QuizResults({
                       &lt;h5>Detaillierte Antworten:&lt;/h5>
                       {questions.map((question, index) => {
                         const answer = answers[index];
+                        // Prüfe, ob answer definiert ist, bevor auf isCorrect zugegriffen wird, um Fehler zu vermeiden
+                        const isCorrect = answer &amp;&amp; answer.isCorrect;
                         return (
                             &lt;div key={index} className="card mb-3">
                               &lt;div className="card-body">
                                 &lt;div className="d-flex justify-content-between align-items-start mb-2">
                                   &lt;h6>Frage {index + 1}:&lt;/h6>
-                                  &lt;span className={`badge ${answer.isCorrect ? 'bg-success' : 'bg-danger'}`}>
-                              {answer.isCorrect ? 'Richtig' : 'Falsch'}
+                                  &lt;span className={`badge ${isCorrect ? 'bg-success' : 'bg-danger'}`}>
+                              {isCorrect ? 'Richtig' : 'Falsch'}
                             &lt;/span>
                                 &lt;/div>
                                 &lt;p className="mb-2">{question.question}&lt;/p>
                                 &lt;div className="row">
                                   &lt;div className="col-md-6">
                                     &lt;small className="text-muted">Ihre Antwort:&lt;/small>
-                                    &lt;p className={answer.isCorrect ? 'text-success' : 'text-danger'}>
-                                      {answer.selectedAnswer !== null ? question.answers[answer.selectedAnswer] : 'Nicht beantwortet'}
+                                    &lt;p className={isCorrect ? 'text-success' : 'text-danger'}>
+                                      {answer &amp;&amp; answer.selectedAnswer !== null &amp;&amp; question.answers 
+                                        ? question.answers[answer.selectedAnswer] 
+                                        : 'Nicht beantwortet'}
                                     &lt;/p>
                                   &lt;/div>
                                   &lt;div className="col-md-6">
                                     &lt;small className="text-muted">Richtige Antwort:&lt;/small>
                                     &lt;p className="text-success">
-                                      {question.answers[question.correctAnswer]}
+                                      {question.answers &amp;&amp; question.correctAnswer !== undefined 
+                                        ? question.answers[question.correctAnswer] 
+                                        : 'Nicht verfügbar'}
                                     &lt;/p>
                                   &lt;/div>
                                 &lt;/div>
                                 &lt;div className="d-flex justify-content-between text-muted">
-                                  &lt;small>Zeit: {answer.timeTaken}s&lt;/small>
-                                  &lt;small>Kategorie: {question.category}&lt;/small>
+                                  &lt;small>Zeit: {answer &amp;&amp; answer.timeTaken ? answer.timeTaken : '0'}s&lt;/small>
+                                  &lt;small>Kategorie: {question.category || 'Unbekannt'}&lt;/small>
                                 &lt;/div>
                                 {question.explanation &amp;&amp; (
                                     &lt;div className="mt-2 p-2 bg-light rounded">
@@ -423,16 +448,16 @@ function QuizResults({
               &lt;/div>
             &lt;/div>
 
-            {/* UPDATE: Multiplayer-Rangliste */}
+            {/* Multiplayer-Rangliste */}
             {multiplayerData?.isMultiplayer &amp;&amp; multiplayerRanking.length > 0 &amp;&amp; (
                 &lt;div className="card">
-                  &lt;div className={`card-header ${getGameModeClass()} text-white`}>
+                  &lt;div className={`card-header ${getGameModeClass()} text-white py-1`}>
                     &lt;h5 className="mb-0">
                       &lt;i className="fas fa-trophy me-2">&lt;/i>
                       Rangliste
                     &lt;/h5>
                   &lt;/div>
-                  &lt;div className="card-body">
+                  &lt;div className="card-body py-1">
                     &lt;div className="list-group list-group-flush">
                       {multiplayerRanking.map((player, index) => (
                           &lt;div key={player.id || index} className={`list-group-item ${player.isHuman ? 'bg-light' : ''}`}>
@@ -496,17 +521,13 @@ export default QuizResults;</code></pre>
 
 </div>
 
-<nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="DataManager.html">DataManager</a></li><li><a href="SimulatedPlayersService.html">SimulatedPlayersService</a></li></ul><h3>Global</h3><ul><li><a href="global.html#App">App</a></li><li><a href="global.html#Footer">Footer</a></li><li><a href="global.html#Header">Header</a></li><li><a href="global.html#LoginForm">LoginForm</a></li><li><a href="global.html#MOCK_USERS">MOCK_USERS</a></li><li><a href="global.html#QuestionEditor">QuestionEditor</a></li><li><a href="global.html#QuizQuestion">QuizQuestion</a></li><li><a href="global.html#QuizResults">QuizResults</a></li><li><a href="global.html#SIMULATED_PLAYERS">SIMULATED_PLAYERS</a></li><li><a href="global.html#SecurityUtils">SecurityUtils</a></li><li><a href="global.html#UserProfile">UserProfile</a></li><li><a href="global.html#mockCategories">mockCategories</a></li><li><a href="global.html#root">root</a></li></ul>
-</nav>
-
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Mon Jul 14 2025 22:44:25 GMT+0200 (Mitteleuropäische Sommerzeit)
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.5</a> on Mon Oct 27 2025 23:45:33 GMT+0100 (Mitteleuropäische Normalzeit) using the Minami theme.
 </footer>
 
-<script> prettyPrint(); </script>
-<script src="scripts/linenumber.js"> </script>
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
 </body>
 </html>

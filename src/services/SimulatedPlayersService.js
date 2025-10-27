@@ -1,28 +1,11 @@
 /**
- * SimulatedPlayers-Service - Simulation von Mitspielern
- *
- * Dieser Service simuliert realistische Mitstudierende für kooperative
- * und kompetitive Quiz-Modi mit verschiedenen Schwierigkeitsgraden.
- *
- * FEATURES:
- * - Realistische Spieler-Profile mit verschiedenen Fähigkeiten
- * - Adaptive Antwortzeiten basierend auf Fragenschwierigkeit
- * - Verschiedene Spielertypen (Schnell, Genau, Durchschnitt)
- * - Kooperative und kompetitive Modi-Unterstützung
- * - Statistische Auswertung und Ranglisten
- *
- * UPDATE: Neue Implementierung für Multiplayer-Simulation
- * UPDATE: Komplette Methoden für generateCompetitiveUpdates und reset
- *
- * @author Projektteam IU Community Quiz
- * @version 1.2.0
- * @since 2025-07-15
- *
- */
-
-/**
  * Simulierte Spieler-Profile mit verschiedenen Charakteristiken
- * @type {Array<Object>}
+ *
+ * Diese Konstante enthält vordefinierte Spieler-Profile mit individuellen
+ * Eigenschaften wie Fähigkeitslevel, Geschwindigkeit und Persönlichkeit.
+ * Jeder Spieler hat Stärken und Schwächen in verschiedenen Kategorien.
+ *
+ * @const {Array<Object>} SIMULATED_PLAYERS
  */
 const SIMULATED_PLAYERS = [
     {
@@ -93,14 +76,32 @@ const SIMULATED_PLAYERS = [
 ];
 
 /**
- * SimulatedPlayers-Service-Klasse
+ * SimulatedPlayersService - Simulation realistischer Mitspieler
  *
- * Verwaltet die Simulation von Mitspielern in verschiedenen Quiz-Modi
- * und stellt realistische Spieler-Interaktionen bereit.
+ * Dieser Service simuliert realistische Mitstudierende für kooperative
+ * und kompetitive Quiz-Modi mit verschiedenen Fähigkeiten und Verhaltensweisen.
+ *
+ * Hauptfunktionen:
+ * - Realistische Spieler-Profile mit individuellen Fähigkeiten und Persönlichkeiten
+ * - Adaptive Antwortzeiten basierend auf Fragenschwierigkeit und Spielerfähigkeit
+ * - Verschiedene Spielertypen (Schnell, Genau, Durchschnittlich, Langsam)
+ * - Unterstützung für kooperative und kompetitive Modi
+ * - Statistische Auswertung und dynamische Ranglisten
+ * - Spezialgebiete und Schwächen für realistische Fehlerquoten
+ * - Zufällige Auswahl von Spielern für jede Session
+ *
+ * @class SimulatedPlayersService
+ * @author Projektteam IU Community Quiz
+ * @version 1.2.0
  */
 class SimulatedPlayersService {
     /**
      * Konstruktor - Initialisiert den Service
+     *
+     * Erstellt eine neue Instanz des SimulatedPlayersService und
+     * initialisiert die internen Zustandsvariablen.
+     *
+     * @constructor
      */
     constructor() {
         this.activePlayers = [];
@@ -111,10 +112,19 @@ class SimulatedPlayersService {
     /**
      * Initialisiert Spieler für eine Quiz-Runde
      *
-     * @param {string} gameMode - 'cooperative' oder 'competitive'
-     * @param {string} category - Kategorie für Spezialisierung
-     * @param {number} playerCount - Anzahl der Mitspieler (2-4)
-     * @returns {Array<Object>} Array von Spielern
+     * Wählt zufällig die angegebene Anzahl von Spielern aus dem Pool aus
+     * und initialisiert ihre Statistiken (Score, Antworten, Zeit). Die Spieler
+     * werden für den angegebenen Spielmodus und die Kategorie vorbereitet.
+     *
+     * @method initializePlayers
+     * @memberof SimulatedPlayersService
+     * @param {string} gameMode - Spielmodus: 'cooperative' oder 'competitive'
+     * @param {string} category - Kategorie für Spezialisierung (beeinflusst Erfolgswahrscheinlichkeit)
+     * @param {number} [playerCount=3] - Anzahl der zu initialisierenden Mitspieler (2-4)
+     * @returns {Array<Object>} Array mit initialisierten Spieler-Objekten
+     * @example
+     * const players = service.initializePlayers('competitive', 'Programmierung', 3);
+     * console.log(players.length); // 3
      */
     initializePlayers(gameMode, category, playerCount = 3) {
         this.gameMode = gameMode;
@@ -137,11 +147,20 @@ class SimulatedPlayersService {
     }
 
     /**
-     * Simuliert Antworten der KI-Spieler
+     * Simuliert Antworten aller aktiven KI-Spieler
      *
-     * @param {Object} question - Aktuelle Frage
-     * @param {number} questionIndex - Index der Frage
-     * @returns {Promise<Array<Object>>} Array mit Spieler-Antworten
+     * Iteriert über alle aktiven Spieler und simuliert für jeden eine Antwort
+     * auf die aktuelle Frage. Die Methode arbeitet asynchron, um realistische
+     * Antwortzeiten zu simulieren.
+     *
+     * @method simulatePlayerAnswers
+     * @memberof SimulatedPlayersService
+     * @param {Object} question - Aktuelles Frage-Objekt mit question, answers, correctAnswer, etc.
+     * @param {number} questionIndex - Index der aktuellen Frage im Quiz
+     * @returns {Promise<Array<Object>>} Promise mit Array von Antwort-Objekten aller Spieler
+     * @example
+     * const answers = await service.simulatePlayerAnswers(question, 0);
+     * console.log(answers[0].isCorrect); // true oder false
      */
     async simulatePlayerAnswers(question, questionIndex) {
         const playerAnswers = [];
@@ -157,10 +176,20 @@ class SimulatedPlayersService {
     /**
      * Simuliert eine individuelle Spieler-Antwort
      *
-     * @param {Object} player - Spieler-Objekt
-     * @param {Object} question - Frage-Objekt
-     * @param {number} questionIndex - Frage-Index
-     * @returns {Promise<Object>} Antwort-Objekt
+     * Diese Methode berechnet eine realistische Antwort für einen einzelnen Spieler
+     * basierend auf dessen Fähigkeiten, Geschwindigkeit, Spezialisierungen und der
+     * Fragenschwierigkeit. Die Erfolgswahrscheinlichkeit wird dynamisch angepasst.
+     * Spieler-Statistiken werden automatisch aktualisiert.
+     *
+     * @method simulatePlayerAnswer
+     * @memberof SimulatedPlayersService
+     * @param {Object} player - Spieler-Objekt mit skillLevel, speedFactor, specialties, etc.
+     * @param {Object} question - Frage-Objekt mit question, answers, correctAnswer, difficulty, category
+     * @param {number} questionIndex - Index der aktuellen Frage
+     * @returns {Promise<Object>} Promise mit Antwort-Objekt (playerId, isCorrect, timeTaken, etc.)
+     * @example
+     * const answer = await service.simulatePlayerAnswer(player, question, 0);
+     * console.log(`${answer.playerName}: ${answer.isCorrect ? 'Richtig' : 'Falsch'} in ${answer.timeTaken}s`);
      */
     async simulatePlayerAnswer(player, question, questionIndex) {
         // Berechne Antwortzeit basierend auf Spieler-Geschwindigkeit
@@ -226,9 +255,17 @@ class SimulatedPlayersService {
     /**
      * Generiert eine zufällige falsche Antwort
      *
-     * @param {number} correctAnswer - Index der richtigen Antwort
-     * @param {number} totalAnswers - Gesamtanzahl der Antworten
-     * @returns {number} Index der falschen Antwort
+     * Wählt zufällig einen Antwortindex aus, der nicht dem korrekten entspricht.
+     * Wird verwendet, wenn ein Spieler eine falsche Antwort geben soll.
+     *
+     * @method getRandomWrongAnswer
+     * @memberof SimulatedPlayersService
+     * @param {number} correctAnswer - Index der richtigen Antwort (wird ausgeschlossen)
+     * @param {number} totalAnswers - Gesamtanzahl der verfügbaren Antworten
+     * @returns {number} Index einer zufälligen falschen Antwort
+     * @example
+     * const wrongIndex = service.getRandomWrongAnswer(2, 4);
+     * console.log(wrongIndex); // 0, 1 oder 3 (aber nie 2)
      */
     getRandomWrongAnswer(correctAnswer, totalAnswers) {
         let wrongAnswer;
@@ -239,10 +276,19 @@ class SimulatedPlayersService {
     }
 
     /**
-     * Berechnet finale Rangliste
+     * Berechnet die finale Rangliste aller Spieler
      *
-     * @param {Object} humanPlayer - Menschlicher Spieler
-     * @returns {Array<Object>} Sortierte Rangliste
+     * Kombiniert den menschlichen Spieler mit allen KI-Spielern und erstellt
+     * eine sortierte Rangliste basierend auf Punktzahl (primär) und durchschnittlicher
+     * Antwortzeit (sekundär bei Gleichstand).
+     *
+     * @method calculateFinalRanking
+     * @memberof SimulatedPlayersService
+     * @param {Object} humanPlayer - Objekt mit Daten des menschlichen Spielers (name, score, correctAnswers, averageTime)
+     * @returns {Array<Object>} Sortiertes Array aller Spieler (höchste Punktzahl zuerst)
+     * @example
+     * const ranking = service.calculateFinalRanking({name: 'Max', score: 500, correctAnswers: 8, averageTime: 15});
+     * console.log(ranking[0].name); // Name des Gewinners
      */
     calculateFinalRanking(humanPlayer) {
         const allPlayers = [
@@ -271,11 +317,20 @@ class SimulatedPlayersService {
     }
 
     /**
-     * Generiert Spieler-Nachrichten für kooperativen Modus
+     * Generiert hilfreiche Nachrichten für den kooperativen Modus
      *
-     * @param {Object} question - Aktuelle Frage
-     * @param {Array<Object>} playerAnswers - Antworten der Spieler
-     * @returns {Array<Object>} Nachrichten-Array
+     * Spieler mit kooperativer Persönlichkeit teilen mit einer gewissen Wahrscheinlichkeit
+     * ihre Gedanken zur Frage mit. Die Nachrichten sind realistisch formuliert und
+     * helfen dem menschlichen Spieler bei der Entscheidungsfindung.
+     *
+     * @method generateCooperativeMessages
+     * @memberof SimulatedPlayersService
+     * @param {Object} question - Aktuelles Frage-Objekt mit answers-Array
+     * @param {Array<Object>} playerAnswers - Array mit Antworten aller Spieler
+     * @returns {Array<Object>} Array mit Nachrichten-Objekten (playerId, playerName, message, timestamp, isHelpful)
+     * @example
+     * const messages = service.generateCooperativeMessages(question, playerAnswers);
+     * messages.forEach(msg => console.log(`${msg.playerName}: ${msg.message}`));
      */
     generateCooperativeMessages(question, playerAnswers) {
         const messages = [];
@@ -315,10 +370,19 @@ class SimulatedPlayersService {
     }
 
     /**
-     * Generiert kompetitive Updates für Ranglisten-Anzeige
+     * Generiert Live-Updates für die kompetitive Ranglisten-Anzeige
      *
-     * @param {Array<Object>} playerAnswers - Antworten der Spieler
-     * @returns {Array<Object>} Update-Array mit Live-Ranglisten-Daten
+     * Erstellt detaillierte Status-Updates für jeden Spieler inklusive aktueller
+     * Punktzahl, Genauigkeit, durchschnittlicher Zeit und Performance-Rating.
+     * Die Updates sind nach Punktzahl sortiert für eine Live-Rangliste.
+     *
+     * @method generateCompetitiveUpdates
+     * @memberof SimulatedPlayersService
+     * @param {Array<Object>} playerAnswers - Array mit Antworten aller Spieler der aktuellen Runde
+     * @returns {Array<Object>} Sortiertes Array mit detaillierten Spieler-Updates
+     * @example
+     * const updates = service.generateCompetitiveUpdates(playerAnswers);
+     * console.log(updates[0].playerName, updates[0].currentScore); // Führender Spieler
      */
     generateCompetitiveUpdates(playerAnswers) {
         const updates = [];
@@ -349,10 +413,18 @@ class SimulatedPlayersService {
     }
 
     /**
-     * Berechnet Performance-Rating eines Spielers
+     * Berechnet das Performance-Rating eines Spielers
      *
-     * @param {Object} player - Spieler-Objekt
-     * @returns {string} Performance-Rating ('excellent', 'good', 'average', 'needs_improvement')
+     * Kombiniert Genauigkeit (correctAnswers/answeredQuestions) und Geschwindigkeit
+     * (averageTime) zu einem Gesamt-Rating. Das Rating wird in vier Stufen klassifiziert.
+     *
+     * @method calculatePerformanceRating
+     * @memberof SimulatedPlayersService
+     * @param {Object} player - Spieler-Objekt mit correctAnswers, answeredQuestions, averageTime
+     * @returns {string} Performance-Rating: 'excellent', 'good', 'average' oder 'needs_improvement'
+     * @example
+     * const rating = service.calculatePerformanceRating(player);
+     * console.log(`Performance: ${rating}`); // z.B. 'excellent'
      */
     calculatePerformanceRating(player) {
         const accuracy = player.correctAnswers / player.answeredQuestions;
@@ -366,10 +438,19 @@ class SimulatedPlayersService {
     }
 
     /**
-     * Generiert Live-Kommentare für kompetitive Modi
+     * Generiert spontane Live-Kommentare für den kompetitiven Modus
      *
-     * @param {Array<Object>} playerAnswers - Aktuelle Spieler-Antworten
-     * @returns {Array<Object>} Live-Kommentare
+     * Kompetitive Spieler äußern sich gelegentlich zu ihren Antworten.
+     * Die Kommentare variieren je nach Erfolg und Geschwindigkeit der Antwort
+     * und sorgen für eine lebendige Atmosphäre im Quiz.
+     *
+     * @method generateLiveComments
+     * @memberof SimulatedPlayersService
+     * @param {Array<Object>} playerAnswers - Array mit Antworten aller Spieler der aktuellen Runde
+     * @returns {Array<Object>} Array mit Kommentar-Objekten (playerId, playerName, comment, timestamp, type)
+     * @example
+     * const comments = service.generateLiveComments(playerAnswers);
+     * comments.forEach(c => console.log(`${c.playerName}: ${c.comment}`));
      */
     generateLiveComments(playerAnswers) {
         const comments = [];
@@ -425,7 +506,15 @@ class SimulatedPlayersService {
     /**
      * Setzt den Service vollständig zurück
      *
-     * Bereinigt alle Spieler-Daten und Zustandsvariablen
+     * Bereinigt alle Spieler-Daten und Zustandsvariablen. Wird typischerweise
+     * am Ende eines Quiz oder beim Start eines neuen Quiz aufgerufen.
+     *
+     * @method reset
+     * @memberof SimulatedPlayersService
+     * @returns {void}
+     * @example
+     * service.reset();
+     * console.log('Service wurde zurückgesetzt');
      */
     reset() {
         this.activePlayers = [];
@@ -435,9 +524,17 @@ class SimulatedPlayersService {
     }
 
     /**
-     * Gibt aktuelle Spieler-Statistiken zurück
+     * Gibt detaillierte Statistiken aller aktiven Spieler zurück
      *
-     * @returns {Array<Object>} Array mit Spieler-Statistiken
+     * Erstellt für jeden aktiven Spieler ein Statistik-Objekt mit Score,
+     * Genauigkeit, durchschnittlicher Antwortzeit und Performance-Rating.
+     *
+     * @method getPlayerStatistics
+     * @memberof SimulatedPlayersService
+     * @returns {Array<Object>} Array mit Statistik-Objekten für jeden Spieler
+     * @example
+     * const stats = service.getPlayerStatistics();
+     * stats.forEach(s => console.log(`${s.name}: ${s.accuracy}% korrekt`));
      */
     getPlayerStatistics() {
         return this.activePlayers.map(player => ({
@@ -454,9 +551,17 @@ class SimulatedPlayersService {
     }
 
     /**
-     * Gibt Spieler-Informationen zurück
+     * Gibt Basis-Informationen aller aktiven Spieler zurück
      *
-     * @returns {Array<Object>} Array mit Basis-Spieler-Informationen
+     * Liefert grundlegende Informationen wie Name, Studiengang, Semester und Avatar
+     * für alle aktiven Spieler. Nützlich für die Anzeige von Spieler-Karten.
+     *
+     * @method getActivePlayers
+     * @memberof SimulatedPlayersService
+     * @returns {Array<Object>} Array mit Basis-Informationen der aktiven Spieler
+     * @example
+     * const players = service.getActivePlayers();
+     * players.forEach(p => console.log(`${p.name} - ${p.studyProgram}`));
      */
     getActivePlayers() {
         return this.activePlayers.map(player => ({

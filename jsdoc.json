@@ -1,0 +1,33 @@
+{
+  "source": {
+    "include": ["src", "README.md"],
+    "includePattern": ".+\\.js(doc|x)?$",
+    "excludePattern": "(node_modules|docs|build|coverage|test|cypress)"
+  },
+  "plugins": ["plugins/markdown"],
+  "opts": {
+    "template": "node_modules/minami",
+    "encoding": "utf8",
+    "destination": "./docs/",
+    "recurse": true,
+    "readme": "README.md"
+  },
+  "templates": {
+    "cleverLinks": true,
+    "monospaceLinks": false,
+    "default": {
+      "outputSourceFiles": true,
+      "includeDate": true,
+      "staticFiles": {
+        "include": ["./jsdoc-template-custom.css"]
+      }
+    },
+    "applicationName": "IU Quiz Community - Dokumentation",
+    "linenums": true,
+    "search": true
+  },
+  "tags": {
+    "allowUnknownTags": true,
+    "dictionaries": ["jsdoc", "closure"]
+  }
+}

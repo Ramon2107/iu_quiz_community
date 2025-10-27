@@ -1,20 +1,7 @@
 /**
- * UserProfile-Komponente - Benutzerprofil und Einstellungen
- *
- * Diese Komponente zeigt das Benutzerprofil mit Statistiken,
- * Einstellungen und Verlauf der Quiz-Aktivitäten an.
- *
- * SICHERHEITSFEATURES:
- * - XSS-Schutz für alle Eingabefelder
- * - Validierung von Benutzereingaben
- * - Sichere Darstellung von Benutzerdaten
- *
- * UPDATE: Logout-Funktion integriert
- * UPDATE: XSS-Schutz für alle Eingabefelder implementiert
- *
+ * Benutzerprofil mit Statistiken, Bearbeitungsfunktion und XSS-Schutz.
  * @author Projektteam IU Community Quiz
  * @version 1.2.0
- * @since 2025-07-15
  */
 
 import React, { useState, useEffect, useCallback } from 'react';
@@ -22,10 +9,32 @@ import dataManager from '../../data/dataManager';
 import { sanitizeInput } from '../../utils/xssUtils';
 
 /**
- * UserProfile-Komponente
- * @param {Object} props - Komponenteneigenschaften
+ * UserProfile - Benutzerprofil mit Statistiken und Bearbeitungsfunktion
+ *
+ * Diese Komponente zeigt das Benutzerprofil mit detaillierten Statistiken,
+ * Einstellungsmöglichkeiten und Verlauf der Quiz-Aktivitäten an.
+ *
+ * Hauptfunktionen:
+ * - Anzeige von Benutzerinformationen (Name, E-Mail, Studiengang, Semester)
+ * - Quiz-Statistiken (gespielte Quiz, Erfolgsrate, Gesamtpunkte)
+ * - Profilbearbeitung mit Validierung
+ * - Verlauf der letzten Quiz-Sessions mit Ergebnissen
+ * - Responsive Design für alle Endgeräte
+ * - Logout-Funktion mit Session-Verwaltung
+ *
+ * Implementierte Sicherheitsfeatures:
+ * - XSS-Schutz für alle Eingabefelder
+ * - Validierung von Benutzereingaben vor dem Speichern
+ * - Sichere Darstellung von Benutzerdaten
+ * - Sanitization aller Textinhalte
+ *
+ * @function UserProfile
+ * @param {Object} props - Component properties
  * @param {Object} props.user - Benutzerdaten
- * @param {Function} props.onLogout - UPDATE: Logout-Funktion
+ * @param {Function} props.onLogout - Callback bei Abmeldung
+ * @returns {React.ReactElement} Die gerenderte UserProfile-Komponente
+ * @example
+ * <UserProfile user={currentUser} onLogout={handleLogout} />
  */
 function UserProfile({ user, onLogout }) {
   const [stats, setStats] = useState({

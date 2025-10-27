@@ -1,41 +1,7 @@
 /**
- * QuizQuestion-Komponente - Einzelne Frage mit Antwortmöglichkeiten
- *
- * Diese Komponente zeigt eine einzelne Quiz-Frage mit allen Antwortmöglichkeiten an
- * und behandelt die Benutzerinteraktion für verschiedene Spielmodi.
- *
- * Features:
- * - Unterstützung für alle Spielmodi (single-player, cooperative, competitive)
- * - Zeitmessung und Fortschrittsanzeige
- * - Responsive Design mit Bootstrap
- * - Benutzerfreundliche Antwort-Auswahl
- * - Sofortiges Feedback nach Antwort
- *
- * SICHERHEITSFEATURES:
- * - XSS-Schutz für alle Chat-Eingaben
- * - Sichere Verarbeitung von Benutzereingaben
- * - Bereinigung aller Nachrichten vor dem Senden
- *
- * UPDATE: Multiplayer-Simulation für kooperative und kompetitive Modi
- * UPDATE: Live-Updates und Mitspieler-Antworten anzeigen
- * UPDATE: Vollständige Multiplayer-Sidebar mit Ranglisten
- * UPDATE: Live-Chat Integration (nur für cooperative Mode)
- * UPDATE: Punkte-Anzeige für alle Spieler
- * UPDATE: Zeit-Anzeige für kooperativen Modus
- * UPDATE: Lobby-Anzeige
- * UPDATE: Separate Chat- und Ranking-Fenster integriert
- * UPDATE: Dynamische Punkte-Erhöhung je nach Antwort
- * UPDATE: Timer-Fix für erste Frage
- * UPDATE: Kein Chat für Competitive Mode
- * UPDATE: XSS-Schutz für alle Eingabefelder implementiert
- * FIX: Live-Rangliste zeigt jetzt Anzahl richtiger Antworten statt Prozent
- * FIX: Korrekte Berechnung der durchschnittlichen Antwortzeit
- * FIX: Verbesserte Positionierung der Live-Punktzahl-Anzeige
- * FIX: Kompakte und übersichtliche Live-Ranglisten-Darstellung
- *
+ * Einzelne Quiz-Frage mit Multiplayer-Unterstützung und Live-Features.
  * @author Projektteam IU Community Quiz
  * @version 1.7.0
- * @since 2025-07-15
  */
 
 /* eslint-disable no-unused-vars */
@@ -44,21 +10,55 @@ import simulatedPlayersService from '../../services/SimulatedPlayersService';
 import { sanitizeInput } from '../../utils/xssUtils';
 
 /**
- * QuizQuestion-Komponente
+ * QuizQuestion - Einzelne Frage mit Multiplayer-Unterstützung
  *
- * @param {Object} props - Komponenteneigenschaften
- * @param {Object} props.question - Die aktuelle Frage
- * @param {number} props.questionNumber - Fragenummer (1-basiert)
+ * Diese Komponente zeigt eine einzelne Quiz-Frage mit allen Antwortmöglichkeiten
+ * und behandelt die Benutzerinteraktion für verschiedene Spielmodi.
+ *
+ * Hauptfunktionen:
+ * - Unterstützung für alle Spielmodi (single-player, cooperative, competitive)
+ * - Zeitmessung mit visueller Fortschrittsanzeige
+ * - Dynamische Punkte-Vergabe basierend auf Antwortgeschwindigkeit
+ * - Multiplayer-Sidebar mit Live-Ranglisten
+ * - Live-Chat Integration für kooperativen Modus
+ * - Responsive Design mit Bootstrap für alle Endgeräte
+ * - Sofortiges Feedback nach Beantwortung
+ * - Lobby-Anzeige mit allen aktiven Spielern
+ * - Separate Fenster für Chat und Ranking
+ *
+ * Implementierte Sicherheitsfeatures:
+ * - XSS-Schutz für alle Chat-Eingaben
+ * - Sichere Verarbeitung von Benutzereingaben
+ * - Automatische Bereinigung aller Nachrichten vor dem Senden
+ *
+ * FIX: Live-Rangliste zeigt jetzt Anzahl richtiger Antworten statt Prozent
+ * FIX: Korrekte Berechnung der durchschnittlichen Antwortzeit
+ * FIX: Verbesserte Positionierung der Live-Punktzahl-Anzeige
+ * FIX: Kompakte und übersichtliche Live-Ranglisten-Darstellung
+ *
+ * @function QuizQuestio
+ * @param {Object} props - Component properties
+ * @param {Object} props.question - Die anzuzeigende Frage
+ * @param {number} props.questionNumber - Aktuelle Fragennummer
  * @param {number} props.totalQuestions - Gesamtanzahl der Fragen
- * @param {string} props.gameMode - Spielmodus ('single-player', 'cooperative', 'competitive')
- * @param {Function} props.onAnswer - Callback-Funktion für Antwort
- * @param {Function} props.onBackToCategorySelection - Callback für Rückkehr zur Kategorieauswahl
+ * @param {string} props.gameMode - Spielmodus (single-player, cooperative, competitive)
+ * @param {Function} props.onAnswer - Callback bei Beantwortung
+ * @param {Function} props.onBackToCategorySelection - Callback für Zurück-Navigation
  * @param {Object} props.user - Benutzerdaten
- * @param {Object} props.multiplayerData - Multiplayer-Daten mit simulierten Spielern
- * @param {Array} props.chatMessages - Chat-Nachrichten
- * @param {Function} props.onSendChatMessage - Callback für Chat-Nachrichten
- * @param {Array} props.allAnswers - Alle bisherigen Antworten für Punkte-Berechnung
- * @returns {JSX.Element} Die gerenderte QuizQuestion-Komponente
+ * @param {Object} props.multiplayerData - Multiplayer-Daten
+ * @param {Array} props.chatMessages - Chat-Nachrichten für kooperativen Modus
+ * @param {Function} props.onSendChatMessage - Callback zum Senden von Chat-Nachrichten
+ * @param {Array} props.allAnswers - Alle bisherigen Antworten
+ * @returns {React.ReactElement} Die gerenderte QuizQuestion-Komponente
+ * @example
+ * <QuizQuestion
+ *   question={currentQuestion}
+ *   questionNumber={1}
+ *   totalQuestions={10}
+ *   gameMode="cooperative"
+ *   onAnswer={handleAnswer}
+ *   user={currentUser}
+ * />
  */
 function QuizQuestion({
                           question,

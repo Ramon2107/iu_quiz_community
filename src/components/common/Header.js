@@ -1,34 +1,40 @@
 /**
- * Header-Komponente für die Navigation
- *
- * Diese Komponente stellt die Hauptnavigation der Anwendung bereit
- * und ist vollständig responsiv für alle Endgeräte optimiert.
- *
- * Features:
- * - Responsive Bootstrap-Navigation
- * - Aktive Menüpunkte-Hervorhebung
- * - Benutzerinformationen in der Navigation
- * - Mobilfreundliches Hamburger-Menü
- * - Logo-Klick führt zur Startseite
- *
- * UPDATE: Logout-Funktion hinzugefügt
- * UPDATE: Community-Navigation hinzugefügt
+ * Responsive Hauptnavigation mit Bootstrap-Integration.
  *
  * @author Projektteam IU Community Quiz
  * @version 1.2.1
- * @since 2025-07-15
  */
 
 import React from 'react';
 
 /**
- * Header-Komponente mit Bootstrap-Navigation
+ * Header - Responsive Hauptnavigation der Anwendung
  *
- * @param {Object} props - Komponenteneigenschaften
+ * Diese Komponente stellt die Hauptnavigation mit vollständiger
+ * Bootstrap-Integration und Responsive-Design für alle Endgeräte bereit.
+ *
+ * Features:
+ * - Responsive Bootstrap-Navigation mit Hamburger-Menü
+ * - Aktive Menüpunkte-Hervorhebung zur besseren Orientierung
+ * - Benutzerinformationen und Profil-Zugang in der Navigation
+ * - Logout-Funktion mit Session-Verwaltung
+ * - Community-Zugang für kollaboratives Lernen
+ * - Logo-Klick für schnelle Rückkehr zur Startseite
+ *
+ * @function Header
+ * @param {Object} props - Component properties
  * @param {string} props.currentView - Aktuelle Ansicht
  * @param {Function} props.setCurrentView - Funktion zum Ändern der Ansicht
  * @param {Object} props.user - Benutzerdaten
- * @param {Function} props.onLogout - Logout-Funktion
+ * @param {Function} props.onLogout - Callback bei Abmeldung
+ * @returns {React.ReactElement} Die gerenderte Header-Komponente
+ * @example
+ * <Header
+ *   currentView="home"
+ *   setCurrentView={setCurrentView}
+ *   user={currentUser}
+ *   onLogout={handleLogout}
+ * />
  */
 function Header({ currentView, setCurrentView, user, onLogout }) {
   return (

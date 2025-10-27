@@ -1,35 +1,7 @@
 /**
- * Hauptquiz-Komponente
- *
- * Diese Komponente verwaltet den gesamten Quiz-Ablauf und stellt
- * verschiedene Spielmodi bereit (kooperativ, kompetitiv und single-player).
- *
- * UPDATE: Konfigurierbare Anzahl von Fragen (1-20)
- * UPDATE: Fragenanzahl-Auswahl für alle Modi
- * UPDATE: Kategorien-Auswahl für alle Modi
- * UPDATE: Verbesserte Benutzeroberfläche für Auswahl
- * UPDATE: "Andere Kategorie wählen" Funktion implementiert
- * UPDATE: Integration mit DataManager statt direktem Import von mockData
- * UPDATE: Simulation von Mitspielern für kooperative und kompetitive Modi
- * UPDATE: Vollständige Multiplayer-Unterstützung mit Live-Updates
- * UPDATE: Live-Chat Integration mit persistenten Nachrichten
- * UPDATE: Punkte-System für alle Spieler
- * UPDATE: Timer-Fix für erste Frage
- * UPDATE: Kein Chat für Competitive Mode
- * UPDATE: Spielmodus-Karten füllen jetzt die komplette äußere Box aus (korrigiert)
- *
- * WICHTIGE ÄNDERUNG: Diese Komponente verwendet jetzt den zentralen DataManager,
- * um konsistente Datenverwendung in der gesamten Anwendung zu gewährleisten.
- * Mock-Daten werden automatisch geladen, wenn localStorage leer ist.
- *
- * Spielmodi:
- * - 'cooperative': Kooperatives Lernen mit anderen Studierenden
- * - 'competitive': Wettbewerbsmodus mit Zeitdruck
- * - 'single-player': Individuelles Lernen ohne Zeitdruck
- *
+ * Zentrale Quiz-Steuerung mit verschiedenen Spielmodi und Multiplayer-Unterstützung.
  * @author Projektteam IU Community Quiz
  * @version 1.8.1
- * @since 2025-07-15
  */
 
 import React, { useState, useEffect, useCallback } from 'react';
@@ -40,11 +12,33 @@ import dataManager from '../../data/dataManager';
 import simulatedPlayersService from '../../services/SimulatedPlayersService';
 
 /**
- * QuizMain-Komponente - Hauptsteuerung des Quiz-Systems
+ * QuizMain - Zentrale Quiz-Steuerung mit Multiplayer-Unterstützung
  *
- * @param {Object} props - Komponenteneigenschaften
+ * Diese Komponente verwaltet den gesamten Quiz-Ablauf und stellt verschiedene
+ * Spielmodi mit umfangreichen Konfigurationsmöglichkeiten bereit.
+ *
+ * Hauptfunktionen:
+ * - Drei Spielmodi: Kooperativ, Kompetitiv und Einzelspieler
+ * - Konfigurierbare Fragenanzahl (1-20 Fragen)
+ * - Dynamische Kategorienauswahl aus verfügbaren Lernkarten
+ * - Integration mit dem zentralen DataManager für konsistente Datenverwaltung
+ * - Simulation von Mitspielern mit realistischem Verhalten
+ * - Live-Chat für kooperativen Modus mit persistenten Nachrichten
+ * - Punktesystem für alle Spieler mit Echtzeitaktualisierung
+ * - Timer-basierte Fragenanzeige mit korrekter Initialisierung
+ * - Responsive Benutzeroberfläche für alle Endgeräte
+ *
+ * Spielmodi:
+ * - cooperative: Kooperatives Lernen mit anderen Studierenden und Live-Chat
+ * - competitive: Wettbewerbsmodus mit Zeitdruck ohne Chat
+ * - single-player: Individuelles Lernen ohne Zeitdruck
+ *
+ * @function QuizMain
+ * @param {Object} props - Component properties
  * @param {Object} props.user - Benutzerdaten
- * @returns {JSX.Element} Die gerenderte QuizMain-Komponente
+ * @returns {React.ReactElement} Die gerenderte QuizMain-Komponente
+ * @example
+ * <QuizMain user={currentUser} />
  */
 function QuizMain({ user }) {
     const [currentStep, setCurrentStep] = useState('mode');

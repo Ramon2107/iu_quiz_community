@@ -1,16 +1,7 @@
 /**
- * Hauptkomponente der IU Quiz-Anwendung
- *
- * UPDATE: Login-System implementiert - Zugriff nur für authentifizierte Benutzer
- * UPDATE: Sichere Authentifizierung mit Input-Validierung
- * UPDATE: Benutzer-Session-Management
- * UPDATE: Community-Funktionalität hinzugefügt (Demo-Prototyp)
- * UPDATE: Verbesserte Layout-Struktur mit automatischer Anpassung des Inhaltsbereichs
- * 
- * Das Layout verwendet eine Flexbox-Struktur, um sicherzustellen, dass der Footer
- * außerhalb des sichtbaren Bereichs bleibt, bis der Benutzer nach unten scrollt.
- * Der Inhaltsbereich (.main-content) dehnt sich automatisch aus, um den verfügbaren
- * Platz zu füllen und den Footer nach unten zu drücken.
+ * Hauptanwendungskomponente mit Authentifizierung und Navigation.
+ * @author Projektteam IU Community Quiz
+ * @version 1.0.0
  */
 
 import React, { useState, useEffect } from 'react';
@@ -30,16 +21,24 @@ import Community from './components/community/Community';
 import dataManager from './data/dataManager';
 
 /**
- * Hauptanwendungskomponente mit Login-Schutz
- * 
- * Diese Komponente steuert den gesamten Anwendungsfluss und verwaltet:
- * - Benutzerauthentifizierung und Session-Management
- * - Navigation zwischen verschiedenen Ansichten
- * - Zentrale Datenverwaltung und -initialisierung
- * - Responsive Layout-Struktur mit Header, Inhaltsbereich und Footer
+ * App - Hauptanwendungskomponente mit Login-Schutz und Session-Management
  *
- * @returns {JSX.Element} Die gerenderte App-Komponente mit entsprechender Ansicht
- * basierend auf dem Authentifizierungsstatus
+ * Diese Komponente steuert den gesamten Anwendungsfluss und implementiert:
+ * - Benutzerauthentifizierung mit sicherer Input-Validierung
+ * - Session-Management über localStorage
+ * - Navigation zwischen verschiedenen Ansichten (Home, Quiz, Community, Admin, Profil)
+ * - Zentrale Datenverwaltung und -initialisierung über den dataManager
+ * - Responsive Layout-Struktur mit Header, Hauptinhaltsbereich und Footer
+ * - Community-Funktionalität mit Kooperationsmodus
+ *
+ * Das Layout verwendet eine Flexbox-Struktur, bei der der Inhaltsbereich (.main-content)
+ * sich automatisch ausdehnt und den Footer nach unten drückt, sodass dieser außerhalb des
+ * initialen Sichtbereichs liegt.
+ *
+ * @function App
+ * @returns {React.ReactElement} Die gerenderte App-Komponente
+ * @example
+ * <App />
  */
 function App() {
     const [currentView, setCurrentView] = useState('home');
@@ -47,7 +46,14 @@ function App() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
 
     /**
-     * Überprüft beim App-Start, ob Benutzer bereits angemeldet ist
+     * Initialisierungs-Effect beim App-Start
+     *
+     * Prüft ob eine bestehende Benutzer-Session im localStorage existiert
+     * und stellt diese wieder her. Zusätzlich wird sichergestellt, dass
+     * Mock-Daten geladen sind, falls die Datenbank leer ist.
+     *
+     * @function useEffect
+     * @inner
      */
     useEffect(() => {
         console.log('App: Initialisiere Anwendung...');
@@ -79,8 +85,15 @@ function App() {
     }, []);
 
     /**
-     * Behandelt erfolgreiche Anmeldung
-     * @param {Object} userData - Benutzerdaten
+     * Handler für erfolgreiche Benutzeranmeldung
+     *
+     * Speichert die Benutzerdaten im State und localStorage,
+     * um die Session über Seitenneuladungen hinweg zu persistieren.
+     *
+     * @function handleLogin
+     * @inner
+     * @param {Object} userData - Benutzerdaten-Objekt (name, email, role, etc.)
+     * @returns {void}
      */
     const handleLogin = (userData) => {
         console.log('App: Benutzer angemeldet:', userData.name);
@@ -92,7 +105,14 @@ function App() {
     };
 
     /**
-     * Behandelt Abmeldung
+     * Handler für Benutzerabmeldung
+     *
+     * Entfernt die Benutzerdaten aus dem State und localStorage,
+     * setzt den Auth-Status zurück und navigiert zur Home-Seite.
+     *
+     * @function handleLogout
+     * @inner
+     * @returns {void}
      */
     const handleLogout = () => {
         console.log('App: Benutzer abgemeldet');

@@ -2,22 +2,35 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: data/dataManager.js</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>data/dataManager.js - Documentation</title>
 
-    <script src="scripts/prettify/prettify.js"> </script>
-    <script src="scripts/prettify/lang-css.js"> </script>
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
     <!--[if lt IE 9]>
       <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
     <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
 </head>
-
 <body>
 
-<div id="main">
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
 
-    <h1 class="page-title">Source: data/dataManager.js</h1>
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <li class="nav-link nav-home-link"><a href="index.html">Home</a></li><li class="nav-heading">Classes</li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="DataManager.html">DataManager</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.archiveCard">archiveCard</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.deleteCard">deleteCard</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.deleteCategory">deleteCategory</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.exportData">exportData</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.extractTagsFromQuestion">extractTagsFromQuestion</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.getAllCards">getAllCards</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.getAllCategories">getAllCategories</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.getAvailableRoles">getAvailableRoles</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.getCardStatus">getCardStatus</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.getCardStatusInfo">getCardStatusInfo</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.getCardsByCategory">getCardsByCategory</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.getCardsByCategoryName">getCardsByCategoryName</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.getCardsByStatus">getCardsByStatus</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.getCategoriesForQuiz">getCategoriesForQuiz</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.getCategoryIdByName">getCategoryIdByName</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.getCurrentUserRole">getCurrentUserRole</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.getQuestionsForQuiz">getQuestionsForQuiz</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.getRoleInfo">getRoleInfo</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.getUniqueAuthors">getUniqueAuthors</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.hasPermission">hasPermission</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.importData">importData</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.initializeData">initializeData</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.isModerator">isModerator</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.isPrivilegedUser">isPrivilegedUser</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.loadMockCategories">loadMockCategories</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.loadMockQuestions">loadMockQuestions</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.markCardForReview">markCardForReview</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.reactivateCard">reactivateCard</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.reloadMockData">reloadMockData</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.resetAllData">resetAllData</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.saveCard">saveCard</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.saveCategory">saveCategory</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.searchCards">searchCards</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.setCardStatus">setCardStatus</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.setCurrentUserRole">setCurrentUserRole</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.updateCard">updateCard</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.updateCategory">updateCategory</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.updateCategoryCardCounts">updateCategoryCardCounts</a></span></li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="SimulatedPlayersService.html">SimulatedPlayersService</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="SimulatedPlayersService.html#.calculateFinalRanking">calculateFinalRanking</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="SimulatedPlayersService.html#.calculatePerformanceRating">calculatePerformanceRating</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="SimulatedPlayersService.html#.generateCompetitiveUpdates">generateCompetitiveUpdates</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="SimulatedPlayersService.html#.generateCooperativeMessages">generateCooperativeMessages</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="SimulatedPlayersService.html#.generateLiveComments">generateLiveComments</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="SimulatedPlayersService.html#.getActivePlayers">getActivePlayers</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="SimulatedPlayersService.html#.getPlayerStatistics">getPlayerStatistics</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="SimulatedPlayersService.html#.getRandomWrongAnswer">getRandomWrongAnswer</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="SimulatedPlayersService.html#.initializePlayers">initializePlayers</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="SimulatedPlayersService.html#.reset">reset</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="SimulatedPlayersService.html#.simulatePlayerAnswer">simulatePlayerAnswer</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="SimulatedPlayersService.html#.simulatePlayerAnswers">simulatePlayerAnswers</a></span></li><li class="nav-heading">Namespaces</li><li class="nav-heading"><span class="nav-item-type type-namespace">N</span><span class="nav-item-name"><a href="Data.Mockdata.html">Mockdata</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Data.Mockdata.html#.getCategoriesWithCardCount">getCategoriesWithCardCount</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Data.Mockdata.html#.getCategoryById">getCategoryById</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Data.Mockdata.html#.getQuestionById">getQuestionById</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Data.Mockdata.html#.getQuestionsByCategory">getQuestionsByCategory</a></span></li><li class="nav-heading"><span class="nav-item-type type-namespace">N</span><span class="nav-item-name"><a href="Utils.Security.html">Security</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Utils.Security.html#.sanitizeAttribute">sanitizeAttribute</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Utils.Security.html#.sanitizeHtml">sanitizeHtml</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Utils.Security.html#.sanitizeInput">sanitizeInput</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Utils.Security.html#.sanitizeUrlParam">sanitizeUrlParam</a></span></li><li class="nav-heading"><a href="global.html">Globals</a></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#App">App</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#CardManager">CardManager</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#Community">Community</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#CooperativeLobby">CooperativeLobby</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#Footer">Footer</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#Header">Header</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#HomePage">HomePage</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#Imprint">Imprint</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#LiveChat">LiveChat</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#LoginForm">LoginForm</a></span></li><li class="nav-item"><span class="nav-item-type type-member">M</span><span class="nav-item-name"><a href="global.html#MOCK_USERS">MOCK_USERS</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#PointsInfo">PointsInfo</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#PrivacyPolicy">PrivacyPolicy</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#QuestionEditor">QuestionEditor</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#QuizCategorySelector">QuizCategorySelector</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#QuizMain">QuizMain</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#QuizQuestio">QuizQuestio</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#QuizResults">QuizResults</a></span></li><li class="nav-item"><span class="nav-item-type type-member">M</span><span class="nav-item-name"><a href="global.html#SIMULATED_PLAYERS">SIMULATED_PLAYERS</a></span></li><li class="nav-item"><span class="nav-item-type type-member">M</span><span class="nav-item-name"><a href="global.html#SecurityUtils">SecurityUtils</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#UserProfile">UserProfile</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html">handleLogin</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html">handleLogout</a></span></li><li class="nav-item"><span class="nav-item-type type-member">M</span><span class="nav-item-name"><a href="global.html#mockCategories">mockCategories</a></span></li><li class="nav-item"><span class="nav-item-type type-member">M</span><span class="nav-item-name"><a href="global.html#mockQuestions">mockQuestions</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#render">render</a></span></li><li class="nav-item"><span class="nav-item-type type-member">M</span><span class="nav-item-name"><a href="global.html#root">root</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html">useEffect</a></span></li>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">data/dataManager.js</h1>
+    
 
     
 
@@ -27,31 +40,44 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>/**
- * Zentraler Datenmanager für die gesamte Anwendung
+ * DataManager - Zentrale Datenverwaltung für Quiz-Kategorien und Fragen
  *
- * KORRIGIERT: Mock-Daten werden jetzt garantiert geladen
- * WICHTIG: Kleine Änderungen für sofortige Funktionalität
+ * Diese Klasse verwaltet alle Quiz-Kategorien und -Fragen im localStorage
+ * und bietet umfassende CRUD-Operationen, Such- und Filterfunktionen sowie
+ * Status-Management und rollenbasierte Zugriffskontrolle.
+ *
+ * @class DataManager
+ * @author Projektteam IU Community Quiz
+ * @version 1.1.1
  */
 
 import { mockCategories, mockQuestions } from './mockData';
 
-/**
- * Zentraler Datenmanager
- */
 class DataManager {
+  /**
+   * Konstruktor - Initialisiert den DataManager und lädt initiale Daten
+   *
+   * @constructor
+   */
   constructor() {
     this.initializeData();
   }
 
   /**
    * Initialisiert die Daten beim ersten Start
-   * KORRIGIERT: Erzwingt das Laden der Mock-Daten wenn localStorage leer ist
+   *
+   * Erzwingt das Laden der Mock-Daten wenn localStorage leer ist
+   * und überprüft die Konsistenz der geladenen Daten.
+   *
+   * @method initializeData
+   * @memberof DataManager
+   * @returns {void}
    */
   initializeData() {
     const existingCategories = localStorage.getItem('quiz-categories');
     const existingCards = localStorage.getItem('quiz-cards');
 
-    // KORRIGIERT: Sofortiges Laden der Mock-Daten bei fehlenden Daten
+    // Sofortiges Laden der Mock-Daten bei fehlenden Daten
     if (!existingCategories || JSON.parse(existingCategories || '[]').length === 0) {
       console.log('DataManager: Lade Mock-Kategorien...');
       this.loadMockCategories();
@@ -62,7 +88,7 @@ class DataManager {
       this.loadMockQuestions();
     }
 
-    // KORRIGIERT: Daten nach dem Laden nochmal prüfen
+    // Daten nach dem Laden nochmal prüfen
     const finalCategories = this.getAllCategories();
     const finalCards = this.getAllCards();
     console.log('DataManager: Finale Kategorien:', finalCategories.length);
@@ -70,8 +96,19 @@ class DataManager {
   }
 
   /**
-   * Lädt die Mock-Kategorien
-   * KORRIGIERT: Bessere Fehlerbehandlung
+   * Lädt die Mock-Kategorien in den localStorage
+   *
+   * Diese Methode importiert die vordefinierte Mock-Kategorien aus mockData.js,
+   * konvertiert sie in das interne Datenformat und speichert sie im localStorage.
+   * Jede Kategorie erhält standardmäßig einen System-Autor, ein Erstellungsdatum
+   * und eine initiale Kartenanzahl von 0.
+   *
+   * @method loadMockCategories
+   * @memberof DataManager
+   * @returns {Array&lt;Object>} Array mit den geladenen und konvertierten Kategorien, oder leeres Array bei Fehler
+   * @example
+   * const categories = dataManager.loadMockCategories();
+   * console.log(categories.length); // Anzahl der geladenen Kategorien
    */
   loadMockCategories() {
     try {
@@ -100,8 +137,19 @@ class DataManager {
   }
 
   /**
-   * Lädt die Mock-Fragen
-   * KORRIGIERT: Bessere Fehlerbehandlung und Kategorie-Zuordnung
+   * Lädt die Mock-Fragen in den localStorage
+   *
+   * Diese Methode importiert die vordefinierten Mock-Fragen aus mockData.js,
+   * ordnet sie den entsprechenden Kategorien zu und speichert sie im localStorage.
+   * Jede Frage wird in das interne Format konvertiert, Tags werden automatisch
+   * aus dem Fragetext extrahiert, und die Kartenanzahl in den Kategorien wird aktualisiert.
+   *
+   * @method loadMockQuestions
+   * @memberof DataManager
+   * @returns {Array&lt;Object>} Array mit den geladenen und konvertierten Fragen, oder leeres Array bei Fehler
+   * @example
+   * const questions = dataManager.loadMockQuestions();
+   * console.log(questions.length); // Anzahl der geladenen Fragen
    */
   loadMockQuestions() {
     try {
@@ -141,7 +189,19 @@ class DataManager {
   }
 
   /**
-   * Hilfsfunktion: Extrahiert Tags aus einer Frage
+   * Extrahiert relevante Tags aus dem Fragetext
+   *
+   * Diese Hilfsmethode durchsucht den Fragetext nach vordefinierten Schlüsselwörtern
+   * und erstellt automatisch eine Liste relevanter Tags. Dies erleichtert das spätere
+   * Filtern und Suchen von Fragen nach bestimmten Themenbereichen.
+   *
+   * @method extractTagsFromQuestion
+   * @memberof DataManager
+   * @param {string} question - Der Fragetext, aus dem Tags extrahiert werden sollen
+   * @returns {Array&lt;string>} Array mit den gefundenen Tags (Schlüsselwörter aus der Frage)
+   * @example
+   * const tags = dataManager.extractTagsFromQuestion("Was ist OOP?");
+   * console.log(tags); // ['OOP']
    */
   extractTagsFromQuestion(question) {
     const keywords = ['OOP', 'SQL', 'HTTP', 'HTTPS', 'Algorithmus', 'Datenbank', 'Netzwerk', 'agile', 'Klasse', 'Objekt', 'LIFO', 'Stack', 'Zeitkomplexität', 'Primärschlüssel', 'Topologie', 'Softwareentwicklung'];
@@ -157,8 +217,21 @@ class DataManager {
   }
 
   /**
-   * Hilfsfunktion: Findet Kategorie-ID basierend auf Name
-   * KORRIGIERT: Bessere Kategorie-Zuordnung
+   * Findet die Kategorie-ID basierend auf dem Kategorienamen
+   *
+   * Diese Hilfsmethode sucht in der übergebenen Kategorienliste nach einer Kategorie
+   * mit dem angegebenen Namen (Groß-/Kleinschreibung wird ignoriert). Falls keine
+   * passende Kategorie gefunden wird, wird die ID der ersten verfügbaren Kategorie
+   * als Fallback zurückgegeben.
+   *
+   * @method getCategoryIdByName
+   * @memberof DataManager
+   * @param {string} categoryName - Der Name der gesuchten Kategorie
+   * @param {Array&lt;Object>} categories - Array mit Kategorie-Objekten zum Durchsuchen
+   * @returns {string} Die ID der gefundenen Kategorie oder der ersten Kategorie als Fallback
+   * @example
+   * const id = dataManager.getCategoryIdByName('Programmierung', categories);
+   * console.log(id); // 'cat1'
    */
   getCategoryIdByName(categoryName, categories) {
     const category = categories.find(cat =>
@@ -176,6 +249,18 @@ class DataManager {
 
   /**
    * Aktualisiert die Kartenanzahl in allen Kategorien
+   *
+   * Diese Methode durchläuft alle Kategorien und zählt die zugehörigen Karten,
+   * um die cardCount-Eigenschaft jeder Kategorie zu aktualisieren. Dies ist wichtig
+   * für die korrekte Anzeige der Kartenanzahl in der Benutzeroberfläche.
+   * Wird automatisch nach dem Hinzufügen, Ändern oder Löschen von Karten aufgerufen.
+   *
+   * @method updateCategoryCardCounts
+   * @memberof DataManager
+   * @returns {void}
+   * @example
+   * dataManager.updateCategoryCardCounts();
+   * // Alle Kategorien haben nun die korrekte cardCount-Eigenschaft
    */
   updateCategoryCardCounts() {
     const categories = this.getAllCategories();
@@ -191,7 +276,15 @@ class DataManager {
   }
 
   /**
-   * Gibt alle Kategorien zurück
+   * Gibt alle Kategorien aus der Datenbank zurück
+   *
+   * Diese Methode liest alle gespeicherten Kategorien aus dem localStorage
+   * und gibt sie als Array zurück. Falls keine Kategorien gefunden werden,
+   * wird ein leeres Array zurückgegeben.
+   *
+   * @method getAllCategories
+   * @memberof DataManager
+   * @returns {Array&lt;Object>} Array mit allen Kategorien oder leeres Array, wenn keine vorhanden sind
    */
   getAllCategories() {
     const storedCategories = localStorage.getItem('quiz-categories');
@@ -199,7 +292,15 @@ class DataManager {
   }
 
   /**
-   * Gibt alle Karten zurück
+   * Gibt alle Karten (Fragen) aus der Datenbank zurück
+   *
+   * Diese Methode liest alle gespeicherten Karten aus dem localStorage
+   * und gibt sie als Array zurück. Falls keine Karten gefunden werden,
+   * wird ein leeres Array zurückgegeben.
+   *
+   * @method getAllCards
+   * @memberof DataManager
+   * @returns {Array&lt;Object>} Array mit allen Karten oder leeres Array, wenn keine vorhanden sind
    */
   getAllCards() {
     const storedCards = localStorage.getItem('quiz-cards');
@@ -207,7 +308,16 @@ class DataManager {
   }
 
   /**
-   * Gibt Karten einer bestimmten Kategorie zurück
+   * Gibt alle Karten einer bestimmten Kategorie zurück
+   *
+   * Diese Methode filtert alle Karten nach der angegebenen Kategorie-ID
+   * und gibt nur die Karten zurück, die zu dieser Kategorie gehören.
+   * Dies ist nützlich für die kategoriebasierte Navigation und Anzeige.
+   *
+   * @method getCardsByCategory
+   * @memberof DataManager
+   * @param {string} categoryId - ID der Kategorie, deren Karten zurückgegeben werden sollen
+   * @returns {Array&lt;Object>} Array mit allen Karten der angegebenen Kategorie oder leeres Array, wenn keine gefunden wurden
    */
   getCardsByCategory(categoryId) {
     const allCards = this.getAllCards();
@@ -215,7 +325,17 @@ class DataManager {
   }
 
   /**
-   * Gibt Karten einer bestimmten Kategorie nach Namen zurück (für Kompatibilität)
+   * Gibt alle Karten einer bestimmten Kategorie anhand des Kategorienamens zurück
+   *
+   * Diese Methode sucht zunächst die Kategorie anhand ihres Namens und filtert dann
+   * alle Karten nach der gefundenen Kategorie-ID. Dies ist eine Hilfsmethode für
+   * ältere Komponenten, die noch mit Kategorienamen statt IDs arbeiten.
+   *
+   * @method getCardsByCategoryName
+   * @memberof DataManager
+   * @param {string} categoryName - Name der Kategorie, deren Karten zurückgegeben werden sollen
+   * @returns {Array&lt;Object>} Array mit allen Karten der angegebenen Kategorie oder leeres Array,
+   * wenn keine Kategorie mit diesem Namen gefunden wurde oder keine Karten vorhanden sind
    */
   getCardsByCategoryName(categoryName) {
     const allCards = this.getAllCards();
@@ -228,7 +348,23 @@ class DataManager {
   }
 
   /**
-   * Speichert eine neue Kategorie
+   * Speichert eine neue Kategorie in der Datenbank
+   *
+   * Diese Methode erstellt eine neue Kategorie mit einer eindeutigen ID,
+   * fügt sie zur Liste der vorhandenen Kategorien hinzu und speichert
+   * die aktualisierte Liste im localStorage.
+   *
+   * @method saveCategory
+   * @memberof DataManager
+   * @param {Object} category - Die zu speichernde Kategorie
+   * @param {string} [category.id] - Optionale ID (wird generiert, falls nicht vorhanden)
+   * @param {string} category.name - Name der Kategorie
+   * @param {string} category.description - Beschreibung der Kategorie
+   * @param {string} category.icon - Icon der Kategorie (FontAwesome-Klasse)
+   * @param {string} category.color - Farbschema der Kategorie
+   * @param {boolean} [category.isPublic=true] - Gibt an, ob die Kategorie öffentlich ist
+   * @param {Array} [category.collaborators=[]] - Liste der Mitarbeiter
+   * @returns {Object} Die neu erstellte Kategorie mit generierter ID und Zeitstempel
    */
   saveCategory(category) {
     const categories = this.getAllCategories();
@@ -246,7 +382,27 @@ class DataManager {
   }
 
   /**
-   * Speichert eine neue Karte
+   * Speichert eine neue Karte (Frage) in der Datenbank
+   *
+   * Diese Methode erstellt eine neue Karte mit einer eindeutigen ID,
+   * fügt sie zur Liste der vorhandenen Karten hinzu und speichert
+   * die aktualisierte Liste im localStorage. Außerdem wird die
+   * Kartenanzahl in den zugehörigen Kategorien aktualisiert.
+   *
+   * @method saveCard
+   * @memberof DataManager
+   * @param {Object} card - Die zu speichernde Karte
+   * @param {string} [card.id] - Optionale ID (wird generiert, falls nicht vorhanden)
+   * @param {string} card.categoryId - ID der Kategorie, zu der die Karte gehört
+   * @param {string} card.question - Fragetext der Karte
+   * @param {string[]} card.answers - Array mit Antwortmöglichkeiten
+   * @param {number} card.correctAnswer - Index der richtigen Antwort
+   * @param {string} card.difficulty - Schwierigkeitsgrad der Frage
+   * @param {string} [card.explanation=''] - Erklärung zur richtigen Antwort
+   * @param {string|string[]} [card.tags=[]] - Tags für die Karte (als String oder Array)
+   * @param {string} [card.author] - Autor der Karte
+   * @param {boolean} [card.isPublic=true] - Gibt an, ob die Karte öffentlich ist
+   * @returns {Object} Die neu erstellte Karte mit generierter ID und Zeitstempel
    */
   saveCard(card) {
     const cards = this.getAllCards();
@@ -268,8 +424,19 @@ class DataManager {
   }
 
   /**
-   * Konvertiert Daten für QuizMain-Kompatibilität
-   * KORRIGIERT: Bessere Fehlerbehandlung
+   * Konvertiert Karten in das für QuizMain benötigte Format
+   *
+   * Diese Methode transformiert die internen Kartendaten in ein Format, das von der
+   * QuizMain-Komponente verwendet werden kann. Dabei wird die Kategorie-ID durch den
+   * Kategorienamen ersetzt und die Datenstruktur vereinfacht. Dies sorgt für
+   * Abwärtskompatibilität mit älteren Komponenten.
+   *
+   * @method getQuestionsForQuiz
+   * @memberof DataManager
+   * @returns {Array&lt;Object>} Array mit konvertierten Fragen im QuizMain-Format
+   * @example
+   * const questions = dataManager.getQuestionsForQuiz();
+   * console.log(questions[0].category); // 'Programmierung' (Name statt ID)
    */
   getQuestionsForQuiz() {
     const cards = this.getAllCards();
@@ -294,8 +461,19 @@ class DataManager {
   }
 
   /**
-   * Konvertiert Kategorien für QuizMain-Kompatibilität
-   * KORRIGIERT: Bessere Icon-Behandlung
+   * Konvertiert Kategorien in das für QuizMain benötigte Format
+   *
+   * Diese Methode transformiert die internen Kategoriedaten in ein vereinfachtes Format
+   * für die QuizMain-Komponente. Dabei werden FontAwesome-Icon-Präfixe ('fas fa-') entfernt,
+   * um nur den Icon-Namen zu liefern. Dies sorgt für Abwärtskompatibilität und
+   * vereinfacht die Verwendung in der Benutzeroberfläche.
+   *
+   * @method getCategoriesForQuiz
+   * @memberof DataManager
+   * @returns {Array&lt;Object>} Array mit konvertierten Kategorien im vereinfachten Format
+   * @example
+   * const categories = dataManager.getCategoriesForQuiz();
+   * console.log(categories[0].icon); // 'code' (ohne 'fas fa-' Präfix)
    */
   getCategoriesForQuiz() {
     const categories = this.getAllCategories();
@@ -311,7 +489,15 @@ class DataManager {
   }
 
   /**
-   * Gibt eindeutige Autoren zurück
+   * Gibt eine Liste aller eindeutigen Autoren im System zurück
+   *
+   * Diese Methode sammelt alle Autoren aus Karten und Kategorien,
+   * entfernt Duplikate und gibt eine Liste mit eindeutigen Autorennamen zurück.
+   * Dies ist nützlich für Filteroptionen in der Benutzeroberfläche.
+   *
+   * @method getUniqueAuthors
+   * @memberof DataManager
+   * @returns {Array&lt;string>} Array mit eindeutigen Autorennamen
    */
   getUniqueAuthors() {
     const cards = this.getAllCards();
@@ -324,7 +510,17 @@ class DataManager {
   }
 
   /**
-   * Sucht nach Karten basierend auf Suchbegriff
+   * Sucht nach Karten basierend auf Suchbegriff und optionalem Autor-Filter
+   *
+   * Diese Methode durchsucht alle Karten nach dem angegebenen Suchbegriff
+   * in Fragen und Tags. Zusätzlich kann nach einem bestimmten Autor gefiltert werden.
+   * Die Suche ist unabhängig von Groß- und Kleinschreibung.
+   *
+   * @method searchCards
+   * @memberof DataManager
+   * @param {string} searchTerm - Suchbegriff für die Filterung (leerer String gibt alle Karten zurück)
+   * @param {string} [authorFilter='all'] - Optionaler Filter für den Autor ('all' für alle Autoren)
+   * @returns {Array&lt;Object>} Array mit den gefilterten Karten, die den Suchkriterien entsprechen
    */
   searchCards(searchTerm, authorFilter = 'all') {
     const cards = this.getAllCards();
@@ -339,7 +535,23 @@ class DataManager {
   }
 
   /**
-   * Aktualisiert eine bestehende Kategorie
+   * Aktualisiert eine bestehende Kategorie in der Datenbank
+   *
+   * Diese Methode sucht eine Kategorie anhand ihrer ID und aktualisiert
+   * ihre Eigenschaften mit den übergebenen Werten. Die aktualisierte
+   * Kategorienliste wird dann im localStorage gespeichert.
+   *
+   * @method updateCategory
+   * @memberof DataManager
+   * @param {string} categoryId - ID der zu aktualisierenden Kategorie
+   * @param {Object} updates - Objekt mit den zu aktualisierenden Eigenschaften
+   * @param {string} [updates.name] - Neuer Name der Kategorie
+   * @param {string} [updates.description] - Neue Beschreibung der Kategorie
+   * @param {string} [updates.icon] - Neues Icon der Kategorie
+   * @param {string} [updates.color] - Neues Farbschema der Kategorie
+   * @param {boolean} [updates.isPublic] - Neuer Wert für die Öffentlichkeit
+   * @param {Array} [updates.collaborators] - Neue Liste der Mitarbeiter
+   * @returns {Object|undefined} Die aktualisierte Kategorie oder undefined, wenn keine Kategorie mit der ID gefunden wurde
    */
   updateCategory(categoryId, updates) {
     const categories = this.getAllCategories();
@@ -352,7 +564,27 @@ class DataManager {
   }
 
   /**
-   * Aktualisiert eine bestehende Karte
+   * Aktualisiert eine bestehende Karte (Frage) in der Datenbank
+   *
+   * Diese Methode sucht eine Karte anhand ihrer ID und aktualisiert
+   * ihre Eigenschaften mit den übergebenen Werten. Die aktualisierte
+   * Kartenliste wird dann im localStorage gespeichert. Zusätzlich wird
+   * die Kartenanzahl in den Kategorien aktualisiert, falls sich die
+   * Kategorie-Zuordnung geändert hat.
+   *
+   * @method updateCard
+   * @memberof DataManager
+   * @param {string} cardId - ID der zu aktualisierenden Karte
+   * @param {Object} updates - Objekt mit den zu aktualisierenden Eigenschaften
+   * @param {string} [updates.categoryId] - Neue Kategorie-ID
+   * @param {string} [updates.question] - Neuer Fragetext
+   * @param {string[]} [updates.answers] - Neue Antwortmöglichkeiten
+   * @param {number} [updates.correctAnswer] - Neuer Index der richtigen Antwort
+   * @param {string} [updates.difficulty] - Neuer Schwierigkeitsgrad
+   * @param {string} [updates.explanation] - Neue Erklärung
+   * @param {string|string[]} [updates.tags] - Neue Tags
+   * @param {boolean} [updates.isPublic] - Neuer Wert für die Öffentlichkeit
+   * @returns {Object|undefined} Die aktualisierte Karte oder undefined, wenn keine Karte mit der ID gefunden wurde
    */
   updateCard(cardId, updates) {
     const cards = this.getAllCards();
@@ -366,7 +598,17 @@ class DataManager {
   }
 
   /**
-   * Löscht eine Kategorie
+   * Löscht eine Kategorie und alle zugehörigen Karten aus der Datenbank
+   *
+   * Diese Methode entfernt eine Kategorie anhand ihrer ID aus der Datenbank.
+   * Zusätzlich werden alle Karten, die dieser Kategorie zugeordnet sind,
+   * ebenfalls gelöscht, um Konsistenz zu gewährleisten und verwaiste
+   * Karten zu vermeiden.
+   *
+   * @method deleteCategory
+   * @memberof DataManager
+   * @param {string} categoryId - ID der zu löschenden Kategorie
+   * @returns {boolean} true, wenn die Löschung erfolgreich war
    */
   deleteCategory(categoryId) {
     const categories = this.getAllCategories();
@@ -384,7 +626,16 @@ class DataManager {
   }
 
   /**
-   * Löscht eine Karte
+   * Löscht eine Karte (Frage) aus der Datenbank
+   *
+   * Diese Methode entfernt eine Karte anhand ihrer ID aus der Datenbank.
+   * Nach dem Löschen wird die Kartenanzahl in den Kategorien aktualisiert,
+   * um die Konsistenz der Daten zu gewährleisten.
+   *
+   * @method deleteCard
+   * @memberof DataManager
+   * @param {string} cardId - ID der zu löschenden Karte
+   * @returns {boolean} true, wenn die Löschung erfolgreich war
    */
   deleteCard(cardId) {
     const cards = this.getAllCards();
@@ -395,7 +646,18 @@ class DataManager {
   }
 
   /**
-   * Lädt Mock-Daten neu (für Debugging)
+   * Lädt alle Mock-Daten neu
+   *
+   * Diese Methode lädt sowohl die Mock-Kategorien als auch die Mock-Fragen neu.
+   * Nützlich für Debugging-Zwecke oder wenn die Daten zurückgesetzt werden sollen,
+   * ohne den gesamten localStorage zu löschen.
+   *
+   * @method reloadMockData
+   * @memberof DataManager
+   * @returns {void}
+   * @example
+   * dataManager.reloadMockData();
+   * console.log('Mock-Daten wurden neu geladen');
    */
   reloadMockData() {
     console.log('DataManager: Lade Mock-Daten neu...');
@@ -404,7 +666,18 @@ class DataManager {
   }
 
   /**
-   * Setzt alle Daten zurück
+   * Setzt alle Daten auf den Ausgangszustand zurück
+   *
+   * Diese Methode löscht alle gespeicherten Kategorien und Karten aus dem localStorage
+   * und initialisiert die Daten neu. Dadurch werden alle benutzerdefinierten Änderungen
+   * entfernt und die ursprünglichen Mock-Daten wiederhergestellt.
+   *
+   * @method resetAllData
+   * @memberof DataManager
+   * @returns {void}
+   * @example
+   * dataManager.resetAllData();
+   * console.log('Alle Daten wurden zurückgesetzt');
    */
   resetAllData() {
     localStorage.removeItem('quiz-categories');
@@ -413,7 +686,19 @@ class DataManager {
   }
 
   /**
-   * Exportiert alle Daten als JSON
+   * Exportiert alle Daten als JSON-Objekt
+   *
+   * Diese Methode erstellt ein vollständiges Export-Objekt mit allen Kategorien
+   * und Karten sowie einem Zeitstempel. Das Ergebnis kann für Backups oder
+   * Datenübertragungen verwendet werden.
+   *
+   * @method exportData
+   * @memberof DataManager
+   * @returns {Object} Export-Objekt mit categories, cards und exportDate
+   * @example
+   * const backup = dataManager.exportData();
+   * const json = JSON.stringify(backup);
+   * // json kann nun gespeichert oder übertragen werden
    */
   exportData() {
     return {
@@ -424,7 +709,22 @@ class DataManager {
   }
 
   /**
-   * Importiert Daten aus JSON
+   * Importiert Daten aus einem JSON-Objekt
+   *
+   * Diese Methode nimmt ein Daten-Objekt entgegen und importiert die enthaltenen
+   * Kategorien und Karten in den localStorage. Bestehende Daten werden überschrieben.
+   * Nach dem Import wird die Kartenanzahl in den Kategorien aktualisiert.
+   *
+   * @method importData
+   * @memberof DataManager
+   * @param {Object} data - Import-Objekt mit categories und/oder cards
+   * @param {Array&lt;Object>} [data.categories] - Array mit zu importierenden Kategorien
+   * @param {Array&lt;Object>} [data.cards] - Array mit zu importierenden Karten
+   * @returns {void}
+   * @example
+   * const backup = JSON.parse(backupJson);
+   * dataManager.importData(backup);
+   * console.log('Daten wurden importiert');
    */
   importData(data) {
     if (data.categories) {
@@ -435,10 +735,261 @@ class DataManager {
     }
     this.updateCategoryCardCounts();
   }
+
+  /**
+   * Gibt den Status einer Karte zurück
+   *
+   * Mögliche Status: 'active', 'review', 'archived'
+   *
+   * @method getCardStatus
+   * @memberof DataManager
+   * @param {string} cardId - ID der Karte
+   * @returns {string} Status der Karte (default: 'active')
+   */
+  getCardStatus(cardId) {
+    const cardStatus = localStorage.getItem('quiz-card-status');
+    const statusMap = cardStatus ? JSON.parse(cardStatus) : {};
+    const cardInfo = statusMap[cardId];
+    return cardInfo ? cardInfo.status : 'active';
+  }
+
+  /**
+   * Setzt den Status einer Karte
+   *
+   * @method setCardStatus
+   * @memberof DataManager
+   * @param {string} cardId - ID der Karte
+   * @param {string} status - Neuer Status ('active', 'review', 'archived')
+   * @param {string} [reason=''] - Grund für die Statusänderung (optional)
+   * @returns {boolean} true, wenn erfolgreich
+   */
+  setCardStatus(cardId, status, reason = '') {
+    const cardStatus = localStorage.getItem('quiz-card-status');
+    const statusMap = cardStatus ? JSON.parse(cardStatus) : {};
+
+    statusMap[cardId] = {
+      status: status,
+      reason: reason,
+      timestamp: new Date().toISOString()
+    };
+
+    localStorage.setItem('quiz-card-status', JSON.stringify(statusMap));
+    return true;
+  }
+
+  /**
+   * Gibt alle Karten mit einem bestimmten Status zurück
+   *
+   * @method getCardsByStatus
+   * @memberof DataManager
+   * @param {string} status - Gewünschter Status ('active', 'review', 'archived')
+   * @returns {Array&lt;Object>} Array mit Karten des angegebenen Status
+   */
+  getCardsByStatus(status) {
+    const cards = this.getAllCards();
+    const cardStatus = localStorage.getItem('quiz-card-status');
+    const statusMap = cardStatus ? JSON.parse(cardStatus) : {};
+
+    return cards.filter(card => {
+      const cardStatusInfo = statusMap[card.id];
+      const cardCurrentStatus = cardStatusInfo ? cardStatusInfo.status : 'active';
+      return cardCurrentStatus === status;
+    });
+  }
+
+  /**
+   * Gibt vollständige Status-Informationen für eine Karte zurück
+   *
+   * @method getCardStatusInfo
+   * @memberof DataManager
+   * @param {string} cardId - ID der Karte
+   * @returns {Object|null} Status-Objekt mit status, reason, timestamp oder null
+   */
+  getCardStatusInfo(cardId) {
+    const cardStatus = localStorage.getItem('quiz-card-status');
+    const statusMap = cardStatus ? JSON.parse(cardStatus) : {};
+    return statusMap[cardId] || null;
+  }
+
+  /**
+   * Archiviert eine Karte (setzt Status auf 'archived')
+   *
+   * @method archiveCard
+   * @memberof DataManager
+   * @param {string} cardId - ID der Karte
+   * @param {string} [reason='Archiviert durch Nutzer'] - Grund für die Archivierung
+   * @returns {boolean} true, wenn erfolgreich
+   */
+  archiveCard(cardId, reason = 'Archiviert durch Nutzer') {
+    return this.setCardStatus(cardId, 'archived', reason);
+  }
+
+  /**
+   * Markiert eine Karte zur Überprüfung (setzt Status auf 'review')
+   *
+   * @method markCardForReview
+   * @memberof DataManager
+   * @param {string} cardId - ID der Karte
+   * @param {string} [reason='Zur Überprüfung markiert'] - Grund für die Überprüfung
+   * @returns {boolean} true, wenn erfolgreich
+   */
+  markCardForReview(cardId, reason = 'Zur Überprüfung markiert') {
+    return this.setCardStatus(cardId, 'review', reason);
+  }
+
+  /**
+   * Reaktiviert eine Karte (setzt Status auf 'active')
+   *
+   * @method reactivateCard
+   * @memberof DataManager
+   * @param {string} cardId - ID der Karte
+   * @returns {boolean} true, wenn erfolgreich
+   */
+  reactivateCard(cardId) {
+    return this.setCardStatus(cardId, 'active', 'Reaktiviert');
+  }
+
+  /**
+   * Rollenbasierte Funktionen
+   * Mockup-Implementierung für rollenbasierte Zugriffskontrolle
+   * Vorbereitet für spätere Backend-Integration
+   */
+
+  /**
+   * Gibt die aktuelle Benutzerrolle zurück (Mockup)
+   *
+   * In Produktionsumgebung würde dies vom Backend kommen.
+   *
+   * Verfügbare Rollen:
+   * - 'user': Standard-Nutzer (kann Fragen melden)
+   * - 'tutor': Erweiterte Rechte (kann Karten bearbeiten und Status ändern)
+   * - 'moderator': Vollzugriff (kann alles verwalten)
+   *
+   * @method getCurrentUserRole
+   * @memberof DataManager
+   * @returns {string} Aktuelle Rolle des Nutzers
+   */
+  getCurrentUserRole() {
+    const storedRole = localStorage.getItem('user-role');
+    return storedRole || 'user'; // Default: Standard-Nutzer
+  }
+
+  /**
+   * Setzt die Rolle des aktuellen Nutzers (nur für Mockup/Demo)
+   *
+   * In Produktion würde dies durch Backend-Authentifizierung erfolgen.
+   *
+   * @method setCurrentUserRole
+   * @memberof DataManager
+   * @param {string} role - Neue Rolle ('user', 'tutor', 'moderator')
+   * @returns {boolean} true, wenn erfolgreich
+   */
+  setCurrentUserRole(role) {
+    const validRoles = ['user', 'tutor', 'moderator'];
+    if (!validRoles.includes(role)) {
+      console.error('Ungültige Rolle:', role);
+      return false;
+    }
+    localStorage.setItem('user-role', role);
+    return true;
+  }
+
+  /**
+   * Prüft, ob der aktuelle Nutzer eine bestimmte Berechtigung hat
+   *
+   * Berechtigungen:
+   * - 'report': Fragen melden (alle Nutzer)
+   * - 'moderate': Karten bearbeiten und Status ändern (Tutor, Moderator)
+   * - 'delete': Karten löschen (nur Moderator)
+   * - 'manage_categories': Kategorien verwalten (Tutor, Moderator)
+   *
+   * @method hasPermission
+   * @memberof DataManager
+   * @param {string} permission - Zu prüfende Berechtigung
+   * @returns {boolean} true, wenn Nutzer die Berechtigung hat
+   */
+  hasPermission(permission) {
+    const role = this.getCurrentUserRole();
+    
+    const permissions = {
+      'user': ['report'],
+      'tutor': ['report', 'moderate', 'manage_categories'],
+      'moderator': ['report', 'moderate', 'delete', 'manage_categories']
+    };
+
+    return permissions[role]?.includes(permission) || false;
+  }
+
+  /**
+   * Gibt alle verfügbaren Rollen zurück (für UI-Auswahl)
+   *
+   * @method getAvailableRoles
+   * @memberof DataManager
+   * @returns {Array&lt;Object>} Array mit Rollen-Objekten
+   */
+  getAvailableRoles() {
+    return [
+      { 
+        value: 'user', 
+        label: 'Standard-Nutzer',
+        description: 'Kann Fragen melden',
+        icon: 'fas fa-user'
+      },
+      { 
+        value: 'tutor', 
+        label: 'Tutor',
+        description: 'Kann Karten bearbeiten und moderieren',
+        icon: 'fas fa-user-graduate'
+      },
+      { 
+        value: 'moderator', 
+        label: 'Moderator',
+        description: 'Vollzugriff auf alle Funktionen',
+        icon: 'fas fa-user-shield'
+      }
+    ];
+  }
+
+  /**
+   * Gibt die Rollenbeschreibung zurück
+   *
+   * @method getRoleInfo
+   * @memberof DataManager
+   * @param {string} role - Rolle
+   * @returns {Object} Rollen-Objekt mit Details
+   */
+  getRoleInfo(role) {
+    const roles = this.getAvailableRoles();
+    return roles.find(r => r.value === role) || roles[0];
+  }
+
+  /**
+   * Prüft, ob der Nutzer Tutor oder Moderator ist
+   *
+   * @method isPrivilegedUser
+   * @memberof DataManager
+   * @returns {boolean} true, wenn Nutzer erweiterte Rechte hat
+   */
+  isPrivilegedUser() {
+    const role = this.getCurrentUserRole();
+    return role === 'tutor' || role === 'moderator';
+  }
+
+  /**
+   * Prüft, ob der Nutzer Moderator ist
+   *
+   * @method isModerator
+   * @memberof DataManager
+   * @returns {boolean} true, wenn Nutzer Moderator ist
+   */
+  isModerator() {
+    return this.getCurrentUserRole() === 'moderator';
+  }
 }
 
-// Exportiere eine Singleton-Instanz
-export default new DataManager();</code></pre>
+
+const dataManager = new DataManager();
+export default dataManager;</code></pre>
         </article>
     </section>
 
@@ -447,17 +998,13 @@ export default new DataManager();</code></pre>
 
 </div>
 
-<nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="DataManager.html">DataManager</a></li><li><a href="SimulatedPlayersService.html">SimulatedPlayersService</a></li></ul><h3>Global</h3><ul><li><a href="global.html#App">App</a></li><li><a href="global.html#Footer">Footer</a></li><li><a href="global.html#Header">Header</a></li><li><a href="global.html#LoginForm">LoginForm</a></li><li><a href="global.html#MOCK_USERS">MOCK_USERS</a></li><li><a href="global.html#QuestionEditor">QuestionEditor</a></li><li><a href="global.html#QuizQuestion">QuizQuestion</a></li><li><a href="global.html#QuizResults">QuizResults</a></li><li><a href="global.html#SIMULATED_PLAYERS">SIMULATED_PLAYERS</a></li><li><a href="global.html#SecurityUtils">SecurityUtils</a></li><li><a href="global.html#UserProfile">UserProfile</a></li><li><a href="global.html#mockCategories">mockCategories</a></li><li><a href="global.html#root">root</a></li></ul>
-</nav>
-
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Mon Jul 14 2025 22:44:25 GMT+0200 (Mitteleuropäische Sommerzeit)
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.5</a> on Mon Oct 27 2025 23:45:33 GMT+0100 (Mitteleuropäische Normalzeit) using the Minami theme.
 </footer>
 
-<script> prettyPrint(); </script>
-<script src="scripts/linenumber.js"> </script>
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
 </body>
 </html>

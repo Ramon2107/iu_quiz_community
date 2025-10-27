@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>components/common/Imprint.js - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <li class="nav-link nav-home-link"><a href="index.html">Home</a></li><li class="nav-heading">Classes</li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="DataManager.html">DataManager</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.archiveCard">archiveCard</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.deleteCard">deleteCard</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.deleteCategory">deleteCategory</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.exportData">exportData</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.extractTagsFromQuestion">extractTagsFromQuestion</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.getAllCards">getAllCards</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.getAllCategories">getAllCategories</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.getAvailableRoles">getAvailableRoles</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.getCardStatus">getCardStatus</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.getCardStatusInfo">getCardStatusInfo</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.getCardsByCategory">getCardsByCategory</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.getCardsByCategoryName">getCardsByCategoryName</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.getCardsByStatus">getCardsByStatus</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.getCategoriesForQuiz">getCategoriesForQuiz</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.getCategoryIdByName">getCategoryIdByName</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.getCurrentUserRole">getCurrentUserRole</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.getQuestionsForQuiz">getQuestionsForQuiz</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.getRoleInfo">getRoleInfo</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.getUniqueAuthors">getUniqueAuthors</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.hasPermission">hasPermission</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.importData">importData</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.initializeData">initializeData</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.isModerator">isModerator</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.isPrivilegedUser">isPrivilegedUser</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.loadMockCategories">loadMockCategories</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.loadMockQuestions">loadMockQuestions</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.markCardForReview">markCardForReview</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.reactivateCard">reactivateCard</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.reloadMockData">reloadMockData</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.resetAllData">resetAllData</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.saveCard">saveCard</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.saveCategory">saveCategory</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.searchCards">searchCards</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.setCardStatus">setCardStatus</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.setCurrentUserRole">setCurrentUserRole</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.updateCard">updateCard</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.updateCategory">updateCategory</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.updateCategoryCardCounts">updateCategoryCardCounts</a></span></li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="SimulatedPlayersService.html">SimulatedPlayersService</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="SimulatedPlayersService.html#.calculateFinalRanking">calculateFinalRanking</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="SimulatedPlayersService.html#.calculatePerformanceRating">calculatePerformanceRating</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="SimulatedPlayersService.html#.generateCompetitiveUpdates">generateCompetitiveUpdates</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="SimulatedPlayersService.html#.generateCooperativeMessages">generateCooperativeMessages</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="SimulatedPlayersService.html#.generateLiveComments">generateLiveComments</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="SimulatedPlayersService.html#.getActivePlayers">getActivePlayers</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="SimulatedPlayersService.html#.getPlayerStatistics">getPlayerStatistics</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="SimulatedPlayersService.html#.getRandomWrongAnswer">getRandomWrongAnswer</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="SimulatedPlayersService.html#.initializePlayers">initializePlayers</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="SimulatedPlayersService.html#.reset">reset</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="SimulatedPlayersService.html#.simulatePlayerAnswer">simulatePlayerAnswer</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="SimulatedPlayersService.html#.simulatePlayerAnswers">simulatePlayerAnswers</a></span></li><li class="nav-heading">Namespaces</li><li class="nav-heading"><span class="nav-item-type type-namespace">N</span><span class="nav-item-name"><a href="Data.Mockdata.html">Mockdata</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Data.Mockdata.html#.getCategoriesWithCardCount">getCategoriesWithCardCount</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Data.Mockdata.html#.getCategoryById">getCategoryById</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Data.Mockdata.html#.getQuestionById">getQuestionById</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Data.Mockdata.html#.getQuestionsByCategory">getQuestionsByCategory</a></span></li><li class="nav-heading"><span class="nav-item-type type-namespace">N</span><span class="nav-item-name"><a href="Utils.Security.html">Security</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Utils.Security.html#.sanitizeAttribute">sanitizeAttribute</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Utils.Security.html#.sanitizeHtml">sanitizeHtml</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Utils.Security.html#.sanitizeInput">sanitizeInput</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Utils.Security.html#.sanitizeUrlParam">sanitizeUrlParam</a></span></li><li class="nav-heading"><a href="global.html">Globals</a></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#App">App</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#CardManager">CardManager</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#Community">Community</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#CooperativeLobby">CooperativeLobby</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#Footer">Footer</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#Header">Header</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#HomePage">HomePage</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#Imprint">Imprint</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#LiveChat">LiveChat</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#LoginForm">LoginForm</a></span></li><li class="nav-item"><span class="nav-item-type type-member">M</span><span class="nav-item-name"><a href="global.html#MOCK_USERS">MOCK_USERS</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#PointsInfo">PointsInfo</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#PrivacyPolicy">PrivacyPolicy</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#QuestionEditor">QuestionEditor</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#QuizCategorySelector">QuizCategorySelector</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#QuizMain">QuizMain</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#QuizQuestio">QuizQuestio</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#QuizResults">QuizResults</a></span></li><li class="nav-item"><span class="nav-item-type type-member">M</span><span class="nav-item-name"><a href="global.html#SIMULATED_PLAYERS">SIMULATED_PLAYERS</a></span></li><li class="nav-item"><span class="nav-item-type type-member">M</span><span class="nav-item-name"><a href="global.html#SecurityUtils">SecurityUtils</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#UserProfile">UserProfile</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html">handleLogin</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html">handleLogout</a></span></li><li class="nav-item"><span class="nav-item-type type-member">M</span><span class="nav-item-name"><a href="global.html#mockCategories">mockCategories</a></span></li><li class="nav-item"><span class="nav-item-type type-member">M</span><span class="nav-item-name"><a href="global.html#mockQuestions">mockQuestions</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#render">render</a></span></li><li class="nav-item"><span class="nav-item-type type-member">M</span><span class="nav-item-name"><a href="global.html#root">root</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html">useEffect</a></span></li>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">components/common/Imprint.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Imprint - Impressum mit rechtlichen Informationen
+ *
+ * Diese Komponente zeigt das Impressum für das IU Community Quiz System an.
+ * Sie enthält alle rechtlich erforderlichen Angaben gemäß TMG und anderen relevanten Gesetzen.
+ *
+ * @author System
+ * @version 1.0.0
+ * @since 2025-07-15
+ */
+
+import React from 'react';
+
+/**
+ * Imprint - Strukturierte Darstellung des Impressums
+ *
+ * Stellt das Impressum in einer benutzerfreundlichen, strukturierten Ansicht dar.
+ * Enthält alle rechtlich erforderlichen Angaben für die Website.
+ *
+ * @function Imprint
+ * @returns {React.ReactElement} Die gerenderte Impressum-Komponente
+ */
+function Imprint() {
+    return (
+        &lt;div className="imprint">
+            &lt;div className="container">
+                &lt;h2 className="mb-4">Impressum&lt;/h2>
+
+                &lt;div className="row">
+                    &lt;div className="col-12">
+                        &lt;div className="card">
+                            &lt;div className="card-body">
+                                &lt;h5 className="card-title">Angaben gemäß § 5 TMG&lt;/h5>
+
+                                &lt;div className="row mt-4">
+                                    &lt;div className="col-md-6">
+                                        &lt;h6>Betreiber&lt;/h6>
+                                        &lt;p>
+                                            IU Internationale Hochschule&lt;br />
+                                            Juri-Gagarin-Ring 152&lt;br />
+                                            99084 Erfurt&lt;br />
+                                            Deutschland
+                                        &lt;/p>
+                                    &lt;/div>
+
+                                    &lt;div className="col-md-6">
+                                        &lt;h6>Kontakt&lt;/h6>
+                                        &lt;p>
+                                            &lt;i className="fas fa-phone me-2">&lt;/i>
+                                            Telefon: +49 (0) 2151 822-0&lt;br />
+                                            &lt;i className="fas fa-fax me-2">&lt;/i>
+                                            Telefax: +49 (0) 2151 822-100&lt;br />
+                                            &lt;i className="fas fa-envelope me-2">&lt;/i>
+                                            E-Mail: info@iu.org
+                                        &lt;/p>
+                                    &lt;/div>
+                                &lt;/div>
+
+                                &lt;hr className="my-4" />
+
+                                &lt;div className="row">
+                                    &lt;div className="col-md-6">
+                                        &lt;h6>Vertreten durch&lt;/h6>
+                                        &lt;p>
+                                            Die IU Internationale Hochschule wird vertreten durch:&lt;br />
+                                            Prof. Dr. Holger Sommerfeldt (Rektor)&lt;br />
+                                            Carmen Thoma (Kanzlerin)
+                                        &lt;/p>
+                                    &lt;/div>
+
+                                    &lt;div className="col-md-6">
+                                        &lt;h6>Registereintrag&lt;/h6>
+                                        &lt;p>
+                                            Eintragung im Vereinsregister.&lt;br />
+                                            Registergericht: Amtsgericht Düsseldorf&lt;br />
+                                            Registernummer: VR 13709
+                                        &lt;/p>
+                                    &lt;/div>
+                                &lt;/div>
+
+                                &lt;hr className="my-4" />
+
+                                &lt;h6>Aufsichtsbehörde&lt;/h6>
+                                &lt;p>
+                                    Thüringer Ministerium für Bildung, Jugend und Sport&lt;br />
+                                    Werner-Seelenbinder-Straße 7&lt;br />
+                                    99096 Erfurt
+                                &lt;/p>
+
+                                &lt;h6 className="mt-4">Umsatzsteuer-ID&lt;/h6>
+                                &lt;p>
+                                    Umsatzsteuer-Identifikationsnummer gemäß § 27 a Umsatzsteuergesetz:&lt;br />
+                                    DE 814 261 460
+                                &lt;/p>
+
+                                &lt;hr className="my-4" />
+
+                                &lt;h5 className="card-title">Haftung für Inhalte&lt;/h5>
+                                &lt;p>
+                                    Als Diensteanbieter sind wir gemäß § 7 Abs.1 TMG für eigene Inhalte auf
+                                    diesen Seiten nach den allgemeinen Gesetzen verantwortlich. Nach §§ 8 bis 10 TMG
+                                    sind wir als Diensteanbieter jedoch nicht unter der Verpflichtung, übermittelte
+                                    oder gespeicherte fremde Informationen zu überwachen oder nach Umständen zu
+                                    forschen, die auf eine rechtswidrige Tätigkeit hinweisen.
+                                &lt;/p>
+
+                                &lt;h5 className="card-title mt-4">Haftung für Links&lt;/h5>
+                                &lt;p>
+                                    Unser Angebot enthält Links zu externen Websites Dritter, auf deren Inhalte
+                                    wir keinen Einfluss haben. Deshalb können wir für diese fremden Inhalte auch
+                                    keine Gewähr übernehmen. Für die Inhalte der verlinkten Seiten ist stets der
+                                    jeweilige Anbieter oder Betreiber der Seiten verantwortlich.
+                                &lt;/p>
+
+                                &lt;h5 className="card-title mt-4">Urheberrecht&lt;/h5>
+                                &lt;p>
+                                    Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten
+                                    unterliegen dem deutschen Urheberrecht. Die Vervielfältigung, Bearbeitung,
+                                    Verbreitung und jede Art der Verwertung außerhalb der Grenzen des Urheberrechtes
+                                    bedürfen der schriftlichen Zustimmung des jeweiligen Autors bzw. Erstellers.
+                                &lt;/p>
+
+                                &lt;h5 className="card-title mt-4">Streitschlichtung&lt;/h5>
+                                &lt;p>
+                                    Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS)
+                                    bereit:
+                                    &lt;a href="https://ec.europa.eu/consumers/odr/"
+                                       target="_blank"
+                                       rel="noopener noreferrer"
+                                       className="text-decoration-none ms-1">
+                                        https://ec.europa.eu/consumers/odr/
+                                    &lt;/a>
+                                &lt;/p>
+                                &lt;p>
+                                    Unsere E-Mail-Adresse finden Sie oben im Impressum. Wir sind nicht bereit oder
+                                    verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle
+                                    teilzunehmen.
+                                &lt;/p>
+
+                                &lt;p className="mt-4">
+                                    &lt;small className="text-muted">
+                                        Stand: 15. Juli 2025&lt;br />
+                                        Quelle:
+                                        &lt;a href="https://www.e-recht24.de/impressum-generator.html"
+                                           target="_blank"
+                                           rel="noopener noreferrer"
+                                           className="text-decoration-none">
+                                            e-recht24.de
+                                        &lt;/a>
+                                    &lt;/small>
+                                &lt;/p>
+                            &lt;/div>
+                        &lt;/div>
+                    &lt;/div>
+                &lt;/div>
+            &lt;/div>
+        &lt;/div>
+    );
+}
+
+export default Imprint;</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.5</a> on Mon Oct 27 2025 23:45:33 GMT+0100 (Mitteleuropäische Normalzeit) using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

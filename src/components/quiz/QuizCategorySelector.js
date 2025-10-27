@@ -1,40 +1,45 @@
 /**
- * QuizCategorySelector-Komponente - Kategorieauswahl für Quiz
- *
- * Diese Komponente ermöglicht es Benutzern, eine Kategorie für ihr Quiz auszuwählen.
- * Sie zeigt verfügbare Kategorien mit Anzahl der Fragen und Beschreibungen an.
- *
- * Features:
- * - Anzeige aller verfügbaren Kategorien
- * - Fragenanzahl pro Kategorie
- * - Responsive Karten-Design
- * - Suchfunktion für Kategorien
- * - Rückkehr zur Modus-Auswahl
- * - Unterstützung für alle Spielmodi
- *
- * UPDATE: Erweiterte Anzeige mit Fragenanzahl
- * UPDATE: Suchfunktion für Kategorien
- * UPDATE: Spielmodus-spezifische Anzeige
- *
+ * Kategorieauswahl mit Suchfunktion und Fragenanzahl-Anzeige.
  * @author Projektteam IU Community Quiz
  * @version 1.3.0
- * @since 2025-07-15
  */
 
 import React, { useState, useMemo } from 'react';
 import dataManager from '../../data/dataManager';
 
 /**
- * QuizCategorySelector-Komponente
+ * QuizCategorySelector - Kategorieauswahl mit Suchfunktion
  *
- * @param {Object} props - Komponenteneigenschaften
+ * Diese Komponente ermöglicht es Benutzern, eine Lernkategorie für ihr Quiz
+ * auszuwählen und zeigt verfügbare Kategorien mit detaillierten Informationen an.
+ *
+ * Hauptfunktionen:
+ * - Anzeige aller verfügbaren Kategorien aus dem DataManager
+ * - Fragenanzahl und Beschreibung für jede Kategorie
+ * - Responsive Karten-Design mit Bootstrap
+ * - Live-Suchfunktion zum Filtern von Kategorien
+ * - Rückkehr zur Spielmodus-Auswahl
+ * - Unterstützung für alle Spielmodi (cooperative, competitive, single-player)
+ * - Spielmodus-spezifische Anzeige und Hinweise
+ * - Validierung, ob genügend Fragen für die gewählte Fragenanzahl vorhanden sind
+ *
+ * @function QuizCategorySelector
+ * @param {Object} props - Component properties
  * @param {Array} props.categories - Verfügbare Kategorien
- * @param {Function} props.onCategorySelect - Callback für Kategorieauswahl
- * @param {Function} props.onBack - Callback für Rückkehr
+ * @param {Function} props.onCategorySelect - Callback bei Kategorieauswahl
+ * @param {Function} props.onBack - Callback für Zurück-Navigation
  * @param {string} props.gameMode - Aktueller Spielmodus
- * @param {number} props.questionCount - Gewünschte Fragenanzahl
- * @param {Object} props.user - Benutzerdaten (für zukünftige Personalisierung vorgesehen, aktuell nicht verwendet)
- * @returns {JSX.Element} Die gerenderte QuizCategorySelector-Komponente
+ * @param {number} props.questionCount - Gewählte Fragenanzahl
+ * @param {Object} props.user - Benutzerdaten
+ * @returns {React.ReactElement} Die gerenderte QuizCategorySelector-Komponente
+ * @example
+ * <QuizCategorySelector
+ *   categories={availableCategories}
+ *   onCategorySelect={handleCategorySelect}
+ *   onBack={handleBack}
+ *   gameMode="cooperative"
+ *   questionCount={10}
+ * />
  */
 function QuizCategorySelector({
                                   categories,

@@ -1,14 +1,12 @@
 /**
- * CooperativeLobby-Komponente - Simulierte Lobby für kooperativen Modus
+ * @description Lobby-Komponente für kooperativen Multiplayer-Modus
+ */
+
+/**
+ * CooperativeLobby - Simulierte Lobby für kooperativen Modus
  *
  * Diese Komponente zeigt eine Lobby, in der Spieler sich sammeln.
  * Sie ist nur für Demozwecke und zeigt simulierte Spieler.
- *
- * @param {Object} props - Komponenteneigenschaften
- * @param {Array} props.players - Spieler-Liste
- * @param {Object} props.user - Benutzerdaten
- * @param {Function} props.onStartGame - Callback zum Spielstart
- * @returns {JSX.Element} Die gerenderte CooperativeLobby-Komponente
  *
  * @author Projektteam IU Community Quiz
  * @version 1.0.0
@@ -16,6 +14,18 @@
  */
 import React, { useState, useEffect } from 'react';
 
+/**
+ * CooperativeLobby - Wartezimmer für Multiplayer-Spiele
+ *
+ * Zeigt eine Lobby mit Spielern und Countdown bis zum Spielstart.
+ *
+ * @function CooperativeLobby
+ * @param {Object} props - Component properties
+ * @param {Array} props.players - Spieler-Liste
+ * @param {Object} props.user - Benutzerdaten
+ * @param {Function} props.onStartGame - Callback zum Spielstart
+ * @returns {React.ReactElement} Die gerenderte CooperativeLobby-Komponente
+ */
 function CooperativeLobby({ players, user, onStartGame }) {
   const [countdown, setCountdown] = useState(5);
   const [isReady, setIsReady] = useState(false);

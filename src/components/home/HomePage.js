@@ -1,29 +1,36 @@
 /**
- * Home-Seite - Startseite der Anwendung
- *
- * Diese Komponente stellt die Startseite der IU Community Quiz App bereit
- * und bietet eine Übersicht über die verfügbaren Funktionen.
+ * Startseite mit Übersicht über Funktionen und Statistiken.
  *
  * @author Projektteam IU Community Quiz
  * @version 1.2.0
- * @since 2025-07-15
- *
  */
 
 import React, { useState, useEffect } from 'react';
 import dataManager from '../../data/dataManager';
 
 /**
- * HomePage-Komponente - Startseite der Anwendung
- * 
- * Diese Komponente zeigt die Startseite mit einer Übersicht der verfügbaren Funktionen,
- * Statistiken und Navigationsmöglichkeiten. Sie dient als zentraler Einstiegspunkt
+ * HomePage - Startseite der Anwendung
+ *
+ * Diese Komponente stellt die Startseite der IU Community Quiz App bereit
+ * und bietet eine Übersicht über die verfügbaren Funktionen, Statistiken
+ * und Navigationsmöglichkeiten. Sie dient als zentraler Einstiegspunkt
  * für Benutzer nach der Anmeldung.
  *
- * @param {Object} props - Komponenteneigenschaften
- * @param {Object} props.user - Benutzerdaten des angemeldeten Benutzers
- * @param {Function} props.onNavigate - Callback-Funktion für die Navigation zu anderen Ansichten
- * @returns {JSX.Element} Die gerenderte HomePage-Komponente
+ * Hauptfunktionen:
+ * - Hero-Bereich mit Willkommensnachricht und Schnellzugriff
+ * - Statistik-Karten mit Kategorien-, Karten- und Beitragsanzahl
+ * - Funktions-Übersicht für Quiz, Kartenverwaltung und Profil
+ * - Projekt-Dokumentation mit Technologie-Stack und NPM-Skripten
+ * - Aktuelle Benutzerinformationen und Profil-Zugang
+ * - Responsive Design für alle Endgeräte
+ *
+ * @function HomePage
+ * @param {Object} props - Component properties
+ * @param {Object} props.user - Benutzerdaten
+ * @param {Function} props.onNavigate - Callback für Navigation
+ * @returns {React.ReactElement} Die gerenderte HomePage-Komponente
+ * @example
+ * <HomePage user={currentUser} onNavigate={handleNavigate} />
  */
 function HomePage({ user, onNavigate }) {
     const [stats, setStats] = useState({
@@ -48,7 +55,7 @@ function HomePage({ user, onNavigate }) {
     return (
         <div className="container mt-4">
             <div className="row">
-                {/* Willkommen-Bereich - KORRIGIERT: Icon entfernt und Inhalte mittig ausgerichtet */}
+                {/* Willkommen-Bereich - Icon entfernt und Inhalte mittig ausgerichtet */}
                 <div className="col-12">
                     <div className="hero-section bg-primary text-white rounded p-5 mb-4">
                         <div className="row align-items-center">
@@ -203,6 +210,93 @@ function HomePage({ user, onNavigate }) {
                                         <i className="fas fa-arrow-right me-2"></i>
                                         Zum Profil
                                     </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Projekt-Dokumentation */}
+                <div className="col-12 mb-4">
+                    <div className="card">
+                        <div className="card-header bg-dark text-white">
+                            <h5 className="mb-0">
+                                <i className="fas fa-book me-2"></i>
+                                Projekt-Dokumentation & Informationen
+                            </h5>
+                        </div>
+                        <div className="card-body">
+                            <div className="row">
+                                <div className="col-md-6 mb-3">
+                                    <h6><i className="fas fa-info-circle me-2 text-primary"></i>Über das Projekt</h6>
+                                    <p>
+                                        Das <strong>IU Community Quiz</strong> ist eine moderne, responsive Webanwendung
+                                        für kooperatives und kollaboratives Online-Lernen. Die Anwendung wurde speziell
+                                        für Studierende des Fernstudiums der IUBH entwickelt.
+                                    </p>
+                                    <h6 className="mt-3"><i className="fas fa-bullseye me-2 text-success"></i>Projektziel</h6>
+                                    <p>
+                                        Konzeption und prototypische Umsetzung eines Online-Quizsystems, das Studierende
+                                        bei der Festigung der Lerninhalte zur Vorbereitung auf Klausuren unterstützt.
+                                    </p>
+                                </div>
+                                <div className="col-md-6 mb-3">
+                                    <h6><i className="fas fa-cogs me-2 text-warning"></i>Technologie-Stack</h6>
+                                    <ul className="list-unstyled">
+                                        <li><i className="fab fa-react me-2 text-info"></i><strong>React</strong> - Moderne Komponentenarchitektur</li>
+                                        <li><i className="fab fa-bootstrap me-2 text-primary"></i><strong>Bootstrap 5.3</strong> - Responsive Design</li>
+                                        <li><i className="fas fa-icons me-2 text-danger"></i><strong>Font Awesome 6.7</strong> - Icons und Symbole</li>
+                                        <li><i className="fas fa-vial me-2 text-success"></i><strong>Cypress & Jest</strong> - Testing Framework</li>
+                                    </ul>
+                                    <h6 className="mt-3"><i className="fas fa-shield-alt me-2 text-danger"></i>Sicherheitsfeatures</h6>
+                                    <ul className="list-unstyled">
+                                        <li><i className="fas fa-check text-success me-2"></i>XSS-Schutz für alle Eingaben</li>
+                                        <li><i className="fas fa-check text-success me-2"></i>Input-Validierung gegen SQL-Injection</li>
+                                        <li><i className="fas fa-check text-success me-2"></i>Sicheres Session-Management</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div className="row mt-3">
+                                <div className="col-12">
+                                    <h6><i className="fas fa-code me-2 text-info"></i>Verfügbare NPM-Skripte</h6>
+                                    <div className="table-responsive">
+                                        <table className="table table-sm table-striped">
+                                            <thead className="table-dark">
+                                                <tr>
+                                                    <th>Befehl</th>
+                                                    <th>Beschreibung</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr><td><code>npm start</code></td><td>Entwicklungsserver starten</td></tr>
+                                                <tr><td><code>npm test</code></td><td>Tests ausführen</td></tr>
+                                                <tr><td><code>npm run jsdoc</code></td><td>JSDoc-Dokumentation generieren</td></tr>
+                                                <tr><td><code>npm run docs:serve</code></td><td>Dokumentation im Browser öffnen</td></tr>
+                                                <tr><td><code>npm run cy:open-e2e</code></td><td>Cypress E2E Tests öffnen</td></tr>
+                                                <tr><td><code>npm run lint</code></td><td>Code-Qualität prüfen</td></tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="row mt-3">
+                                <div className="col-md-6">
+                                    <h6><i className="fas fa-book-open me-2 text-primary"></i>Dokumentation</h6>
+                                    <p className="mb-2">Die vollständige JSDoc-Dokumentation finden Sie hier:</p>
+                                    <a
+                                        href="/docs/index.html"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="btn btn-outline-primary btn-sm"
+                                    >
+                                        <i className="fas fa-external-link-alt me-2"></i>
+                                        JSDoc Dokumentation öffnen
+                                    </a>
+                                </div>
+                                <div className="col-md-6">
+                                    <h6><i className="fas fa-user-lock me-2 text-warning"></i>Demo-Login-Daten</h6>
+                                    <p className="mb-1"><strong>Student:</strong> max.mustermann@iu-study.org / StudiumIU2024!</p>
+                                    <p className="mb-0"><strong>Admin:</strong> admin@iu-study.org / AdminIU2024!</p>
                                 </div>
                             </div>
                         </div>

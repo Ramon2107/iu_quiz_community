@@ -1,12 +1,12 @@
 /**
- * PointsInfo-Komponente - Zeigt Informationen zur Punkteberechnung
+ * @description Informationskomponente für Punkteberechnungsregeln
+ */
+
+/**
+ * PointsInfo - Erklärung der Punkteberechnung
  *
  * Diese Komponente erklärt dem Benutzer, wie Punkte im Quiz berechnet werden.
  * Sie ist in die QuizQuestion-Komponente integriert.
- *
- * @param {Object} props - Komponenteneigenschaften
- * @param {string} props.gameMode - Spielmodus
- * @returns {JSX.Element} Die gerenderte PointsInfo-Komponente
  *
  * @author Projektteam IU Community Quiz
  * @version 1.0.0
@@ -14,6 +14,16 @@
  */
 import React from 'react';
 
+/**
+ * PointsInfo - Anzeige von Punkteberechnungsregeln
+ *
+ * Zeigt modusabhängige Punkteberechnungsregeln an.
+ *
+ * @function PointsInfo
+ * @param {Object} props - Component properties
+ * @param {string} props.gameMode - Spielmodus
+ * @returns {React.ReactElement} Die gerenderte PointsInfo-Komponente
+ */
 function PointsInfo({ gameMode }) {
   return (
     <div className="card mb-3">

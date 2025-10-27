@@ -1,5 +1,5 @@
 /**
- * Impressum-Komponente
+ * Imprint - Impressum mit rechtlichen Informationen
  *
  * Diese Komponente zeigt das Impressum für das IU Community Quiz System an.
  * Sie enthält alle rechtlich erforderlichen Angaben gemäß TMG und anderen relevanten Gesetzen.
@@ -12,12 +12,13 @@
 import React from 'react';
 
 /**
- * Imprint-Komponente
+ * Imprint - Strukturierte Darstellung des Impressums
  *
  * Stellt das Impressum in einer benutzerfreundlichen, strukturierten Ansicht dar.
  * Enthält alle rechtlich erforderlichen Angaben für die Website.
  *
- * @returns {JSX.Element} Die gerenderte Impressum-Komponente
+ * @function Imprint
+ * @returns {React.ReactElement} Die gerenderte Impressum-Komponente
  */
 function Imprint() {
     return (

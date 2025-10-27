@@ -1,35 +1,42 @@
 /**
- * Zentraler Datenmanager für die gesamte Anwendung
+ * DataManager - Zentrale Datenverwaltung für Quiz-Kategorien und Fragen
  *
- * KORRIGIERT: Mock-Daten werden jetzt garantiert geladen
- * UPDATE: Kleine Änderungen für sofortige Funktionalität
+ * Diese Klasse verwaltet alle Quiz-Kategorien und -Fragen im localStorage
+ * und bietet umfassende CRUD-Operationen, Such- und Filterfunktionen sowie
+ * Status-Management und rollenbasierte Zugriffskontrolle.
  *
+ * @class DataManager
  * @author Projektteam IU Community Quiz
  * @version 1.1.1
- * @since 2025-07-15
- *
- *  *
  */
 
 import { mockCategories, mockQuestions } from './mockData';
 
-/**
- * Zentraler Datenmanager
- */
 class DataManager {
+  /**
+   * Konstruktor - Initialisiert den DataManager und lädt initiale Daten
+   *
+   * @constructor
+   */
   constructor() {
     this.initializeData();
   }
 
   /**
    * Initialisiert die Daten beim ersten Start
-   * KORRIGIERT: Erzwingt das Laden der Mock-Daten wenn localStorage leer ist
+   *
+   * Erzwingt das Laden der Mock-Daten wenn localStorage leer ist
+   * und überprüft die Konsistenz der geladenen Daten.
+   *
+   * @method initializeData
+   * @memberof DataManager
+   * @returns {void}
    */
   initializeData() {
     const existingCategories = localStorage.getItem('quiz-categories');
     const existingCards = localStorage.getItem('quiz-cards');
 
-    // KORRIGIERT: Sofortiges Laden der Mock-Daten bei fehlenden Daten
+    // Sofortiges Laden der Mock-Daten bei fehlenden Daten
     if (!existingCategories || JSON.parse(existingCategories || '[]').length === 0) {
       console.log('DataManager: Lade Mock-Kategorien...');
       this.loadMockCategories();
@@ -40,7 +47,7 @@ class DataManager {
       this.loadMockQuestions();
     }
 
-    // KORRIGIERT: Daten nach dem Laden nochmal prüfen
+    // Daten nach dem Laden nochmal prüfen
     const finalCategories = this.getAllCategories();
     const finalCards = this.getAllCards();
     console.log('DataManager: Finale Kategorien:', finalCategories.length);
@@ -48,8 +55,19 @@ class DataManager {
   }
 
   /**
-   * Lädt die Mock-Kategorien
-   * KORRIGIERT: Bessere Fehlerbehandlung
+   * Lädt die Mock-Kategorien in den localStorage
+   *
+   * Diese Methode importiert die vordefinierte Mock-Kategorien aus mockData.js,
+   * konvertiert sie in das interne Datenformat und speichert sie im localStorage.
+   * Jede Kategorie erhält standardmäßig einen System-Autor, ein Erstellungsdatum
+   * und eine initiale Kartenanzahl von 0.
+   *
+   * @method loadMockCategories
+   * @memberof DataManager
+   * @returns {Array<Object>} Array mit den geladenen und konvertierten Kategorien, oder leeres Array bei Fehler
+   * @example
+   * const categories = dataManager.loadMockCategories();
+   * console.log(categories.length); // Anzahl der geladenen Kategorien
    */
   loadMockCategories() {
     try {
@@ -78,8 +96,19 @@ class DataManager {
   }
 
   /**
-   * Lädt die Mock-Fragen
-   * KORRIGIERT: Bessere Fehlerbehandlung und Kategorie-Zuordnung
+   * Lädt die Mock-Fragen in den localStorage
+   *
+   * Diese Methode importiert die vordefinierten Mock-Fragen aus mockData.js,
+   * ordnet sie den entsprechenden Kategorien zu und speichert sie im localStorage.
+   * Jede Frage wird in das interne Format konvertiert, Tags werden automatisch
+   * aus dem Fragetext extrahiert, und die Kartenanzahl in den Kategorien wird aktualisiert.
+   *
+   * @method loadMockQuestions
+   * @memberof DataManager
+   * @returns {Array<Object>} Array mit den geladenen und konvertierten Fragen, oder leeres Array bei Fehler
+   * @example
+   * const questions = dataManager.loadMockQuestions();
+   * console.log(questions.length); // Anzahl der geladenen Fragen
    */
   loadMockQuestions() {
     try {
@@ -119,7 +148,19 @@ class DataManager {
   }
 
   /**
-   * Hilfsfunktion: Extrahiert Tags aus einer Frage
+   * Extrahiert relevante Tags aus dem Fragetext
+   *
+   * Diese Hilfsmethode durchsucht den Fragetext nach vordefinierten Schlüsselwörtern
+   * und erstellt automatisch eine Liste relevanter Tags. Dies erleichtert das spätere
+   * Filtern und Suchen von Fragen nach bestimmten Themenbereichen.
+   *
+   * @method extractTagsFromQuestion
+   * @memberof DataManager
+   * @param {string} question - Der Fragetext, aus dem Tags extrahiert werden sollen
+   * @returns {Array<string>} Array mit den gefundenen Tags (Schlüsselwörter aus der Frage)
+   * @example
+   * const tags = dataManager.extractTagsFromQuestion("Was ist OOP?");
+   * console.log(tags); // ['OOP']
    */
   extractTagsFromQuestion(question) {
     const keywords = ['OOP', 'SQL', 'HTTP', 'HTTPS', 'Algorithmus', 'Datenbank', 'Netzwerk', 'agile', 'Klasse', 'Objekt', 'LIFO', 'Stack', 'Zeitkomplexität', 'Primärschlüssel', 'Topologie', 'Softwareentwicklung'];
@@ -135,8 +176,21 @@ class DataManager {
   }
 
   /**
-   * Hilfsfunktion: Findet Kategorie-ID basierend auf Name
-   * KORRIGIERT: Bessere Kategorie-Zuordnung
+   * Findet die Kategorie-ID basierend auf dem Kategorienamen
+   *
+   * Diese Hilfsmethode sucht in der übergebenen Kategorienliste nach einer Kategorie
+   * mit dem angegebenen Namen (Groß-/Kleinschreibung wird ignoriert). Falls keine
+   * passende Kategorie gefunden wird, wird die ID der ersten verfügbaren Kategorie
+   * als Fallback zurückgegeben.
+   *
+   * @method getCategoryIdByName
+   * @memberof DataManager
+   * @param {string} categoryName - Der Name der gesuchten Kategorie
+   * @param {Array<Object>} categories - Array mit Kategorie-Objekten zum Durchsuchen
+   * @returns {string} Die ID der gefundenen Kategorie oder der ersten Kategorie als Fallback
+   * @example
+   * const id = dataManager.getCategoryIdByName('Programmierung', categories);
+   * console.log(id); // 'cat1'
    */
   getCategoryIdByName(categoryName, categories) {
     const category = categories.find(cat =>
@@ -154,6 +208,18 @@ class DataManager {
 
   /**
    * Aktualisiert die Kartenanzahl in allen Kategorien
+   *
+   * Diese Methode durchläuft alle Kategorien und zählt die zugehörigen Karten,
+   * um die cardCount-Eigenschaft jeder Kategorie zu aktualisieren. Dies ist wichtig
+   * für die korrekte Anzeige der Kartenanzahl in der Benutzeroberfläche.
+   * Wird automatisch nach dem Hinzufügen, Ändern oder Löschen von Karten aufgerufen.
+   *
+   * @method updateCategoryCardCounts
+   * @memberof DataManager
+   * @returns {void}
+   * @example
+   * dataManager.updateCategoryCardCounts();
+   * // Alle Kategorien haben nun die korrekte cardCount-Eigenschaft
    */
   updateCategoryCardCounts() {
     const categories = this.getAllCategories();
@@ -170,11 +236,13 @@ class DataManager {
 
   /**
    * Gibt alle Kategorien aus der Datenbank zurück
-   * 
+   *
    * Diese Methode liest alle gespeicherten Kategorien aus dem localStorage
    * und gibt sie als Array zurück. Falls keine Kategorien gefunden werden,
    * wird ein leeres Array zurückgegeben.
    *
+   * @method getAllCategories
+   * @memberof DataManager
    * @returns {Array<Object>} Array mit allen Kategorien oder leeres Array, wenn keine vorhanden sind
    */
   getAllCategories() {
@@ -184,11 +252,13 @@ class DataManager {
 
   /**
    * Gibt alle Karten (Fragen) aus der Datenbank zurück
-   * 
+   *
    * Diese Methode liest alle gespeicherten Karten aus dem localStorage
    * und gibt sie als Array zurück. Falls keine Karten gefunden werden,
    * wird ein leeres Array zurückgegeben.
    *
+   * @method getAllCards
+   * @memberof DataManager
    * @returns {Array<Object>} Array mit allen Karten oder leeres Array, wenn keine vorhanden sind
    */
   getAllCards() {
@@ -198,11 +268,13 @@ class DataManager {
 
   /**
    * Gibt alle Karten einer bestimmten Kategorie zurück
-   * 
+   *
    * Diese Methode filtert alle Karten nach der angegebenen Kategorie-ID
    * und gibt nur die Karten zurück, die zu dieser Kategorie gehören.
    * Dies ist nützlich für die kategoriebasierte Navigation und Anzeige.
    *
+   * @method getCardsByCategory
+   * @memberof DataManager
    * @param {string} categoryId - ID der Kategorie, deren Karten zurückgegeben werden sollen
    * @returns {Array<Object>} Array mit allen Karten der angegebenen Kategorie oder leeres Array, wenn keine gefunden wurden
    */
@@ -213,13 +285,15 @@ class DataManager {
 
   /**
    * Gibt alle Karten einer bestimmten Kategorie anhand des Kategorienamens zurück
-   * 
+   *
    * Diese Methode sucht zunächst die Kategorie anhand ihres Namens und filtert dann
    * alle Karten nach der gefundenen Kategorie-ID. Dies ist eine Hilfsmethode für
    * ältere Komponenten, die noch mit Kategorienamen statt IDs arbeiten.
    *
+   * @method getCardsByCategoryName
+   * @memberof DataManager
    * @param {string} categoryName - Name der Kategorie, deren Karten zurückgegeben werden sollen
-   * @returns {Array<Object>} Array mit allen Karten der angegebenen Kategorie oder leeres Array, 
+   * @returns {Array<Object>} Array mit allen Karten der angegebenen Kategorie oder leeres Array,
    * wenn keine Kategorie mit diesem Namen gefunden wurde oder keine Karten vorhanden sind
    */
   getCardsByCategoryName(categoryName) {
@@ -234,11 +308,13 @@ class DataManager {
 
   /**
    * Speichert eine neue Kategorie in der Datenbank
-   * 
+   *
    * Diese Methode erstellt eine neue Kategorie mit einer eindeutigen ID,
    * fügt sie zur Liste der vorhandenen Kategorien hinzu und speichert
    * die aktualisierte Liste im localStorage.
    *
+   * @method saveCategory
+   * @memberof DataManager
    * @param {Object} category - Die zu speichernde Kategorie
    * @param {string} [category.id] - Optionale ID (wird generiert, falls nicht vorhanden)
    * @param {string} category.name - Name der Kategorie
@@ -266,12 +342,14 @@ class DataManager {
 
   /**
    * Speichert eine neue Karte (Frage) in der Datenbank
-   * 
+   *
    * Diese Methode erstellt eine neue Karte mit einer eindeutigen ID,
    * fügt sie zur Liste der vorhandenen Karten hinzu und speichert
    * die aktualisierte Liste im localStorage. Außerdem wird die
    * Kartenanzahl in den zugehörigen Kategorien aktualisiert.
    *
+   * @method saveCard
+   * @memberof DataManager
    * @param {Object} card - Die zu speichernde Karte
    * @param {string} [card.id] - Optionale ID (wird generiert, falls nicht vorhanden)
    * @param {string} card.categoryId - ID der Kategorie, zu der die Karte gehört
@@ -305,8 +383,19 @@ class DataManager {
   }
 
   /**
-   * Konvertiert Daten für QuizMain-Kompatibilität
-   * KORRIGIERT: Bessere Fehlerbehandlung
+   * Konvertiert Karten in das für QuizMain benötigte Format
+   *
+   * Diese Methode transformiert die internen Kartendaten in ein Format, das von der
+   * QuizMain-Komponente verwendet werden kann. Dabei wird die Kategorie-ID durch den
+   * Kategorienamen ersetzt und die Datenstruktur vereinfacht. Dies sorgt für
+   * Abwärtskompatibilität mit älteren Komponenten.
+   *
+   * @method getQuestionsForQuiz
+   * @memberof DataManager
+   * @returns {Array<Object>} Array mit konvertierten Fragen im QuizMain-Format
+   * @example
+   * const questions = dataManager.getQuestionsForQuiz();
+   * console.log(questions[0].category); // 'Programmierung' (Name statt ID)
    */
   getQuestionsForQuiz() {
     const cards = this.getAllCards();
@@ -331,8 +420,19 @@ class DataManager {
   }
 
   /**
-   * Konvertiert Kategorien für QuizMain-Kompatibilität
-   * KORRIGIERT: Bessere Icon-Behandlung
+   * Konvertiert Kategorien in das für QuizMain benötigte Format
+   *
+   * Diese Methode transformiert die internen Kategoriedaten in ein vereinfachtes Format
+   * für die QuizMain-Komponente. Dabei werden FontAwesome-Icon-Präfixe ('fas fa-') entfernt,
+   * um nur den Icon-Namen zu liefern. Dies sorgt für Abwärtskompatibilität und
+   * vereinfacht die Verwendung in der Benutzeroberfläche.
+   *
+   * @method getCategoriesForQuiz
+   * @memberof DataManager
+   * @returns {Array<Object>} Array mit konvertierten Kategorien im vereinfachten Format
+   * @example
+   * const categories = dataManager.getCategoriesForQuiz();
+   * console.log(categories[0].icon); // 'code' (ohne 'fas fa-' Präfix)
    */
   getCategoriesForQuiz() {
     const categories = this.getAllCategories();
@@ -349,11 +449,13 @@ class DataManager {
 
   /**
    * Gibt eine Liste aller eindeutigen Autoren im System zurück
-   * 
+   *
    * Diese Methode sammelt alle Autoren aus Karten und Kategorien,
    * entfernt Duplikate und gibt eine Liste mit eindeutigen Autorennamen zurück.
    * Dies ist nützlich für Filteroptionen in der Benutzeroberfläche.
    *
+   * @method getUniqueAuthors
+   * @memberof DataManager
    * @returns {Array<string>} Array mit eindeutigen Autorennamen
    */
   getUniqueAuthors() {
@@ -367,12 +469,14 @@ class DataManager {
   }
 
   /**
-   * Sucht nach Karten basierend auf Suchbegriff und optionalem Autorfilter
-   * 
+   * Sucht nach Karten basierend auf Suchbegriff und optionalem Autor-Filter
+   *
    * Diese Methode durchsucht alle Karten nach dem angegebenen Suchbegriff
    * in Fragen und Tags. Zusätzlich kann nach einem bestimmten Autor gefiltert werden.
    * Die Suche ist unabhängig von Groß- und Kleinschreibung.
    *
+   * @method searchCards
+   * @memberof DataManager
    * @param {string} searchTerm - Suchbegriff für die Filterung (leerer String gibt alle Karten zurück)
    * @param {string} [authorFilter='all'] - Optionaler Filter für den Autor ('all' für alle Autoren)
    * @returns {Array<Object>} Array mit den gefilterten Karten, die den Suchkriterien entsprechen
@@ -391,11 +495,13 @@ class DataManager {
 
   /**
    * Aktualisiert eine bestehende Kategorie in der Datenbank
-   * 
+   *
    * Diese Methode sucht eine Kategorie anhand ihrer ID und aktualisiert
    * ihre Eigenschaften mit den übergebenen Werten. Die aktualisierte
    * Kategorienliste wird dann im localStorage gespeichert.
    *
+   * @method updateCategory
+   * @memberof DataManager
    * @param {string} categoryId - ID der zu aktualisierenden Kategorie
    * @param {Object} updates - Objekt mit den zu aktualisierenden Eigenschaften
    * @param {string} [updates.name] - Neuer Name der Kategorie
@@ -418,13 +524,15 @@ class DataManager {
 
   /**
    * Aktualisiert eine bestehende Karte (Frage) in der Datenbank
-   * 
+   *
    * Diese Methode sucht eine Karte anhand ihrer ID und aktualisiert
    * ihre Eigenschaften mit den übergebenen Werten. Die aktualisierte
    * Kartenliste wird dann im localStorage gespeichert. Zusätzlich wird
    * die Kartenanzahl in den Kategorien aktualisiert, falls sich die
    * Kategorie-Zuordnung geändert hat.
    *
+   * @method updateCard
+   * @memberof DataManager
    * @param {string} cardId - ID der zu aktualisierenden Karte
    * @param {Object} updates - Objekt mit den zu aktualisierenden Eigenschaften
    * @param {string} [updates.categoryId] - Neue Kategorie-ID
@@ -450,12 +558,14 @@ class DataManager {
 
   /**
    * Löscht eine Kategorie und alle zugehörigen Karten aus der Datenbank
-   * 
+   *
    * Diese Methode entfernt eine Kategorie anhand ihrer ID aus der Datenbank.
    * Zusätzlich werden alle Karten, die dieser Kategorie zugeordnet sind,
    * ebenfalls gelöscht, um Konsistenz zu gewährleisten und verwaiste
    * Karten zu vermeiden.
    *
+   * @method deleteCategory
+   * @memberof DataManager
    * @param {string} categoryId - ID der zu löschenden Kategorie
    * @returns {boolean} true, wenn die Löschung erfolgreich war
    */
@@ -476,11 +586,13 @@ class DataManager {
 
   /**
    * Löscht eine Karte (Frage) aus der Datenbank
-   * 
+   *
    * Diese Methode entfernt eine Karte anhand ihrer ID aus der Datenbank.
    * Nach dem Löschen wird die Kartenanzahl in den Kategorien aktualisiert,
    * um die Konsistenz der Daten zu gewährleisten.
    *
+   * @method deleteCard
+   * @memberof DataManager
    * @param {string} cardId - ID der zu löschenden Karte
    * @returns {boolean} true, wenn die Löschung erfolgreich war
    */
@@ -493,7 +605,18 @@ class DataManager {
   }
 
   /**
-   * Lädt Mock-Daten neu (für Debugging)
+   * Lädt alle Mock-Daten neu
+   *
+   * Diese Methode lädt sowohl die Mock-Kategorien als auch die Mock-Fragen neu.
+   * Nützlich für Debugging-Zwecke oder wenn die Daten zurückgesetzt werden sollen,
+   * ohne den gesamten localStorage zu löschen.
+   *
+   * @method reloadMockData
+   * @memberof DataManager
+   * @returns {void}
+   * @example
+   * dataManager.reloadMockData();
+   * console.log('Mock-Daten wurden neu geladen');
    */
   reloadMockData() {
     console.log('DataManager: Lade Mock-Daten neu...');
@@ -502,7 +625,18 @@ class DataManager {
   }
 
   /**
-   * Setzt alle Daten zurück
+   * Setzt alle Daten auf den Ausgangszustand zurück
+   *
+   * Diese Methode löscht alle gespeicherten Kategorien und Karten aus dem localStorage
+   * und initialisiert die Daten neu. Dadurch werden alle benutzerdefinierten Änderungen
+   * entfernt und die ursprünglichen Mock-Daten wiederhergestellt.
+   *
+   * @method resetAllData
+   * @memberof DataManager
+   * @returns {void}
+   * @example
+   * dataManager.resetAllData();
+   * console.log('Alle Daten wurden zurückgesetzt');
    */
   resetAllData() {
     localStorage.removeItem('quiz-categories');
@@ -511,7 +645,19 @@ class DataManager {
   }
 
   /**
-   * Exportiert alle Daten als JSON
+   * Exportiert alle Daten als JSON-Objekt
+   *
+   * Diese Methode erstellt ein vollständiges Export-Objekt mit allen Kategorien
+   * und Karten sowie einem Zeitstempel. Das Ergebnis kann für Backups oder
+   * Datenübertragungen verwendet werden.
+   *
+   * @method exportData
+   * @memberof DataManager
+   * @returns {Object} Export-Objekt mit categories, cards und exportDate
+   * @example
+   * const backup = dataManager.exportData();
+   * const json = JSON.stringify(backup);
+   * // json kann nun gespeichert oder übertragen werden
    */
   exportData() {
     return {
@@ -522,7 +668,22 @@ class DataManager {
   }
 
   /**
-   * Importiert Daten aus JSON
+   * Importiert Daten aus einem JSON-Objekt
+   *
+   * Diese Methode nimmt ein Daten-Objekt entgegen und importiert die enthaltenen
+   * Kategorien und Karten in den localStorage. Bestehende Daten werden überschrieben.
+   * Nach dem Import wird die Kartenanzahl in den Kategorien aktualisiert.
+   *
+   * @method importData
+   * @memberof DataManager
+   * @param {Object} data - Import-Objekt mit categories und/oder cards
+   * @param {Array<Object>} [data.categories] - Array mit zu importierenden Kategorien
+   * @param {Array<Object>} [data.cards] - Array mit zu importierenden Karten
+   * @returns {void}
+   * @example
+   * const backup = JSON.parse(backupJson);
+   * dataManager.importData(backup);
+   * console.log('Daten wurden importiert');
    */
   importData(data) {
     if (data.categories) {
@@ -536,8 +697,11 @@ class DataManager {
 
   /**
    * Gibt den Status einer Karte zurück
+   *
    * Mögliche Status: 'active', 'review', 'archived'
    *
+   * @method getCardStatus
+   * @memberof DataManager
    * @param {string} cardId - ID der Karte
    * @returns {string} Status der Karte (default: 'active')
    */
@@ -551,9 +715,11 @@ class DataManager {
   /**
    * Setzt den Status einer Karte
    *
+   * @method setCardStatus
+   * @memberof DataManager
    * @param {string} cardId - ID der Karte
    * @param {string} status - Neuer Status ('active', 'review', 'archived')
-   * @param {string} reason - Grund für die Statusänderung (optional)
+   * @param {string} [reason=''] - Grund für die Statusänderung (optional)
    * @returns {boolean} true, wenn erfolgreich
    */
   setCardStatus(cardId, status, reason = '') {
@@ -573,6 +739,8 @@ class DataManager {
   /**
    * Gibt alle Karten mit einem bestimmten Status zurück
    *
+   * @method getCardsByStatus
+   * @memberof DataManager
    * @param {string} status - Gewünschter Status ('active', 'review', 'archived')
    * @returns {Array<Object>} Array mit Karten des angegebenen Status
    */
@@ -591,6 +759,8 @@ class DataManager {
   /**
    * Gibt vollständige Status-Informationen für eine Karte zurück
    *
+   * @method getCardStatusInfo
+   * @memberof DataManager
    * @param {string} cardId - ID der Karte
    * @returns {Object|null} Status-Objekt mit status, reason, timestamp oder null
    */
@@ -603,8 +773,10 @@ class DataManager {
   /**
    * Archiviert eine Karte (setzt Status auf 'archived')
    *
+   * @method archiveCard
+   * @memberof DataManager
    * @param {string} cardId - ID der Karte
-   * @param {string} reason - Grund für die Archivierung
+   * @param {string} [reason='Archiviert durch Nutzer'] - Grund für die Archivierung
    * @returns {boolean} true, wenn erfolgreich
    */
   archiveCard(cardId, reason = 'Archiviert durch Nutzer') {
@@ -614,8 +786,10 @@ class DataManager {
   /**
    * Markiert eine Karte zur Überprüfung (setzt Status auf 'review')
    *
+   * @method markCardForReview
+   * @memberof DataManager
    * @param {string} cardId - ID der Karte
-   * @param {string} reason - Grund für die Überprüfung
+   * @param {string} [reason='Zur Überprüfung markiert'] - Grund für die Überprüfung
    * @returns {boolean} true, wenn erfolgreich
    */
   markCardForReview(cardId, reason = 'Zur Überprüfung markiert') {
@@ -625,6 +799,8 @@ class DataManager {
   /**
    * Reaktiviert eine Karte (setzt Status auf 'active')
    *
+   * @method reactivateCard
+   * @memberof DataManager
    * @param {string} cardId - ID der Karte
    * @returns {boolean} true, wenn erfolgreich
    */
@@ -633,20 +809,23 @@ class DataManager {
   }
 
   /**
-   * ===== ROLLENBASIERTE FUNKTIONEN (PB12.1) =====
+   * Rollenbasierte Funktionen
    * Mockup-Implementierung für rollenbasierte Zugriffskontrolle
    * Vorbereitet für spätere Backend-Integration
    */
 
   /**
    * Gibt die aktuelle Benutzerrolle zurück (Mockup)
-   * In Produktionsumgebung würde dies vom Backend kommen
-   * 
+   *
+   * In Produktionsumgebung würde dies vom Backend kommen.
+   *
    * Verfügbare Rollen:
    * - 'user': Standard-Nutzer (kann Fragen melden)
    * - 'tutor': Erweiterte Rechte (kann Karten bearbeiten und Status ändern)
    * - 'moderator': Vollzugriff (kann alles verwalten)
    *
+   * @method getCurrentUserRole
+   * @memberof DataManager
    * @returns {string} Aktuelle Rolle des Nutzers
    */
   getCurrentUserRole() {
@@ -656,8 +835,11 @@ class DataManager {
 
   /**
    * Setzt die Rolle des aktuellen Nutzers (nur für Mockup/Demo)
-   * WICHTIG: In Produktion würde dies durch Backend-Authentifizierung erfolgen
    *
+   * In Produktion würde dies durch Backend-Authentifizierung erfolgen.
+   *
+   * @method setCurrentUserRole
+   * @memberof DataManager
    * @param {string} role - Neue Rolle ('user', 'tutor', 'moderator')
    * @returns {boolean} true, wenn erfolgreich
    */
@@ -680,6 +862,8 @@ class DataManager {
    * - 'delete': Karten löschen (nur Moderator)
    * - 'manage_categories': Kategorien verwalten (Tutor, Moderator)
    *
+   * @method hasPermission
+   * @memberof DataManager
    * @param {string} permission - Zu prüfende Berechtigung
    * @returns {boolean} true, wenn Nutzer die Berechtigung hat
    */
@@ -698,6 +882,8 @@ class DataManager {
   /**
    * Gibt alle verfügbaren Rollen zurück (für UI-Auswahl)
    *
+   * @method getAvailableRoles
+   * @memberof DataManager
    * @returns {Array<Object>} Array mit Rollen-Objekten
    */
   getAvailableRoles() {
@@ -726,6 +912,8 @@ class DataManager {
   /**
    * Gibt die Rollenbeschreibung zurück
    *
+   * @method getRoleInfo
+   * @memberof DataManager
    * @param {string} role - Rolle
    * @returns {Object} Rollen-Objekt mit Details
    */
@@ -737,6 +925,8 @@ class DataManager {
   /**
    * Prüft, ob der Nutzer Tutor oder Moderator ist
    *
+   * @method isPrivilegedUser
+   * @memberof DataManager
    * @returns {boolean} true, wenn Nutzer erweiterte Rechte hat
    */
   isPrivilegedUser() {
@@ -747,6 +937,8 @@ class DataManager {
   /**
    * Prüft, ob der Nutzer Moderator ist
    *
+   * @method isModerator
+   * @memberof DataManager
    * @returns {boolean} true, wenn Nutzer Moderator ist
    */
   isModerator() {

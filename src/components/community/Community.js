@@ -1,5 +1,9 @@
 /**
- * Community-Komponente (Demo-Prototyp)
+ * @description Community-Komponente für studentischen Austausch und Kollaboration
+ */
+
+/**
+ * Community - Demo-Prototyp für Community-Features
  *
  * Diese Komponente stellt eine einfache Community-Seite für Austausch
  * und Kollaboration zwischen Studierenden dar. 
@@ -15,14 +19,15 @@
 import React, { useState } from 'react';
 
 /**
- * Community-Komponente
+ * Community - Übersicht mit Demo-Themen und Diskussionen
  *
  * Zeigt eine einfache Community-Übersicht mit Demo-Themen
  * und simulierten Diskussionen für Demozwecke.
  *
- * @param {Object} props - Komponenten-Properties
+ * @function Community
+ * @param {Object} props - Component properties
  * @param {Object} props.user - Aktueller Benutzer
- * @returns {JSX.Element} Die gerenderte Community-Komponente
+ * @returns {React.ReactElement} Die gerenderte Community-Komponente
  */
 function Community({ user }) {
     // Demo-Themen (in echter App aus API)

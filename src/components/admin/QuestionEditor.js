@@ -1,36 +1,8 @@
 /**
- * QuestionEditor-Komponente - Erweitert für kollaborative Kartenverwaltung
- *
- * Diese Komponente ermöglicht es Benutzern, neue Quiz-Fragen zu erstellen
- * und bestehende Fragen zu bearbeiten. Sie unterstützt kollaboratives
- * Erstellen von Fragenkatalogen und ist vollständig in die neue
- * Kartenverwaltung integriert.
- *
- * SICHERHEITSFEATURES:
- * - XSS-Schutz für alle Eingabefelder
- * - Bereinigung aller Benutzereingaben
- * - Sichere Speicherung von Fragen und Antworten
- *
- * ERWEITERT:
- * - Integration mit CardManager-Komponente
- * - Unterstützung für dynamische Kategorien
- * - Kollaborative Features mit Autorenzuordnung
- * - Verwaltung von Karten und Kategorien
- *
- * Features:
- * - Intuitive Formularerstellung
- * - Validierung der Eingaben
- * - Vorschau der Fragen
- * - Dynamische Kategorisierung
- * - Schwierigkeitsgrade
- * - Erklärungen für Antworten
- * - Kollaborative Kartenverwaltung
- *
- * UPDATE: XSS-Schutz für alle Eingabefelder implementiert
+ * Erweiterte Komponente zur Erstellung und Bearbeitung von Quiz-Fragen mit XSS-Schutz.
  *
  * @author Projektteam IU Community Quiz
  * @version 1.5.0
- * @since 2025-07-15
  */
 
 import React, { useState, useEffect } from 'react';
@@ -38,14 +10,36 @@ import CardManager from './CardManager';
 import { sanitizeInput } from '../../utils/xssUtils';
 
 /**
- * QuestionEditor-Komponente mit erweiterter Kartenverwaltung
- * 
+ * QuestionEditor - Erweiterte Komponente zur Erstellung und Bearbeitung von Quiz-Fragen
+ *
+ * **Sicherheitsfeatures:**
+ * - XSS-Schutz für alle Eingabefelder
+ * - Bereinigung aller Benutzereingaben
+ * - Sichere Speicherung von Fragen und Antworten
+ *
+ * **Hauptfunktionen:**
+ * - Intuitive Formularerstellung mit Validierung
+ * - Vorschau der Fragen vor dem Speichern
+ * - Dynamische Kategorisierung
+ * - Schwierigkeitsgrade (Leicht, Mittel, Schwer)
+ * - Erklärungen für korrekte Antworten
+ *
+ * **Kollaborative Features:**
+ * - Integration mit CardManager-Komponente
+ * - Autorenzuordnung bei Fragenerstellung
+ * - Verwaltung von Karten und Kategorien
+ * - Unterstützung für Mehrfachautoren
+ *
  * Diese Komponente bietet umfassenden XSS-Schutz für alle Eingabefelder,
  * indem sie Benutzereingaben bereinigt und potenziell gefährliche Zeichen
  * in sichere HTML-Entitäten umwandelt, ohne die Funktionalität zu beeinträchtigen.
  *
- * @param {Object} props - Komponenteneigenschaften
- * @param {Object} props.user - Benutzerdaten
+ * @function QuestionEditor
+ * @param {Object} props - Component properties
+ * @param {Object} props.user - Aktueller Benutzer
+ * @returns {React.ReactElement} Die gerenderte QuestionEditor-Komponente
+ * @example
+ * <QuestionEditor user={currentUser} />
  */
 function QuestionEditor({ user }) {
   // Zustandsverwaltung für aktuelle Ansicht
