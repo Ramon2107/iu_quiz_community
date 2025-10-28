@@ -6,8 +6,8 @@
 .pnp.js
 
 # testing
-/coverage
-/coverage_cy
+# /coverage todo generate after each git commit and do not push to repo
+# /coverage_cy todo generate after each git commit and do not push to repo
 /.nyc_output
 
 # production
