@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="Mocha Tests" time="3.133" tests="1" failures="0">
+  <testsuite name="Root Suite" timestamp="2025-10-28T19:20:07" tests="0" file="cypress\e2e\cooperate.cy.js" time="0.000" failures="0">
+  </testsuite>
+  <testsuite name="Start cooperative mode" timestamp="2025-10-28T19:20:07" tests="1" time="3.104" failures="0">
+    <testcase name="Start cooperative mode passes" time="2.801" classname="passes">
+    </testcase>
+  </testsuite>
+</testsuites>
