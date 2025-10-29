@@ -7,7 +7,7 @@
  *
  * Ein vollständiger Live-Chat für Multiplayer-Quiz-Modi mit persistenten Nachrichten
  * über alle Fragen hinweg.
- *
+ * @namespace quiz_Livechat
  * @author Projektteam IU Community Quiz
  * @version 1.1.0
  * @since 2025-07-15
@@ -22,6 +22,7 @@ import React, { useState, useEffect, useRef } from 'react';
  * farbcodierten Nachrichten und Spieler-Icons.
  *
  * @function LiveChat
+ * @memberOf quiz_Livechat
  * @param {Object} props - Component properties
  * @param {Array} props.messages - Alle Chat-Nachrichten
  * @param {Object} props.user - Aktueller Benutzer
@@ -37,6 +38,7 @@ function LiveChat({ messages, user, onSendMessage, players, gameMode }) {
 
     /**
      * Scrollt automatisch zum Ende des Chats
+     * @memberOf quiz_Livechat
      */
     useEffect(() => {
         chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -44,6 +46,7 @@ function LiveChat({ messages, user, onSendMessage, players, gameMode }) {
 
     /**
      * Behandelt die Eingabe einer Chat-Nachricht
+     * @memberOf quiz_Livechat
      * @param {Event} e - Event-Objekt
      */
     const handleSendMessage = (e) => {
@@ -67,6 +70,7 @@ function LiveChat({ messages, user, onSendMessage, players, gameMode }) {
 
     /**
      * Behandelt Eingabe-Änderungen
+     * @memberOf quiz_Livechat
      * @param {Event} e - Event-Objekt
      */
     const handleInputChange = (e) => {
@@ -76,6 +80,7 @@ function LiveChat({ messages, user, onSendMessage, players, gameMode }) {
 
     /**
      * Gibt die Farbe für einen Spieler zurück
+     * @memberOf quiz_Livechat
      * @param {Object} message - Nachricht
      * @returns {string} CSS-Farben-Klasse
      */
@@ -87,6 +92,7 @@ function LiveChat({ messages, user, onSendMessage, players, gameMode }) {
 
     /**
      * Gibt das Icon für einen Spieler zurück
+     * @memberOf quiz_Livechat
      * @param {Object} message - Nachricht
      * @returns {string} Icon-Klasse
      */
@@ -98,6 +104,7 @@ function LiveChat({ messages, user, onSendMessage, players, gameMode }) {
 
     /**
      * Formatiert die Zeitstempel
+     * @memberOf quiz_Livechat
      * @param {string} timestamp - ISO-Zeitstempel
      * @returns {string} Formatierte Zeit
      */

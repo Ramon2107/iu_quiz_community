@@ -1,5 +1,6 @@
 /**
  * Hauptanwendungskomponente mit Authentifizierung und Navigation.
+ * @namespace App
  * @author Projektteam IU Community Quiz
  * @version 1.0.0
  */
@@ -36,6 +37,7 @@ import dataManager from './data/dataManager';
  * initialen Sichtbereichs liegt.
  *
  * @function App
+ * @memberof App
  * @returns {React.ReactElement} Die gerenderte App-Komponente
  * @example
  * <App />
@@ -53,6 +55,7 @@ function App() {
      * Mock-Daten geladen sind, falls die Datenbank leer ist.
      *
      * @function useEffect
+     * @memberof App
      * @inner
      */
     useEffect(() => {
@@ -91,6 +94,7 @@ function App() {
      * um die Session über Seitenneuladungen hinweg zu persistieren.
      *
      * @function handleLogin
+     * @memberof App
      * @inner
      * @param {Object} userData - Benutzerdaten-Objekt (name, email, role, etc.)
      * @returns {void}
@@ -111,6 +115,7 @@ function App() {
      * setzt den Auth-Status zurück und navigiert zur Home-Seite.
      *
      * @function handleLogout
+     * @memberof App
      * @inner
      * @returns {void}
      */
@@ -126,6 +131,7 @@ function App() {
 
     /**
      * Behandelt Fragen-Events
+     * @memberof App
      */
     const handleQuestionAdded = (question) => {
         console.log('App: Neue Frage hinzugefügt:', question);
@@ -133,6 +139,7 @@ function App() {
 
     /**
      * Behandelt Kategorie-Events
+     * @memberof App
      */
     const handleCategoryAdded = (category) => {
         console.log('App: Neue Kategorie hinzugefügt:', category);
@@ -145,6 +152,7 @@ function App() {
      * welcher sich automatisch ausdehnt, um den verfügbaren Platz zu füllen.
      * Dies sorgt dafür, dass der Footer außerhalb des sichtbaren Bereichs bleibt,
      * bis der Benutzer nach unten scrollt.
+     * @memberof App
      */
     const renderCurrentView = () => {
         switch (currentView) {

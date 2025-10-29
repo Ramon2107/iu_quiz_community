@@ -87,20 +87,11 @@ npm run test_ci
 # Cypress E2E Tests öffnen (interaktiv)
 npm run cy:open-e2e
 
-# Cypress Unit Tests öffnen (interaktiv)
-npm run cy:open-unit
-
 # Cypress E2E Tests ausführen
 npm run cy:run-e2e
 
-# Cypress Unit Tests ausführen
-npm run cy:run-unit
-
 # E2E Tests mit laufendem Server
 npm run cy:e2e
-
-# Unit Tests mit laufendem Server
-npm run cy:unit
 ```
 
 ### Dokumentation
@@ -109,7 +100,6 @@ npm run cy:unit
 npm run jsdoc
 # oder
 npm run docs
-
 # Dokumentation generieren und im Browser öffnen
 npm run docs:serve
 ```

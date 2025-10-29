@@ -1,5 +1,6 @@
 /**
  * Verwaltungsoberfläche für Fragen und Kategorien mit rollenbasierter Zugriffskontrolle.
+ * @namespace admin_CardManager
  * @author Projektteam IU Community Quiz
  * @version 1.5.0
  */
@@ -9,7 +10,6 @@ import dataManager from '../../data/dataManager';
 
 /**
  * CardManager - Komponente zur Verwaltung von Fragen und Kategorien
- *
  * Diese Komponente bietet eine umfassende Verwaltungsoberfläche für das Quizsystem:
  *
  * **Kategorien-Management:**
@@ -34,6 +34,7 @@ import dataManager from '../../data/dataManager';
  * - Öffentliche/Private Inhalte
  *
  * @function CardManager
+ * @memberOf admin_CardManager
  * @param {Object} props - Component properties
  * @param {Object} props.user - Aktueller Benutzer
  * @param {Function} props.onQuestionAdded - Callback bei neuer Frage
@@ -68,6 +69,7 @@ function CardManager({ user, onQuestionAdded, onCategoryAdded }) {
     // Zustandsverwaltung für Bearbeitung
     /**
      * @type {null|CardState}
+     * @memberOf admin_CardManager
      */
     const [editingCard, setEditingCard] = useState(null);
 
@@ -83,7 +85,7 @@ function CardManager({ user, onQuestionAdded, onCategoryAdded }) {
 
     // Zustandsverwaltung für neue Karte
     /**
-     * @typedef {Object} CardState
+     * @typedef {Object} admin_CardManager.CardState
      * @property {string} categoryId - ID der Kategorie, zu der diese Karte gehört
      * @property {string} question - Fragetext
      * @property {string[]} answers - Array mit möglichen Antworten
@@ -137,6 +139,7 @@ function CardManager({ user, onQuestionAdded, onCategoryAdded }) {
 
     /**
      * Lädt Daten beim Component Mount - Initialisierung der Anwendungsdaten
+     * @memberOf admin_CardManager
      */
     useEffect(() => {
         loadData();
@@ -146,6 +149,7 @@ function CardManager({ user, onQuestionAdded, onCategoryAdded }) {
      * Filtert Karten basierend auf Suchbegriff und Filtern
      * Erweiterte Filterlogik mit Kategorie-Berücksichtigung und gemeldete Fragen
      * Diese Funktion wird bei jeder Änderung der Filter automatisch ausgeführt
+     * @memberOf admin_CardManager
      */
     useEffect(() => {
         let filtered = cards;
@@ -198,6 +202,7 @@ function CardManager({ user, onQuestionAdded, onCategoryAdded }) {
 
     /**
      * Lädt alle Daten über den DataManager
+     * @memberOf admin_CardManager
      */
     const loadData = () => {
         // Prüfe ob Mock-Daten geladen werden müssen für initiale Demonstration
@@ -221,6 +226,7 @@ function CardManager({ user, onQuestionAdded, onCategoryAdded }) {
 
     /**
      * Wechselt zur Kategorie-Detail-Ansicht - Navigation in spezifische Kategorie
+     * @memberOf admin_CardManager
      */
     const enterCategoryView = (category) => {
         setCurrentCategoryView(category);
@@ -230,6 +236,7 @@ function CardManager({ user, onQuestionAdded, onCategoryAdded }) {
 
     /**
      * Kehrt zur Kategorien-Übersicht zurück - Navigation zurück zur Hauptansicht
+     * @memberOf admin_CardManager
      */
     const exitCategoryView = () => {
         setCurrentCategoryView(null);
@@ -239,6 +246,7 @@ function CardManager({ user, onQuestionAdded, onCategoryAdded }) {
 
     /**
      * Gibt die Anzahl der Karten für eine Kategorie zurück - Statistik-Funktion
+     * @memberOf admin_CardManager
      */
     const getCardCountForCategory = (categoryId) => {
         if (!categoryId || !Array.isArray(cards)) return 0;
@@ -247,6 +255,7 @@ function CardManager({ user, onQuestionAdded, onCategoryAdded }) {
 
     /**
      * Validiert die neue Kategorie - Überprüfung der Eingabedaten
+     * @memberOf admin_CardManager
      */
     const validateCategory = () => {
         const newErrors = {};
@@ -274,6 +283,7 @@ function CardManager({ user, onQuestionAdded, onCategoryAdded }) {
 
     /**
      * Validiert die neue Karte - Vollständige Validierung aller Kartendaten
+     * @memberOf admin_CardManager
      */
     const validateCard = () => {
         const newErrors = {};
@@ -311,6 +321,7 @@ function CardManager({ user, onQuestionAdded, onCategoryAdded }) {
 
     /**
      * Erstellt eine neue Kategorie - Speicherung und Aktualisierung der Daten
+     * @memberOf admin_CardManager
      */
     const createCategory = () => {
         if (!validateCategory()) return;
@@ -350,6 +361,7 @@ function CardManager({ user, onQuestionAdded, onCategoryAdded }) {
 
     /**
      * Erstellt eine neue Karte - Vollständige Karten-Erstellung mit Validierung
+     * @memberOf admin_CardManager
      */
     const createCard = () => {
         if (!validateCard()) return;
@@ -391,6 +403,7 @@ function CardManager({ user, onQuestionAdded, onCategoryAdded }) {
 
     /**
      * Löscht eine Karte - Mit Bestätigungsdialog für Sicherheit
+     * @memberOf admin_CardManager
      */
     const deleteCard = (cardId) => {
         if (window.confirm('Möchten Sie diese Karte wirklich löschen?')) {
@@ -402,6 +415,7 @@ function CardManager({ user, onQuestionAdded, onCategoryAdded }) {
 
     /**
      * Löscht eine Kategorie - Mit Validierung und Bestätigung
+     * @memberOf admin_CardManager
      */
     const deleteCategory = (categoryId) => {
         try {
@@ -417,6 +431,7 @@ function CardManager({ user, onQuestionAdded, onCategoryAdded }) {
 
     /**
      * Startet die Bearbeitung einer Kategorie - Neu hinzugefügt
+     * @memberOf admin_CardManager
      */
     const startEditCategory = (category) => {
         setNewCategory({
@@ -433,6 +448,7 @@ function CardManager({ user, onQuestionAdded, onCategoryAdded }) {
 
     /**
      * Speichert die bearbeitete Kategorie - Neu hinzugefügt
+     * @memberOf admin_CardManager
      */
     const saveEditedCategory = () => {
         if (!validateCategory()) return;
@@ -463,6 +479,7 @@ function CardManager({ user, onQuestionAdded, onCategoryAdded }) {
 
     /**
      * Startet die Bearbeitung einer Karte - Vorbereitung der Edit-Ansicht
+     * @memberOf admin_CardManager
      */
     const startEditCard = (card) => {
         setEditingCard({
@@ -474,6 +491,7 @@ function CardManager({ user, onQuestionAdded, onCategoryAdded }) {
 
     /**
      * Speichert die bearbeitete Karte - Aktualisierung bestehender Karte
+     * @memberOf admin_CardManager
      */
     const saveEditedCard = () => {
         if (!editingCard.question.trim()) {
@@ -498,6 +516,7 @@ function CardManager({ user, onQuestionAdded, onCategoryAdded }) {
 
     /**
      * Aktualisiert eine Antwort der neuen Karte - JavaScript-kompatible Implementierung
+     * @memberOf admin_CardManager
      */
     const updateCardAnswer = (index, value) => {
         if (!newCard || !Array.isArray(newCard.answers)) return;
@@ -514,6 +533,7 @@ function CardManager({ user, onQuestionAdded, onCategoryAdded }) {
 
     /**
      * Aktualisiert eine Antwort der bearbeiteten Karte - JavaScript-kompatible Implementierung
+     * @memberOf admin_CardManager
      */
     const updateEditCardAnswer = (index, value) => {
         if (!editingCard || !Array.isArray(editingCard.answers)) return;
@@ -530,6 +550,7 @@ function CardManager({ user, onQuestionAdded, onCategoryAdded }) {
 
     /**
      * Gibt eindeutige Autoren zurück - Für Filter-Dropdown
+     * @memberOf admin_CardManager
      */
     const getUniqueAuthors = () => {
         try {
@@ -544,6 +565,7 @@ function CardManager({ user, onQuestionAdded, onCategoryAdded }) {
     /**
      * Ändert die Rolle des aktuellen Nutzers (Mockup für Demo)
      * In Produktion würde die Rolle durch Backend-Authentifizierung gesetzt
+     * @memberOf admin_CardManager
      */
     const handleRoleChange = (newRole) => {
         dataManager.setCurrentUserRole(newRole);
@@ -553,6 +575,7 @@ function CardManager({ user, onQuestionAdded, onCategoryAdded }) {
 
     /**
      * Rendert die Kategorien-Übersicht - Hauptansicht mit allen Kategorien
+     * @memberOf admin_CardManager
      */
     const renderCategoriesOverview = () => (
         <div className="container mt-4">
@@ -700,6 +723,7 @@ function CardManager({ user, onQuestionAdded, onCategoryAdded }) {
 
     /**
      * Rendert die Karten einer bestimmten Kategorie - Detailansicht für spezifische Kategorie
+     * @memberOf admin_CardManager
      */
     const renderCategoryDetail = () => (
         <div className="container mt-4">
@@ -1119,6 +1143,7 @@ function CardManager({ user, onQuestionAdded, onCategoryAdded }) {
 
     /**
      * Rendert das Formular zum Hinzufügen einer neuen Kategorie - Vollständiges Eingabeformular
+     * @memberOf admin_CardManager
      */
     const renderAddCategory = () => (
         <div className="container mt-4">
@@ -1261,6 +1286,7 @@ function CardManager({ user, onQuestionAdded, onCategoryAdded }) {
 
     /**
      * Rendert das Formular zum Bearbeiten einer Kategorie
+     * @memberOf admin_CardManager
      */
     const renderEditCategory = () => (
         <div className="container mt-4">
@@ -1423,6 +1449,7 @@ function CardManager({ user, onQuestionAdded, onCategoryAdded }) {
 
     /**
      * Rendert das Formular zum Hinzufügen einer neuen Karte
+     * @memberOf admin_CardManager
      */
     const renderAddCard = () => (
         <div className="container mt-4">
@@ -1619,6 +1646,7 @@ function CardManager({ user, onQuestionAdded, onCategoryAdded }) {
 
     /**
      * Rendert das Formular zum Bearbeiten einer Karte
+     * @memberOf admin_CardManager
      */
     const renderEditCard = () => (
         <div className="container mt-4">

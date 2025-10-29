@@ -7,7 +7,7 @@
  *
  * Diese Komponente erklärt dem Benutzer, wie Punkte im Quiz berechnet werden.
  * Sie ist in die QuizQuestion-Komponente integriert.
- *
+ * @namespace quiz_PointsInfo
  * @author Projektteam IU Community Quiz
  * @version 1.0.0
  * @since 2025-07-15
@@ -20,6 +20,7 @@ import React from 'react';
  * Zeigt modusabhängige Punkteberechnungsregeln an.
  *
  * @function PointsInfo
+ * @memberOf quiz_PointsInfo
  * @param {Object} props - Component properties
  * @param {string} props.gameMode - Spielmodus
  * @returns {React.ReactElement} Die gerenderte PointsInfo-Komponente

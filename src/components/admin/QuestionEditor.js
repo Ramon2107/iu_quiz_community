@@ -1,6 +1,6 @@
 /**
  * Erweiterte Komponente zur Erstellung und Bearbeitung von Quiz-Fragen mit XSS-Schutz.
- *
+ * @namespace admin_QuestionEditor
  * @author Projektteam IU Community Quiz
  * @version 1.5.0
  */
@@ -35,6 +35,7 @@ import { sanitizeInput } from '../../utils/xssUtils';
  * in sichere HTML-Entitäten umwandelt, ohne die Funktionalität zu beeinträchtigen.
  *
  * @function QuestionEditor
+ * @memberOf admin_QuestionEditor
  * @param {Object} props - Component properties
  * @param {Object} props.user - Aktueller Benutzer
  * @returns {React.ReactElement} Die gerenderte QuestionEditor-Komponente
@@ -63,6 +64,7 @@ function QuestionEditor({ user }) {
 
   /**
    * Lädt verfügbare Kategorien beim Component Mount
+   * @memberOf admin_QuestionEditor
    */
   useEffect(() => {
     loadCategories();
@@ -70,6 +72,7 @@ function QuestionEditor({ user }) {
 
   /**
    * Lädt Kategorien aus localStorage
+   * @memberOf admin_QuestionEditor
    */
   const loadCategories = () => {
     const storedCategories = JSON.parse(localStorage.getItem('quiz-categories') || '[]');
@@ -78,6 +81,7 @@ function QuestionEditor({ user }) {
 
   /**
    * Callback-Funktion für neue Fragen aus CardManager
+   * @memberOf admin_QuestionEditor
    */
   const handleQuestionAdded = (newQuestion) => {
     console.log('Neue Frage hinzugefügt:', newQuestion);
@@ -86,6 +90,7 @@ function QuestionEditor({ user }) {
 
   /**
    * Callback-Funktion für neue Kategorien aus CardManager
+   * @memberOf admin_QuestionEditor
    */
   const handleCategoryAdded = (newCategory) => {
     console.log('Neue Kategorie hinzugefügt:', newCategory);
@@ -100,6 +105,7 @@ function QuestionEditor({ user }) {
    *
    * @param {string} field - Feldname
    * @param {any} value - Neuer Wert
+   * @memberOf admin_QuestionEditor
    */
   const updateFormData = (field, value) => {
     // XSS-Schutz für Texteingaben
@@ -127,6 +133,7 @@ function QuestionEditor({ user }) {
    *
    * @param {number} index - Index der Antwort
    * @param {string} value - Neuer Wert
+   * @memberOf admin_QuestionEditor
    */
   const updateAnswer = (index, value) => {
     // XSS-Schutz für Antwort-Eingabe
@@ -141,6 +148,7 @@ function QuestionEditor({ user }) {
    * Validiert das Formular (Legacy-Support)
    *
    * @returns {boolean} True wenn valide, false wenn Fehler vorhanden
+   * @memberOf admin_QuestionEditor
    */
   const validateForm = () => {
     const newErrors = {};
@@ -172,6 +180,7 @@ function QuestionEditor({ user }) {
 
   /**
    * Speichert die Frage (Legacy-Support)
+   * @memberOf admin_QuestionEditor
    */
   const saveQuestion = () => {
     if (!validateForm()) {
@@ -213,6 +222,7 @@ function QuestionEditor({ user }) {
 
   /**
    * Rendert das Legacy-Formular (als Fallback)
+   * @memberOf admin_QuestionEditor
    */
   const renderLegacyForm = () => (
       <div className="card">
@@ -381,6 +391,7 @@ function QuestionEditor({ user }) {
 
   /**
    * Rendert die Statistiken
+   * @memberOf admin_QuestionEditor
    */
   const renderStats = () => (
       <div className="row mt-4">

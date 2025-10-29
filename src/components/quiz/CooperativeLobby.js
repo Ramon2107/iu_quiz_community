@@ -5,9 +5,9 @@
 /**
  * CooperativeLobby - Simulierte Lobby für kooperativen Modus
  *
- * Diese Komponente zeigt eine Lobby, in der Spieler sich sammeln.
- * Sie ist nur für Demozwecke und zeigt simulierte Spieler.
- *
+ * Diese Komponente zeigt eine Lobby, in der sich Spieler sammeln.
+ * Für Demozwecke, zeigt nur simulierte Spieler.
+ * @namespace quiz_CoopLobby
  * @author Projektteam IU Community Quiz
  * @version 1.0.0
  * @since 2025-07-15
@@ -20,6 +20,7 @@ import React, { useState, useEffect } from 'react';
  * Zeigt eine Lobby mit Spielern und Countdown bis zum Spielstart.
  *
  * @function CooperativeLobby
+ * @memberOf quiz_CoopLobby
  * @param {Object} props - Component properties
  * @param {Array} props.players - Spieler-Liste
  * @param {Object} props.user - Benutzerdaten
@@ -32,6 +33,7 @@ function CooperativeLobby({ players, user, onStartGame }) {
 
   /**
    * Countdown-Timer für automatischen Spielstart
+   * @memberOf quiz_CoopLobby
    */
   useEffect(() => {
     if (players.length >= 2) {

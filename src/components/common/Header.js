@@ -1,6 +1,6 @@
 /**
  * Responsive Hauptnavigation mit Bootstrap-Integration.
- *
+ * @namespace common_Header
  * @author Projektteam IU Community Quiz
  * @version 1.2.1
  */
@@ -22,6 +22,7 @@ import React from 'react';
  * - Logo-Klick für schnelle Rückkehr zur Startseite
  *
  * @function Header
+ * @memberOf common_Header
  * @param {Object} props - Component properties
  * @param {string} props.currentView - Aktuelle Ansicht
  * @param {Function} props.setCurrentView - Funktion zum Ändern der Ansicht

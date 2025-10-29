@@ -1,13 +1,12 @@
 /**
  * @description Datenschutzhinweise-Komponente mit DSGVO-Informationen
  */
-
 /**
  * PrivacyPolicy - Datenschutzbestimmungen
  *
  * Diese Komponente zeigt die Datenschutzbestimmungen für das IU Community Quiz System an.
  * Sie enthält alle relevanten Informationen zur Datenerfassung, -verarbeitung und -nutzung.
- *
+ * @namespace common_Privacy
  * @author System
  * @version 1.0.0
  * @since 2025-07-15
@@ -22,6 +21,7 @@ import React from 'react';
  * scrollbaren Modal-Ansicht dar.
  *
  * @function PrivacyPolicy
+ * @memberOf common_Privacy
  * @returns {React.ReactElement} Die gerenderte Datenschutzhinweise-Komponente
  */
 function PrivacyPolicy() {

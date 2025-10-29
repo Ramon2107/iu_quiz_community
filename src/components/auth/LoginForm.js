@@ -1,6 +1,6 @@
 /**
  * Authentifizierungsformular mit umfassenden Sicherheitsmaßnahmen.
- *
+ * @namespace auth_LoginForm
  * @author Projektteam IU Community Quiz
  * @version 1.1.0
  */
@@ -9,8 +9,28 @@ import React, { useState } from 'react';
 import { sanitizeInput } from '../../utils/xssUtils';
 
 /**
- * Simulierte Benutzerdatenbank mit verschiedenen Nutzer-Typen
- * In einer echten Anwendung würde dies über eine sichere API erfolgen
+ * @description Simuliertes Modul mit Testdaten und einer kleinen Demo-Komponente.
+ */
+/**
+ * Repräsentiert einen Anwender in der Mock-Datenbank.
+ * @typedef {Object} auth_LoginForm.User
+ * @property {string|number} id - Eindeutige ID des Benutzers.
+ * @property {string} name - Anzeigename.
+ * @property {string} email - E-Mail-Adresse.
+ * @property {'admin'|'user'|'guest'} role - Rolle des Benutzers.
+ * @property {boolean} active - Ob der Benutzer aktiv ist.
+ */
+
+/**
+ * Simulierte Benutzerdatenbank mit verschiedenen Nutzer-Typen.
+ * In einer echten Anwendung würde dies über eine sichere API erfolgen.
+ * @memberof auth_LoginForm
+ * @constant {User[]}
+ * @type {User[]}
+ * @example
+ * // Zugriff:
+ * // import { MOCK_USERS } from './MockUsers';
+ * // console.log(MOCK_USERS[0].email);
  */
 const MOCK_USERS = [
     {
@@ -64,8 +84,7 @@ const SecurityUtils = {
      * 
      * Diese Funktion kombiniert XSS-Schutz durch HTML-Entitäten mit
      * SQL-Injection-Schutz und Längenbegrenzung für maximale Sicherheit.
-     *
-
+     * @memberof auth_LoginForm
      * @param {string} input - Zu bereinigende Eingabe
      * @returns {string} Bereinigte Eingabe
      */
@@ -84,6 +103,7 @@ const SecurityUtils = {
 
     /**
      * Validiert E-Mail-Format
+     * @memberof auth_LoginForm
      * @param {string} email - E-Mail-Adresse
      * @returns {boolean} Gültige E-Mail
      */
@@ -94,6 +114,7 @@ const SecurityUtils = {
 
     /**
      * Validiert Passwort-Stärke
+     * @memberof auth_LoginForm
      * @param {string} password - Passwort
      * @returns {object} Validierungsergebnis
      */
@@ -122,6 +143,7 @@ const SecurityUtils = {
  * - Session-Management über localStorage
  *
  * @function LoginForm
+ * @memberof auth_LoginForm
  * @param {Object} props - Component properties
  * @param {Function} props.onLogin - Callback bei erfolgreicher Anmeldung
  * @returns {React.ReactElement} Die gerenderte LoginForm-Komponente
@@ -139,6 +161,7 @@ function LoginForm({ onLogin }) {
 
     /**
      * Behandelt Eingabeänderungen mit Sicherheitsvalidierung
+     * @memberof auth_LoginForm
      */
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -160,6 +183,7 @@ function LoginForm({ onLogin }) {
 
     /**
      * Validiert das Formular vor der Übermittlung
+     * @memberof auth_LoginForm
      */
     const validateForm = () => {
         const newErrors = {};
@@ -184,7 +208,8 @@ function LoginForm({ onLogin }) {
 
     /**
      * Simuliert Authentifizierung mit der Mock-Datenbank
-     */
+     * @memberof auth_LoginForm
+     *      */
     const authenticateUser = async (email, password) => {
         // Simuliere Netzwerk-Latenz
         await new Promise(resolve => setTimeout(resolve, 1000));
@@ -211,6 +236,7 @@ function LoginForm({ onLogin }) {
 
     /**
      * Behandelt die Formular-Übermittlung
+     * @memberof auth_LoginForm
      */
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -239,6 +265,7 @@ function LoginForm({ onLogin }) {
 
     /**
      * Füllt Demo-Anmeldedaten aus
+     * @memberof auth_LoginForm
      */
     const fillDemoCredentials = (userIndex = 0) => {
         const demoUser = MOCK_USERS[userIndex];

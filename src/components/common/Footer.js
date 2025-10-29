@@ -1,6 +1,6 @@
 /**
  * Footer mit Card-Struktur, Modals und rechtlichen Informationen.
- *
+ * @namespace common_Footer
  * @author Projektteam IU Community Quiz
  * @version 1.1.0
  */
@@ -23,6 +23,7 @@ import Imprint from './Imprint';
  * - Social Media Links und Kontaktinformationen
  *
  * @function Footer
+ * @memberOf common_Footer
  * @returns {React.ReactElement} Die gerenderte Footer-Komponente
  * @example
  * <Footer />
@@ -35,41 +36,49 @@ function Footer() {
 
     /**
      * Öffnet das Datenschutz-Modal
+     * @memberOf common_Footer
      */
     const handleShowPrivacy = () => setShowPrivacyModal(true);
 
     /**
      * Schließt das Datenschutz-Modal
+     * @memberOf common_Footer
      */
     const handleClosePrivacy = () => setShowPrivacyModal(false);
 
     /**
      * Öffnet das Impressum-Modal
+     * @memberOf common_Footer
      */
     const handleShowImprint = () => setShowImprintModal(true);
 
     /**
      * Schließt das Impressum-Modal
+     * @memberOf common_Footer
      */
     const handleCloseImprint = () => setShowImprintModal(false);
 
     /**
      * Öffnet das Hilfe-Modal
+     * @memberOf common_Footer
      */
     const handleShowHelp = () => setShowHelpModal(true);
 
     /**
      * Schließt das Hilfe-Modal
+     * @memberOf common_Footer
      */
     const handleCloseHelp = () => setShowHelpModal(false);
 
     /**
      * Öffnet das Nutzungsbedingungen-Modal
+     * @memberOf common_Footer
      */
     const handleShowTerms = () => setShowTermsModal(true);
 
     /**
      * Schließt das Nutzungsbedingungen-Modal
+     * @memberOf common_Footer
      */
     const handleCloseTerms = () => setShowTermsModal(false);
 

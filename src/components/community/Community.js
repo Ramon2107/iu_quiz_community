@@ -10,7 +10,7 @@
  * 
  * WICHTIG: Dies ist eine Demo-Implementation mit Mock-Daten.
  * In einer produktiven Umgebung würden hier echte API-Aufrufe erfolgen.
- *
+ * @namespace Community
  * @author System
  * @version 1.0.0
  * @since 2025-07-15
@@ -25,6 +25,7 @@ import React, { useState } from 'react';
  * und simulierten Diskussionen für Demozwecke.
  *
  * @function Community
+ * @memberOf Community
  * @param {Object} props - Component properties
  * @param {Object} props.user - Aktueller Benutzer
  * @returns {React.ReactElement} Die gerenderte Community-Komponente
@@ -87,6 +88,7 @@ function Community({ user }) {
 
     /**
      * Behandelt das Öffnen eines Themas
+     * @memberOf Community
      * @param {Object} topic - Ausgewähltes Thema
      */
     const handleTopicClick = (topic) => {
@@ -95,6 +97,7 @@ function Community({ user }) {
 
     /**
      * Behandelt das Hinzufügen eines neuen Posts (Demo)
+     * @memberOf Community
      */
     const handleAddPost = () => {
         if (newPost.trim()) {
@@ -105,6 +108,7 @@ function Community({ user }) {
 
     /**
      * Schließt die Themen-Detailansicht
+     * @memberOf Community
      */
     const handleBackToOverview = () => {
         setSelectedTopic(null);

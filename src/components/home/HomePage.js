@@ -1,6 +1,6 @@
 /**
  * Startseite mit Übersicht über Funktionen und Statistiken.
- *
+ * @namespace home_Hompepage
  * @author Projektteam IU Community Quiz
  * @version 1.2.0
  */
@@ -25,6 +25,7 @@ import dataManager from '../../data/dataManager';
  * - Responsive Design für alle Endgeräte
  *
  * @function HomePage
+ * @memberOf home_Hompepage
  * @param {Object} props - Component properties
  * @param {Object} props.user - Benutzerdaten
  * @param {Function} props.onNavigate - Callback für Navigation

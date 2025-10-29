@@ -1,5 +1,6 @@
 /**
  * Anzeige der Quiz-Ergebnisse mit Statistiken und Rangliste.
+ * @namespace quiz_Results
  * @author Projektteam IU Community Quiz
  * @version 1.2.0
  */
@@ -24,6 +25,7 @@ import simulatedPlayersService from '../../services/SimulatedPlayersService'; //
  * - Farbcodierte Performance-Bewertung
  *
  * @function QuizResults
+ * @memberOf quiz_Results
  * @param {Object} props - Component properties
  * @param {Array} props.questions - Alle Quiz-Fragen
  * @param {Array} props.answers - Alle gegebenen Antworten
@@ -100,6 +102,7 @@ function QuizResults({
 
   /**
    * Analysiert Spielergebnisse für Multiplayer-Modi
+   * @memberOf quiz_Results
    */
   const analyzeGameResults = (ranking) => {
     if (!ranking || ranking.length === 0) return null;
@@ -154,6 +157,7 @@ function QuizResults({
 
   /**
    * Gibt CSS-Klasse für Punktzahl zurück
+   * @memberOf quiz_Results
    */
   const getScoreClass = () => {
     if (score >= 80) return 'text-success';
@@ -163,6 +167,7 @@ function QuizResults({
 
   /**
    * Gibt Performance-Bewertung zurück
+   * @memberOf quiz_Results
    */
   const getPerformanceRating = () => {
     if (score >= 90) return { text: 'Hervorragend', icon: 'fas fa-star', color: 'success' };
@@ -175,6 +180,7 @@ function QuizResults({
 
   /**
    * Gibt Spielmodus-spezifische CSS-Klasse zurück
+   * @memberOf quiz_Results
    */
   const getGameModeClass = () => {
     switch (gameMode) {
@@ -189,6 +195,7 @@ function QuizResults({
 
   /**
    * Gibt Spielmodus-spezifisches Icon zurück
+   * @memberOf quiz_Results
    */
   const getGameModeIcon = () => {
     switch (gameMode) {

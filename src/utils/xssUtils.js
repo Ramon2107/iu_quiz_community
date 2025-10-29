@@ -10,7 +10,7 @@
  * - sanitizeUrlParam: Bereinigt URL-Parameter
  * - sanitizeHtml: Bereinigt HTML-Content für sichere Anzeige
  *
- * @namespace Utils.Security
+ * @namespace utils_Security
  * @author Projektteam IU Community Quiz
  * @version 1.0.0
  */
@@ -23,7 +23,7 @@
  * dabei die ursprüngliche Bedeutung des Textes bei.
  *
  * @function sanitizeInput
- * @memberof Utils.Security
+ * @memberof utils_Security
  * @param {string} input - Die zu bereinigende Eingabe
  * @returns {string} Die bereinigte Eingabe ohne gefährliche Zeichen
  * @example
@@ -50,7 +50,7 @@ export const sanitizeInput = (input) => {
  * die in HTML-Attributen verwendet werden, wie z.B. in data-Attributen.
  *
  * @function sanitizeAttribute
- * @memberof Utils.Security
+ * @memberof utils_Security
  * @param {string} input - Der zu bereinigende Attributwert
  * @returns {string} Der bereinigte Attributwert
  * @example
@@ -75,7 +75,7 @@ export const sanitizeAttribute = (input) => {
  * die in URLs oder als URL-Parameter verwendet werden.
  *
  * @function sanitizeUrlParam
- * @memberof Utils.Security
+ * @memberof utils_Security
  * @param {string} input - Der zu bereinigende URL-Parameter
  * @returns {string} Der bereinigte URL-Parameter
  * @example
@@ -97,7 +97,7 @@ export const sanitizeUrlParam = (input) => {
  * Erlaubt nur sichere Tags: b, i, em, strong, p, br
  *
  * @function sanitizeHtml
- * @memberof Utils.Security
+ * @memberof utils_Security
  * @param {string} html - Der zu bereinigende HTML-Inhalt
  * @returns {string} Der bereinigte HTML-Inhalt (nur erlaubte Tags)
  * @example

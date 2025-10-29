@@ -1,5 +1,6 @@
 /**
  * Benutzerprofil mit Statistiken, Bearbeitungsfunktion und XSS-Schutz.
+ * @namespace user_Profile
  * @author Projektteam IU Community Quiz
  * @version 1.2.0
  */
@@ -29,6 +30,7 @@ import { sanitizeInput } from '../../utils/xssUtils';
  * - Sanitization aller Textinhalte
  *
  * @function UserProfile
+ * @memberOf user_Profile
  * @param {Object} props - Component properties
  * @param {Object} props.user - Benutzerdaten
  * @param {Function} props.onLogout - Callback bei Abmeldung
@@ -52,6 +54,7 @@ function UserProfile({ user, onLogout }) {
 
   /**
    * Lädt Benutzerstatistiken
+   * @memberOf user_Profile
    */
   const loadUserStats = useCallback(() => {
     // Simuliere Statistiken basierend auf Benutzerdaten
@@ -73,6 +76,7 @@ function UserProfile({ user, onLogout }) {
 
   /**
    * Behandelt Profil-Änderungen
+   * @memberOf user_Profile
    */
   const handleProfileUpdate = () => {
     // In echter App würde dies über API erfolgen
@@ -80,7 +84,8 @@ function UserProfile({ user, onLogout }) {
   };
 
   /**
-   * UPDATE: Behandelt Logout mit Bestätigung
+   * Behandelt Logout mit Bestätigung
+   * @memberOf user_Profile
    */
   const handleLogout = () => {
     if (window.confirm('Möchten Sie sich wirklich abmelden?')) {

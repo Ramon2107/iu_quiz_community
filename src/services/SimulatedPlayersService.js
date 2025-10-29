@@ -6,6 +6,7 @@
  * Jeder Spieler hat Stärken und Schwächen in verschiedenen Kategorien.
  *
  * @const {Array<Object>} SIMULATED_PLAYERS
+ * @memberof SimulatedPlayersService
  */
 const SIMULATED_PLAYERS = [
     {

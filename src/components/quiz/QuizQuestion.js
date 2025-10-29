@@ -1,5 +1,6 @@
 /**
  * Einzelne Quiz-Frage mit Multiplayer-Unterstützung und Live-Features.
+ * @namespace quiz_Question
  * @author Projektteam IU Community Quiz
  * @version 1.7.0
  */
@@ -36,7 +37,8 @@ import { sanitizeInput } from '../../utils/xssUtils';
  * FIX: Verbesserte Positionierung der Live-Punktzahl-Anzeige
  * FIX: Kompakte und übersichtliche Live-Ranglisten-Darstellung
  *
- * @function QuizQuestio
+ * @function QuizQuestion
+ * @memberOf quiz_Question
  * @param {Object} props - Component properties
  * @param {Object} props.question - Die anzuzeigende Frage
  * @param {number} props.questionNumber - Aktuelle Fragennummer
@@ -107,6 +109,7 @@ function QuizQuestion({
 
     /**
      * Berechnet die aktuellen Punkte des Spielers
+     * @memberOf quiz_Question
      * @returns {number} Aktuelle Punkte
      */
     const calculateCurrentScore = () => {
@@ -120,7 +123,8 @@ function QuizQuestion({
     };
 
     /**
-     * FIX: Berechnet die Anzahl richtig beantworteter Fragen (statt Prozentsatz)
+     * Berechnet die Anzahl richtig beantworteter Fragen
+     * @memberOf quiz_Question
      * @returns {number} Anzahl richtig beantworteter Fragen
      */
     const calculateHumanCorrectAnswers = () => {
@@ -129,6 +133,7 @@ function QuizQuestion({
 
     /**
      * Berechnet die Genauigkeit des menschlichen Spielers
+     * @memberOf quiz_Question
      * @returns {number} Genauigkeit in Prozent
      */
     const calculateHumanAccuracy = () => {
@@ -139,6 +144,7 @@ function QuizQuestion({
 
     /**
      * FIX: Korrekte Berechnung der durchschnittlichen Antwortzeit des menschlichen Spielers
+     * @memberOf quiz_Question
      * @returns {number} Durchschnittliche Zeit in Sekunden (gerundet auf 1 Dezimalstelle)
      */
     const calculateAverageTime = () => {
@@ -149,6 +155,7 @@ function QuizQuestion({
 
     /**
      * Erstellt die vollständige Rangliste mit menschlichem Spieler
+     * @memberOf quiz_Question
      * @returns {Array} Sortierte Rangliste
      */
     const createFullRanking = () => {
@@ -180,6 +187,7 @@ function QuizQuestion({
 
     /**
      * Gibt die Positions-Farbe zurück
+     * @memberOf quiz_Question
      * @param {number} position - Position in der Rangliste
      * @returns {string} Bootstrap-Farben-Klasse
      */
@@ -194,6 +202,7 @@ function QuizQuestion({
 
     /**
      * Gibt das Positions-Icon zurück
+     * @memberOf quiz_Question
      * @param {number} position - Position in der Rangliste
      * @returns {string} Icon-Klasse
      *
@@ -220,6 +229,7 @@ function QuizQuestion({
 
     /**
      * Aktualisiert die Punkte-Anzeige dynamisch
+     * @memberOf quiz_Question
      */
     useEffect(() => {
         const newScore = allAnswers.reduce((total, answer) => {
@@ -238,11 +248,12 @@ function QuizQuestion({
     }, [allAnswers, currentScore]);
 
     /**
-     * Zeitmessung und Timer-Setup - KORRIGIERT
+     * Zeitmessung und Timer-Setup
      *
      * Aktualisiert: Abhängigkeitsarray optimiert, um React-Warnungen zu vermeiden.
      * Die Abhängigkeiten wurden sorgfältig ausgewählt, um die Funktionalität zu erhalten
      * und gleichzeitig unnötige Re-Renders zu vermeiden.
+     * @memberOf quiz_Question
      */
     useEffect(() => {
         // Cleanup vorheriger Timer
@@ -316,7 +327,8 @@ function QuizQuestion({
     }, [question, gameMode, onAnswer]);
 
     /**
-     * Effekt für Multiplayer-Nachrichten und Updates
+     * useEffect für Multiplayer-Nachrichten und Updates
+     * @memberOf quiz_Question
      */
     useEffect(() => {
         if (multiplayerData?.isMultiplayer && multiplayerData.currentPlayerAnswers.length > 0) {
@@ -348,7 +360,7 @@ function QuizQuestion({
 
     /**
      * Behandelt Antwort-Auswahl
-     *
+     * @memberOf quiz_Question
      * @param {number} answerIndex - Index der ausgewählten Antwort
      */
     const handleAnswerSelect = (answerIndex) => {
@@ -380,6 +392,7 @@ function QuizQuestion({
      * 
      * Die Nachricht wird vor dem Senden mit XSS-Schutz bereinigt,
      * um die Sicherheit der Anwendung zu gewährleisten.
+     * @memberOf quiz_Question
      */
     const handleSendMessage = () => {
         if (chatInputMessage.trim() && onSendChatMessage) {
@@ -406,6 +419,7 @@ function QuizQuestion({
      *
      * Aktualisiert: Von onKeyPress zu onKeyDown gewechselt, da onKeyPress in React 18 als veraltet gilt.
      * Dies verbessert die Kompatibilität und vermeidet Warnungen in der Konsole.
+     * @memberOf quiz_Question
      */
     const handleChatKeyPress = (e) => {
         if (e.key === 'Enter') {
@@ -415,7 +429,7 @@ function QuizQuestion({
 
     /**
      * Gibt CSS-Klasse für Antwort-Button zurück
-     *
+     * @memberOf quiz_Question
      * @param {number} index - Index der Antwort
      * @returns {string} CSS-Klassen-String
      */
@@ -440,7 +454,7 @@ function QuizQuestion({
 
     /**
      * Berechnet Fortschritt in Prozent
-     *
+     * @memberOf quiz_Question
      * @returns {number} Fortschritt in Prozent
      */
     const getProgressPercentage = () => {
@@ -449,7 +463,7 @@ function QuizQuestion({
 
     /**
      * Gibt Spielmodus-spezifische CSS-Klasse zurück
-     *
+     * @memberOf quiz_Question
      * @returns {string} CSS-Klassen-String
      */
     const getGameModeClass = () => {
@@ -465,7 +479,7 @@ function QuizQuestion({
 
     /**
      * Gibt Spielmodus-spezifisches Icon zurück
-     *
+     * @memberOf quiz_Question
      * @returns {string} Icon-Klassen-String
      */
     const getGameModeIcon = () => {
@@ -486,6 +500,7 @@ function QuizQuestion({
      * und wird derzeit nicht aktiv verwendet. Sie bleibt im Code für zukünftige Implementierungen
      * oder als Referenz für ähnliche Funktionalitäten. Die Lobby-Darstellung wurde durch
      * spezialisierte Komponenten wie renderChatWindow und renderRankingWindow ersetzt.
+     * @memberOf quiz_Question
      */
         // Alte Lobby-Funktion als Referenz behalten für mögliche Wiederverwendung
     const renderLobby = () => {
@@ -555,6 +570,7 @@ function QuizQuestion({
 
     /**
      * Rendert das integrierte Chat-Fenster (nur für cooperative Mode)
+     * @memberOf quiz_Question
      */
     const renderChatWindow = () => {
         if (gameMode !== 'cooperative') return null;
@@ -629,6 +645,7 @@ function QuizQuestion({
     /**
      * Rendert das integrierte Ranking-Fenster
      * FIX: Kompakte und übersichtliche Darstellung ohne Verzerrungen
+     * @memberOf quiz_Question
      */
     const renderRankingWindow = () => {
         const ranking = createFullRanking();

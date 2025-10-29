@@ -1,5 +1,6 @@
 /**
  * Zentrale Quiz-Steuerung mit verschiedenen Spielmodi und Multiplayer-Unterstützung.
+ * @namespace quiz_Main
  * @author Projektteam IU Community Quiz
  * @version 1.8.1
  */
@@ -34,6 +35,7 @@ import simulatedPlayersService from '../../services/SimulatedPlayersService';
  * - single-player: Individuelles Lernen ohne Zeitdruck
  *
  * @function QuizMain
+ * @memberOf quiz_Main
  * @param {Object} props - Component properties
  * @param {Object} props.user - Benutzerdaten
  * @returns {React.ReactElement} Die gerenderte QuizMain-Komponente

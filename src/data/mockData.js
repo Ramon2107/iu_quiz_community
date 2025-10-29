@@ -18,7 +18,7 @@
  * - mockQuestions: Array mit Fragen-Objekten
  * - Hilfsfunktionen für Datenzugriff
  *
- * @namespace Data.Mockdata
+ * @namespace data_Mockdata
  * @author Projektteam IU Community Quiz
  * @version 1.3.0
  * @since 2025-07-15
@@ -29,7 +29,7 @@
  *
  * Enthält 6 Hauptkategorien für verschiedene Studienbereiche mit jeweils
  * 11-18 Fragen. Jede Kategorie hat ein eigenes Farbschema und Icon.
- *
+ * @memberof data_Mockdata
  * @const {Array<Object>} mockCategories
  */
 export const mockCategories = [
@@ -121,6 +121,7 @@ export const mockCategories = [
  * - Projektmanagement: 14 Fragen
  * - Wirtschaftsinformatik: 16 Fragen
  * - Netzwerke: 11 Fragen
+ * @memberof data_Mockdata
  *
  * @const {Array<Object>} mockQuestions
  */
@@ -1725,7 +1726,7 @@ export const mockQuestions = [
  * mit der korrekten Anzahl verfügbarer Fragen.
  *
  * @function getCategoriesWithCardCount
- * @memberOf Data.Mockdata
+ * @memberof data_Mockdata
  * @returns {Array<Object>} Array mit Kategorien inkl. cardCount-Eigenschaft
  * @example
  * const categories = getCategoriesWithCardCount();
@@ -1745,7 +1746,7 @@ export const getCategoriesWithCardCount = () => {
  * nur die Fragen zurück, die zu dieser Kategorie gehören.
  *
  * @function getQuestionsByCategory
- * @memberOf Data.Mockdata
+ * @memberof data_Mockdata
  * @param {string} categoryId - ID der Kategorie (z.B. 'cat1' für Programmierung)
  * @returns {Array<Object>} Array mit Fragen der angegebenen Kategorie
  * @example
@@ -1763,7 +1764,7 @@ export const getQuestionsByCategory = (categoryId) => {
  * und gibt diese zurück, falls vorhanden.
  *
  * @function getQuestionById
- * @memberOf Data.Mockdata
+ * @memberof data_Mockdata
  * @param {string} questionId - ID der gesuchten Frage (z.B. 'q1')
  * @returns {Object|undefined} Frage-Objekt oder undefined, falls nicht gefunden
  * @example
@@ -1781,7 +1782,7 @@ export const getQuestionById = (questionId) => {
  * und gibt diese zurück, falls vorhanden.
  *
  * @function getCategoryById
- * @memberOf Data.Mockdata
+ * @memberof data_Mockdata
  * @param {string} categoryId - ID der gesuchten Kategorie (z.B. 'cat1')
  * @returns {Object|undefined} Kategorie-Objekt oder undefined, falls nicht gefunden
  * @example

@@ -1,5 +1,6 @@
 /**
  * Kategorieauswahl mit Suchfunktion und Fragenanzahl-Anzeige.
+ * @namespace quiz_CategorySelector
  * @author Projektteam IU Community Quiz
  * @version 1.3.0
  */
@@ -24,6 +25,7 @@ import dataManager from '../../data/dataManager';
  * - Validierung, ob genügend Fragen für die gewählte Fragenanzahl vorhanden sind
  *
  * @function QuizCategorySelector
+ * @memberOf quiz_CategorySelector
  * @param {Object} props - Component properties
  * @param {Array} props.categories - Verfügbare Kategorien
  * @param {Function} props.onCategorySelect - Callback bei Kategorieauswahl
@@ -105,7 +107,7 @@ function QuizCategorySelector({
      * Diese Funktion wird für zukünftige Erweiterungen aufbewahrt,
      * um die geschätzte Spielzeit anzuzeigen. Aktuell nicht in Verwendung,
      * aber für kommende UI-Updates vorgesehen.
-     * 
+     * @memberOf quiz_CategorySelector
      * @returns {string} Geschätzte Spielzeit in Minuten
      */
     function getEstimatedTime() {
