@@ -25,9 +25,10 @@ import React, { useState, useEffect } from 'react';
  * @param {Array} props.players - Spieler-Liste
  * @param {Object} props.user - Benutzerdaten
  * @param {Function} props.onStartGame - Callback zum Spielstart
+ * @param {Function} props.onBack - Callback für Zurück zur Kategorieauswahl
  * @returns {React.ReactElement} Die gerenderte CooperativeLobby-Komponente
  */
-function CooperativeLobby({ players, user, onStartGame }) {
+function CooperativeLobby({ players, user, onStartGame, onBack }) {
   const [countdown, setCountdown] = useState(5);
   const [isReady, setIsReady] = useState(false);
 
@@ -48,7 +49,7 @@ function CooperativeLobby({ players, user, onStartGame }) {
           return prev - 1;
         });
       }, 1000);
-      
+
       return () => clearInterval(timer);
     }
   }, [players.length, onStartGame]);
@@ -59,10 +60,21 @@ function CooperativeLobby({ players, user, onStartGame }) {
         <div className="col-md-8">
           <div className="card shadow-lg">
             <div className="card-header bg-success text-white">
-              <h3 className="mb-0">
-                <i className="fas fa-users me-2"></i>
-                Kooperative Lobby
-              </h3>
+              <div className="d-flex align-items-center">
+                {onBack && (
+                  <button 
+                    className="btn btn-sm btn-light me-3"
+                    onClick={onBack}
+                    disabled={isReady}
+                  >
+                    <i className="fas fa-arrow-left"></i>
+                  </button>
+                )}
+                <h3 className="mb-0 flex-grow-1">
+                  <i className="fas fa-users me-2"></i>
+                  Kooperative Lobby
+                </h3>
+              </div>
             </div>
             <div className="card-body">
               <div className="text-center mb-4">
@@ -120,6 +132,19 @@ function CooperativeLobby({ players, user, onStartGame }) {
             </div>
           </div>
         </div>
+
+                {/* Footer mit Zurück-Button */}
+                {onBack && !isReady && (
+                  <div className="card-footer bg-light">
+                    <button 
+                      className="btn btn-secondary w-100"
+                      onClick={onBack}
+                    >
+                      <i className="fas fa-arrow-left me-2"></i>
+                      Zurück zur Kategorieauswahl
+                    </button>
+                  </div>
+                )}
       </div>
     </div>
   );

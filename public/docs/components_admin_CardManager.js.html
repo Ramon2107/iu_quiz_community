@@ -1,0 +1,1872 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>components/admin/CardManager.js - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <li class="nav-link nav-home-link"><a href="index.html">Home</a></li><li class="nav-heading">Classes</li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="DataManager.html">DataManager</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.archiveCard">archiveCard</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.deleteCard">deleteCard</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.deleteCategory">deleteCategory</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.exportData">exportData</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.extractTagsFromQuestion">extractTagsFromQuestion</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.getAllCards">getAllCards</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.getAllCategories">getAllCategories</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.getAvailableRoles">getAvailableRoles</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.getCardStatus">getCardStatus</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.getCardStatusInfo">getCardStatusInfo</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.getCardsByCategory">getCardsByCategory</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.getCardsByCategoryName">getCardsByCategoryName</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.getCardsByStatus">getCardsByStatus</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.getCategoriesForQuiz">getCategoriesForQuiz</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.getCategoryIdByName">getCategoryIdByName</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.getCurrentUserRole">getCurrentUserRole</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.getQuestionsForQuiz">getQuestionsForQuiz</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.getRoleInfo">getRoleInfo</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.getUniqueAuthors">getUniqueAuthors</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.hasPermission">hasPermission</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.importData">importData</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.initializeData">initializeData</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.isModerator">isModerator</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.isPrivilegedUser">isPrivilegedUser</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.loadMockCategories">loadMockCategories</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.loadMockQuestions">loadMockQuestions</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.markCardForReview">markCardForReview</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.reactivateCard">reactivateCard</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.reloadMockData">reloadMockData</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.resetAllData">resetAllData</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.saveCard">saveCard</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.saveCategory">saveCategory</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.searchCards">searchCards</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.setCardStatus">setCardStatus</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.setCurrentUserRole">setCurrentUserRole</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.updateCard">updateCard</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.updateCategory">updateCategory</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="DataManager.html#.updateCategoryCardCounts">updateCategoryCardCounts</a></span></li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="SimulatedPlayersService.html">SimulatedPlayersService</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="SimulatedPlayersService.html#.calculateFinalRanking">calculateFinalRanking</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="SimulatedPlayersService.html#.calculatePerformanceRating">calculatePerformanceRating</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="SimulatedPlayersService.html#.generateCompetitiveUpdates">generateCompetitiveUpdates</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="SimulatedPlayersService.html#.generateCooperativeMessages">generateCooperativeMessages</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="SimulatedPlayersService.html#.generateLiveComments">generateLiveComments</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="SimulatedPlayersService.html#.getActivePlayers">getActivePlayers</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="SimulatedPlayersService.html#.getPlayerStatistics">getPlayerStatistics</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="SimulatedPlayersService.html#.getRandomWrongAnswer">getRandomWrongAnswer</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="SimulatedPlayersService.html#.initializePlayers">initializePlayers</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="SimulatedPlayersService.html#.reset">reset</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="SimulatedPlayersService.html#.simulatePlayerAnswer">simulatePlayerAnswer</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="SimulatedPlayersService.html#.simulatePlayerAnswers">simulatePlayerAnswers</a></span></li><li class="nav-heading">Namespaces</li><li class="nav-heading"><span class="nav-item-type type-namespace">N</span><span class="nav-item-name"><a href="App.html">App</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="App.html#.App">App</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="App.html#.handleCategoryAdded">handleCategoryAdded</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="App.html#.handleQuestionAdded">handleQuestionAdded</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="App.html#.renderCurrentView">renderCurrentView</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="App.html#~handleLogin">handleLogin</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="App.html#~handleLogout">handleLogout</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="App.html#~useEffect">useEffect</a></span></li><li class="nav-heading"><span class="nav-item-type type-namespace">N</span><span class="nav-item-name"><a href="Community.html">Community</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Community.html#.Community">Community</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Community.html#.handleAddPost">handleAddPost</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Community.html#.handleBackToOverview">handleBackToOverview</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Community.html#.handleTopicClick">handleTopicClick</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Community.html#~formatDate">formatDate</a></span></li><li class="nav-heading"><span class="nav-item-type type-namespace">N</span><span class="nav-item-name"><a href="admin_CardManager.html">admin_CardManager</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="admin_CardManager.html#.CardManager">CardManager</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="admin_CardManager.html#.createCard">createCard</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="admin_CardManager.html#.createCategory">createCategory</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="admin_CardManager.html#.deleteCard">deleteCard</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="admin_CardManager.html#.deleteCategory">deleteCategory</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="admin_CardManager.html#.enterCategoryView">enterCategoryView</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="admin_CardManager.html#.exitCategoryView">exitCategoryView</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="admin_CardManager.html#.getCardCountForCategory">getCardCountForCategory</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="admin_CardManager.html#.getUniqueAuthors">getUniqueAuthors</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="admin_CardManager.html#.handleRoleChange">handleRoleChange</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="admin_CardManager.html#.loadData">loadData</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="admin_CardManager.html#.renderAddCard">renderAddCard</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="admin_CardManager.html#.renderAddCategory">renderAddCategory</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="admin_CardManager.html#.renderCategoriesOverview">renderCategoriesOverview</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="admin_CardManager.html#.renderCategoryDetail">renderCategoryDetail</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="admin_CardManager.html#.renderEditCard">renderEditCard</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="admin_CardManager.html#.renderEditCategory">renderEditCategory</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="admin_CardManager.html#.saveEditedCard">saveEditedCard</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="admin_CardManager.html#.saveEditedCategory">saveEditedCategory</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="admin_CardManager.html#.startEditCard">startEditCard</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="admin_CardManager.html#.startEditCategory">startEditCategory</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="admin_CardManager.html#.updateCardAnswer">updateCardAnswer</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="admin_CardManager.html#.updateEditCardAnswer">updateEditCardAnswer</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="admin_CardManager.html#.validateCard">validateCard</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="admin_CardManager.html#.validateCategory">validateCategory</a></span></li><li class="nav-heading"><span class="nav-item-type type-namespace">N</span><span class="nav-item-name"><a href="admin_QuestionEditor.html">admin_QuestionEditor</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="admin_QuestionEditor.html#.QuestionEditor">QuestionEditor</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="admin_QuestionEditor.html#.handleCategoryAdded">handleCategoryAdded</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="admin_QuestionEditor.html#.handleQuestionAdded">handleQuestionAdded</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="admin_QuestionEditor.html#.loadCategories">loadCategories</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="admin_QuestionEditor.html#.renderLegacyForm">renderLegacyForm</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="admin_QuestionEditor.html#.renderStats">renderStats</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="admin_QuestionEditor.html#.saveQuestion">saveQuestion</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="admin_QuestionEditor.html#.updateAnswer">updateAnswer</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="admin_QuestionEditor.html#.updateFormData">updateFormData</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="admin_QuestionEditor.html#.validateForm">validateForm</a></span></li><li class="nav-heading"><span class="nav-item-type type-namespace">N</span><span class="nav-item-name"><a href="auth_LoginForm.html">auth_LoginForm</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="auth_LoginForm.html#.LoginForm">LoginForm</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="auth_LoginForm.html#.authenticateUser">authenticateUser</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="auth_LoginForm.html#.fillDemoCredentials">fillDemoCredentials</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="auth_LoginForm.html#.handleInputChange">handleInputChange</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="auth_LoginForm.html#.handleSubmit">handleSubmit</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="auth_LoginForm.html#.isValidEmail">isValidEmail</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="auth_LoginForm.html#.sanitizeInput">sanitizeInput</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="auth_LoginForm.html#.validateForm">validateForm</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="auth_LoginForm.html#.validatePassword">validatePassword</a></span></li><li class="nav-heading"><span class="nav-item-type type-namespace">N</span><span class="nav-item-name"><a href="common_Footer.html">common_Footer</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="common_Footer.html#.Footer">Footer</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="common_Footer.html#.handleCloseHelp">handleCloseHelp</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="common_Footer.html#.handleCloseImprint">handleCloseImprint</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="common_Footer.html#.handleClosePrivacy">handleClosePrivacy</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="common_Footer.html#.handleCloseTerms">handleCloseTerms</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="common_Footer.html#.handleShowHelp">handleShowHelp</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="common_Footer.html#.handleShowImprint">handleShowImprint</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="common_Footer.html#.handleShowPrivacy">handleShowPrivacy</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="common_Footer.html#.handleShowTerms">handleShowTerms</a></span></li><li class="nav-heading"><span class="nav-item-type type-namespace">N</span><span class="nav-item-name"><a href="common_Header.html">common_Header</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="common_Header.html#.Header">Header</a></span></li><li class="nav-heading"><span class="nav-item-type type-namespace">N</span><span class="nav-item-name"><a href="common_Imprint.html">common_Imprint</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="common_Imprint.html#.Imprint">Imprint</a></span></li><li class="nav-heading"><span class="nav-item-type type-namespace">N</span><span class="nav-item-name"><a href="common_Privacy.html">common_Privacy</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="common_Privacy.html#.PrivacyPolicy">PrivacyPolicy</a></span></li><li class="nav-heading"><span class="nav-item-type type-namespace">N</span><span class="nav-item-name"><a href="data_Mockdata.html">data_Mockdata</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="data_Mockdata.html#.getCategoriesWithCardCount">getCategoriesWithCardCount</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="data_Mockdata.html#.getCategoryById">getCategoryById</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="data_Mockdata.html#.getQuestionById">getQuestionById</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="data_Mockdata.html#.getQuestionsByCategory">getQuestionsByCategory</a></span></li><li class="nav-heading"><span class="nav-item-type type-namespace">N</span><span class="nav-item-name"><a href="home_Hompepage.html">home_Hompepage</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="home_Hompepage.html#.HomePage">HomePage</a></span></li><li class="nav-heading"><span class="nav-item-type type-namespace">N</span><span class="nav-item-name"><a href="quiz_CategorySelector.html">quiz_CategorySelector</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="quiz_CategorySelector.html#.QuizCategorySelector">QuizCategorySelector</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="quiz_CategorySelector.html#.getEstimatedTime">getEstimatedTime</a></span></li><li class="nav-heading"><span class="nav-item-type type-namespace">N</span><span class="nav-item-name"><a href="quiz_CoopLobby.html">quiz_CoopLobby</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="quiz_CoopLobby.html#.CooperativeLobby">CooperativeLobby</a></span></li><li class="nav-heading"><span class="nav-item-type type-namespace">N</span><span class="nav-item-name"><a href="quiz_Livechat.html">quiz_Livechat</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="quiz_Livechat.html#.LiveChat">LiveChat</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="quiz_Livechat.html#.formatTime">formatTime</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="quiz_Livechat.html#.getPlayerColor">getPlayerColor</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="quiz_Livechat.html#.getPlayerIcon">getPlayerIcon</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="quiz_Livechat.html#.handleInputChange">handleInputChange</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="quiz_Livechat.html#.handleSendMessage">handleSendMessage</a></span></li><li class="nav-heading"><span class="nav-item-type type-namespace">N</span><span class="nav-item-name"><a href="quiz_Main.html">quiz_Main</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="quiz_Main.html#.QuizMain">QuizMain</a></span></li><li class="nav-heading"><span class="nav-item-type type-namespace">N</span><span class="nav-item-name"><a href="quiz_PointsInfo.html">quiz_PointsInfo</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="quiz_PointsInfo.html#.PointsInfo">PointsInfo</a></span></li><li class="nav-heading"><span class="nav-item-type type-namespace">N</span><span class="nav-item-name"><a href="quiz_Question.html">quiz_Question</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="quiz_Question.html#.QuizQuestion">QuizQuestion</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="quiz_Question.html#.calculateAverageTime">calculateAverageTime</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="quiz_Question.html#.calculateCurrentScore">calculateCurrentScore</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="quiz_Question.html#.calculateHumanAccuracy">calculateHumanAccuracy</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="quiz_Question.html#.calculateHumanCorrectAnswers">calculateHumanCorrectAnswers</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="quiz_Question.html#.createFullRanking">createFullRanking</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="quiz_Question.html#.getAnswerButtonClass">getAnswerButtonClass</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="quiz_Question.html#.getGameModeClass">getGameModeClass</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="quiz_Question.html#.getGameModeIcon">getGameModeIcon</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="quiz_Question.html#.getPositionColor">getPositionColor</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="quiz_Question.html#.getPositionIcon">getPositionIcon</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="quiz_Question.html#.getProgressPercentage">getProgressPercentage</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="quiz_Question.html#.handleAnswerSelect">handleAnswerSelect</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="quiz_Question.html#.handleChatKeyPress">handleChatKeyPress</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="quiz_Question.html#.handleSendMessage">handleSendMessage</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="quiz_Question.html#.renderChatWindow">renderChatWindow</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="quiz_Question.html#.renderLobby">renderLobby</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="quiz_Question.html#.renderRankingWindow">renderRankingWindow</a></span></li><li class="nav-heading"><span class="nav-item-type type-namespace">N</span><span class="nav-item-name"><a href="quiz_Results.html">quiz_Results</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="quiz_Results.html#.QuizResults">QuizResults</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="quiz_Results.html#.analyzeGameResults">analyzeGameResults</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="quiz_Results.html#.getGameModeClass">getGameModeClass</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="quiz_Results.html#.getGameModeIcon">getGameModeIcon</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="quiz_Results.html#.getPerformanceRating">getPerformanceRating</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="quiz_Results.html#.getScoreClass">getScoreClass</a></span></li><li class="nav-heading"><span class="nav-item-type type-namespace">N</span><span class="nav-item-name"><a href="user_Profile.html">user_Profile</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="user_Profile.html#.UserProfile">UserProfile</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="user_Profile.html#.handleLogout">handleLogout</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="user_Profile.html#.handleProfileUpdate">handleProfileUpdate</a></span></li><li class="nav-heading"><span class="nav-item-type type-namespace">N</span><span class="nav-item-name"><a href="utils_Security.html">utils_Security</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="utils_Security.html#.sanitizeAttribute">sanitizeAttribute</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="utils_Security.html#.sanitizeHtml">sanitizeHtml</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="utils_Security.html#.sanitizeInput">sanitizeInput</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="utils_Security.html#.sanitizeUrlParam">sanitizeUrlParam</a></span></li><li class="nav-heading"><a href="global.html">Globals</a></li><li class="nav-item"><span class="nav-item-type type-member">M</span><span class="nav-item-name"><a href="global.html#SecurityUtils">SecurityUtils</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#render">render</a></span></li><li class="nav-item"><span class="nav-item-type type-member">M</span><span class="nav-item-name"><a href="global.html#root">root</a></span></li>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">components/admin/CardManager.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Verwaltungsoberfläche für Fragen und Kategorien mit rollenbasierter Zugriffskontrolle.
+ * @namespace admin_CardManager
+ * @author Projektteam IU Community Quiz
+ * @version 1.5.0
+ */
+
+import React, { useState, useEffect } from 'react';
+import dataManager from '../../data/dataManager';
+
+/**
+ * CardManager - Komponente zur Verwaltung von Fragen und Kategorien
+ * Diese Komponente bietet eine umfassende Verwaltungsoberfläche für das Quizsystem:
+ *
+ * **Kategorien-Management:**
+ * - Hierarchische Navigation durch Kategorien
+ * - Erstellen, Bearbeiten und Löschen von Kategorien
+ * - Drill-Down-Funktionalität für detaillierte Ansichten
+ *
+ * **Karten-Management:**
+ * - Erstellen neuer Fragenkarten
+ * - Bearbeiten bestehender Karten
+ * - Löschen von Karten mit Berechtigungsprüfung
+ * - Zuordnung zu Kategorien
+ *
+ * **Such- und Filterfunktionen:**
+ * - Volltextsuche über Fragen
+ * - Filterung nach Autor, Schwierigkeitsgrad, Status
+ * - Anzeige gemeldeter Inhalte
+ *
+ * **Kollaborative Features:**
+ * - Rollenbasierte Zugriffskontrolle (Admin, Moderator, Editor)
+ * - Kollaborator-Verwaltung für Kategorien
+ * - Öffentliche/Private Inhalte
+ *
+ * @function CardManager
+ * @memberOf admin_CardManager
+ * @param {Object} props - Component properties
+ * @param {Object} props.user - Aktueller Benutzer
+ * @param {Function} props.onQuestionAdded - Callback bei neuer Frage
+ * @param {Function} props.onCategoryAdded - Callback bei neuer Kategorie
+ * @returns {React.ReactElement} Die gerenderte CardManager-Komponente
+ * @example
+ * &lt;CardManager
+ *   user={currentUser}
+ *   onQuestionAdded={handleQuestionAdded}
+ *   onCategoryAdded={handleCategoryAdded}
+ * />
+ */
+function CardManager({ user, onQuestionAdded, onCategoryAdded }) {
+    // Zustandsverwaltung für Kategorien und Karten
+    const [categories, setCategories] = useState([]);
+    const [cards, setCards] = useState([]);
+    const [filteredCards, setFilteredCards] = useState([]);
+    const [currentView, setCurrentView] = useState('overview');
+    const [searchTerm, setSearchTerm] = useState('');
+    const [authorFilter, setAuthorFilter] = useState('all');
+    const [difficultyFilter, setDifficultyFilter] = useState('all');
+    const [reportedFilter, setReportedFilter] = useState('all');
+    const [statusFilter, setStatusFilter] = useState('all');
+    
+    // Rollenbasierte Zustandsverwaltung
+    const [currentRole, setCurrentRole] = useState(dataManager.getCurrentUserRole());
+
+    // Zustand für Kategorie-Navigation
+    const [viewMode, setViewMode] = useState('categories'); // 'categories' oder 'category-detail'
+    const [currentCategoryView, setCurrentCategoryView] = useState(null);
+
+    // Zustandsverwaltung für Bearbeitung
+    /**
+     * @type {null|CardState}
+     * @memberOf admin_CardManager
+     */
+    const [editingCard, setEditingCard] = useState(null);
+
+    // Zustandsverwaltung für neue Kategorie
+    const [newCategory, setNewCategory] = useState({
+        name: '',
+        description: '',
+        icon: 'fas fa-folder',
+        color: 'primary',
+        isPublic: true,
+        collaborators: []
+    });
+
+    // Zustandsverwaltung für neue Karte
+    /**
+     * @typedef {Object} admin_CardManager.CardState
+     * @property {string} categoryId - ID der Kategorie, zu der diese Karte gehört
+     * @property {string} question - Fragetext
+     * @property {string[]} answers - Array mit möglichen Antworten
+     * @property {null|number} correctAnswer - Index der richtigen Antwort oder null, wenn keine ausgewählt wurde
+     * @property {string} difficulty - Schwierigkeitsgrad der Frage
+     * @property {string} explanation - Erklärung zur richtigen Antwort
+     * @property {string} tags - Mit der Karte verknüpfte Schlagwörter
+     * @property {boolean} isPublic - Gibt an, ob die Karte öffentlich verfügbar ist
+     */
+
+    /**
+     * @type {CardState}
+     */
+    const [newCard, setNewCard] = useState({
+        categoryId: '',
+        question: '',
+        answers: ['', '', '', ''],
+        correctAnswer: null,
+        difficulty: 'Mittel',
+        explanation: '',
+        tags: '',
+        isPublic: true
+    });
+
+    const [errors, setErrors] = useState({});
+
+    // Verfügbare Icons und Farben für Kategorien
+    const categoryIcons = [
+        { value: 'fas fa-code', label: 'Programmierung' },
+        { value: 'fas fa-laptop-code', label: 'Informatik' },
+        { value: 'fas fa-database', label: 'Datenbank' },
+        { value: 'fas fa-network-wired', label: 'Netzwerk' },
+        { value: 'fas fa-calculator', label: 'Mathematik' },
+        { value: 'fas fa-chart-line', label: 'Wirtschaft' },
+        { value: 'fas fa-tasks', label: 'Projektmanagement' },
+        { value: 'fas fa-shield-alt', label: 'Sicherheit' },
+        { value: 'fas fa-cogs', label: 'Technik' },
+        { value: 'fas fa-brain', label: 'Logik' },
+        { value: 'fas fa-graduation-cap', label: 'Studium' },
+        { value: 'fas fa-folder', label: 'Allgemein' }
+    ];
+
+    const categoryColors = [
+        { value: 'primary', label: 'Blau', class: 'text-primary' },
+        { value: 'success', label: 'Grün', class: 'text-success' },
+        { value: 'warning', label: 'Gelb', class: 'text-warning' },
+        { value: 'danger', label: 'Rot', class: 'text-danger' },
+        { value: 'info', label: 'Türkis', class: 'text-info' },
+        { value: 'secondary', label: 'Grau', class: 'text-secondary' }
+    ];
+
+    /**
+     * Lädt Daten beim Component Mount - Initialisierung der Anwendungsdaten
+     * @memberOf admin_CardManager
+     */
+    useEffect(() => {
+        loadData();
+    }, []);
+
+    /**
+     * Filtert Karten basierend auf Suchbegriff und Filtern
+     * Erweiterte Filterlogik mit Kategorie-Berücksichtigung und gemeldete Fragen
+     * Diese Funktion wird bei jeder Änderung der Filter automatisch ausgeführt
+     * @memberOf admin_CardManager
+     */
+    useEffect(() => {
+        let filtered = cards;
+
+        // Filtere nach aktueller Kategorie-Ansicht, wenn eine ausgewählt ist
+        if (currentCategoryView) {
+            filtered = filtered.filter(card => card.categoryId === currentCategoryView.id);
+        }
+
+        // Suchfilter - durchsucht Fragen und Tags nach Suchbegriff
+        if (searchTerm) {
+            filtered = filtered.filter(card =>
+                card.question.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                (card.tags &amp;&amp; Array.isArray(card.tags) &amp;&amp; card.tags.some(tag =>
+                    typeof tag === 'string' &amp;&amp; tag.toLowerCase().includes(searchTerm.toLowerCase())
+                ))
+            );
+        }
+
+        // Autor-Filter - zeigt nur Karten des ausgewählten Autors
+        if (authorFilter !== 'all') {
+            filtered = filtered.filter(card => card.author === authorFilter);
+        }
+
+        // Schwierigkeitsgrad - filtert nach gewählter Schwierigkeitsstufe
+        if (difficultyFilter !== 'all') {
+            filtered = filtered.filter(card => card.difficulty === difficultyFilter);
+        }
+
+        // Gemeldet-Filter - filtert nach gemeldeten Fragen
+        if (reportedFilter !== 'all') {
+            const reportedQuestions = JSON.parse(localStorage.getItem('reported-questions') || '[]');
+            if (reportedFilter === 'reported') {
+                filtered = filtered.filter(card => reportedQuestions.includes(card.id));
+            } else if (reportedFilter === 'not-reported') {
+                filtered = filtered.filter(card => !reportedQuestions.includes(card.id));
+            }
+        }
+
+        // Status-Filter - filtert nach Housekeeping-Status (aktiv, zu prüfen, archiviert)
+        if (statusFilter !== 'all') {
+            filtered = filtered.filter(card => {
+                const status = dataManager.getCardStatus(card.id);
+                return status === statusFilter;
+            });
+        }
+
+        setFilteredCards(filtered);
+    }, [searchTerm, authorFilter, difficultyFilter, reportedFilter, statusFilter, cards, currentCategoryView]);
+
+    /**
+     * Lädt alle Daten über den DataManager
+     * @memberOf admin_CardManager
+     */
+    const loadData = () => {
+        // Prüfe ob Mock-Daten geladen werden müssen für initiale Demonstration
+        const existingCategories = localStorage.getItem('quiz-categories');
+        const existingCards = localStorage.getItem('quiz-cards');
+
+        // Erzwinge Mock-Daten Reload wenn nichts vorhanden ist
+        if (!existingCategories || !existingCards ||
+            JSON.parse(existingCategories || '[]').length === 0 ||
+            JSON.parse(existingCards || '[]').length === 0) {
+            dataManager.reloadMockData();
+        }
+
+        // Daten über DataManager laden - zentrale Datenquelle
+        const loadedCategories = dataManager.getAllCategories();
+        const loadedCards = dataManager.getAllCards();
+
+        setCategories(loadedCategories);
+        setCards(loadedCards);
+    };
+
+    /**
+     * Wechselt zur Kategorie-Detail-Ansicht - Navigation in spezifische Kategorie
+     * @memberOf admin_CardManager
+     */
+    const enterCategoryView = (category) => {
+        setCurrentCategoryView(category);
+        setViewMode('category-detail');
+        setSearchTerm('');
+    };
+
+    /**
+     * Kehrt zur Kategorien-Übersicht zurück - Navigation zurück zur Hauptansicht
+     * @memberOf admin_CardManager
+     */
+    const exitCategoryView = () => {
+        setCurrentCategoryView(null);
+        setViewMode('categories');
+        setSearchTerm('');
+    };
+
+    /**
+     * Gibt die Anzahl der Karten für eine Kategorie zurück - Statistik-Funktion
+     * @memberOf admin_CardManager
+     */
+    const getCardCountForCategory = (categoryId) => {
+        if (!categoryId || !Array.isArray(cards)) return 0;
+        return cards.filter(card => card &amp;&amp; card.categoryId === categoryId).length;
+    };
+
+    /**
+     * Validiert die neue Kategorie - Überprüfung der Eingabedaten
+     * @memberOf admin_CardManager
+     */
+    const validateCategory = () => {
+        const newErrors = {};
+
+        // Überprüfung des Kategorienamens auf Vorhandensein
+        if (!newCategory || !newCategory.name || !newCategory.name.trim()) {
+            newErrors.categoryName = 'Kategoriename ist erforderlich';
+        }
+
+        // Prüfung auf doppelte Kategorienamen
+        if (Array.isArray(categories) &amp;&amp; newCategory &amp;&amp; newCategory.name &amp;&amp;
+            categories.some(cat => cat &amp;&amp; cat.name &amp;&amp;
+                cat.name.toLowerCase() === newCategory.name.toLowerCase())) {
+            newErrors.categoryName = 'Kategorie existiert bereits';
+        }
+
+        // Überprüfung der Beschreibung
+        if (!newCategory || !newCategory.description || !newCategory.description.trim()) {
+            newErrors.categoryDescription = 'Beschreibung ist erforderlich';
+        }
+
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
+
+    /**
+     * Validiert die neue Karte - Vollständige Validierung aller Kartendaten
+     * @memberOf admin_CardManager
+     */
+    const validateCard = () => {
+        const newErrors = {};
+
+        // Überprüfung der Frage
+        if (!newCard || !newCard.question || !newCard.question.trim()) {
+            newErrors.question = 'Frage ist erforderlich';
+        }
+
+        // Überprüfung der Kategoriezuordnung
+        if (!newCard || !newCard.categoryId) {
+            newErrors.categoryId = 'Kategorie muss ausgewählt werden';
+        }
+
+        // Validierung der Antworten - mindestens 2 müssen ausgefüllt sein
+        if (newCard &amp;&amp; Array.isArray(newCard.answers)) {
+            const filledAnswers = newCard.answers.filter(answer =>
+                typeof answer === 'string' &amp;&amp; answer.trim()
+            );
+            if (filledAnswers.length &lt; 2) {
+                newErrors.answers = 'Mindestens 2 Antworten sind erforderlich';
+            }
+        } else {
+            newErrors.answers = 'Antworten müssen angegeben werden';
+        }
+
+        // Überprüfung der korrekten Antwort
+        if (!newCard || newCard.correctAnswer === null || newCard.correctAnswer === undefined) {
+            newErrors.correctAnswer = 'Richtige Antwort muss ausgewählt werden';
+        }
+
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
+
+    /**
+     * Erstellt eine neue Kategorie - Speicherung und Aktualisierung der Daten
+     * @memberOf admin_CardManager
+     */
+    const createCategory = () => {
+        if (!validateCategory()) return;
+
+        // Kategorie-Daten mit Benutzerdaten erweitern
+        const categoryData = {
+            ...newCategory,
+            author: user.name,
+            authorEmail: user.email
+        };
+
+        const savedCategory = dataManager.saveCategory(categoryData);
+
+        // Daten neu laden nach Speicherung
+        loadData();
+
+        // Callback für Parent-Komponente ausführen
+        if (onCategoryAdded) {
+            onCategoryAdded(savedCategory);
+        }
+
+        // Formular zurücksetzen für nächste Eingabe
+        setNewCategory({
+            name: '',
+            description: '',
+            icon: 'fas fa-folder',
+            color: 'primary',
+            isPublic: true,
+            collaborators: []
+        });
+
+        setCurrentView('overview');
+        setErrors({});
+
+        alert(`Kategorie "${savedCategory.name}" wurde erfolgreich erstellt!`);
+    };
+
+    /**
+     * Erstellt eine neue Karte - Vollständige Karten-Erstellung mit Validierung
+     * @memberOf admin_CardManager
+     */
+    const createCard = () => {
+        if (!validateCard()) return;
+
+        // Karten-Daten mit Benutzerdaten erweitern
+        const cardData = {
+            ...newCard,
+            author: user.name,
+            authorEmail: user.email
+        };
+
+        const savedCard = dataManager.saveCard(cardData);
+
+        // Daten neu laden nach Speicherung
+        loadData();
+
+        // Callback für Parent-Komponente ausführen
+        if (onQuestionAdded) {
+            onQuestionAdded(savedCard);
+        }
+
+        // Formular zurücksetzen für nächste Eingabe
+        setNewCard({
+            categoryId: '',
+            question: '',
+            answers: ['', '', '', ''],
+            correctAnswer: null,
+            difficulty: 'Mittel',
+            explanation: '',
+            tags: '',
+            isPublic: true
+        });
+
+        setCurrentView('overview');
+        setErrors({});
+
+        alert('Karte wurde erfolgreich erstellt!');
+    };
+
+    /**
+     * Löscht eine Karte - Mit Bestätigungsdialog für Sicherheit
+     * @memberOf admin_CardManager
+     */
+    const deleteCard = (cardId) => {
+        if (window.confirm('Möchten Sie diese Karte wirklich löschen?')) {
+            dataManager.deleteCard(cardId);
+            loadData();
+            alert('Karte wurde gelöscht.');
+        }
+    };
+
+    /**
+     * Löscht eine Kategorie - Mit Validierung und Bestätigung
+     * @memberOf admin_CardManager
+     */
+    const deleteCategory = (categoryId) => {
+        try {
+            if (window.confirm('Möchten Sie diese Kategorie wirklich löschen? Dies ist nur möglich, wenn keine Karten vorhanden sind.')) {
+                dataManager.deleteCategory(categoryId);
+                loadData();
+                alert('Kategorie wurde gelöscht.');
+            }
+        } catch (error) {
+            alert(error.message);
+        }
+    };
+
+    /**
+     * Startet die Bearbeitung einer Kategorie - Neu hinzugefügt
+     * @memberOf admin_CardManager
+     */
+    const startEditCategory = (category) => {
+        setNewCategory({
+            id: category.id,
+            name: category.name,
+            description: category.description,
+            icon: category.icon || 'fas fa-folder',
+            color: category.color || 'primary',
+            isPublic: category.isPublic || true,
+            collaborators: category.collaborators || []
+        });
+        setCurrentView('edit-category');
+    };
+
+    /**
+     * Speichert die bearbeitete Kategorie - Neu hinzugefügt
+     * @memberOf admin_CardManager
+     */
+    const saveEditedCategory = () => {
+        if (!validateCategory()) return;
+
+        const updatedCategory = {
+            ...newCategory,
+            author: user.name,
+            authorEmail: user.email
+        };
+
+        dataManager.updateCategory(newCategory.id, updatedCategory);
+        loadData();
+
+        // Zurücksetzen des Formulars
+        setNewCategory({
+            name: '',
+            description: '',
+            icon: 'fas fa-folder',
+            color: 'primary',
+            isPublic: true,
+            collaborators: []
+        });
+
+        setCurrentView('overview');
+        setErrors({});
+        alert('Kategorie wurde aktualisiert.');
+    };
+
+    /**
+     * Startet die Bearbeitung einer Karte - Vorbereitung der Edit-Ansicht
+     * @memberOf admin_CardManager
+     */
+    const startEditCard = (card) => {
+        setEditingCard({
+            ...card,
+            tags: Array.isArray(card.tags) ? card.tags.join(', ') : card.tags
+        });
+        setCurrentView('edit-card');
+    };
+
+    /**
+     * Speichert die bearbeitete Karte - Aktualisierung bestehender Karte
+     * @memberOf admin_CardManager
+     */
+    const saveEditedCard = () => {
+        if (!editingCard.question.trim()) {
+            alert('Frage ist erforderlich');
+            return;
+        }
+
+        // Tags von String zu Array konvertieren, falls nötig
+        const updatedCard = {
+            ...editingCard,
+            tags: typeof editingCard.tags === 'string' ?
+                editingCard.tags.split(',').map(t => t.trim()).filter(t => t) :
+                editingCard.tags
+        };
+
+        dataManager.updateCard(editingCard.id, updatedCard);
+        loadData();
+        setEditingCard(null);
+        setCurrentView('overview');
+        alert('Karte wurde aktualisiert.');
+    };
+
+    /**
+     * Aktualisiert eine Antwort der neuen Karte - JavaScript-kompatible Implementierung
+     * @memberOf admin_CardManager
+     */
+    const updateCardAnswer = (index, value) => {
+        if (!newCard || !Array.isArray(newCard.answers)) return;
+
+        const newAnswers = [...newCard.answers];
+        newAnswers[index] = value || '';
+
+        // JavaScript-kompatible State-Update-Syntax
+        setNewCard({
+            ...newCard,
+            answers: newAnswers
+        });
+    };
+
+    /**
+     * Aktualisiert eine Antwort der bearbeiteten Karte - JavaScript-kompatible Implementierung
+     * @memberOf admin_CardManager
+     */
+    const updateEditCardAnswer = (index, value) => {
+        if (!editingCard || !Array.isArray(editingCard.answers)) return;
+
+        const newAnswers = [...editingCard.answers];
+        newAnswers[index] = value || '';
+
+        // JavaScript-kompatible State-Update-Syntax
+        setEditingCard({
+            ...editingCard,
+            answers: newAnswers
+        });
+    };
+
+    /**
+     * Gibt eindeutige Autoren zurück - Für Filter-Dropdown
+     * @memberOf admin_CardManager
+     */
+    const getUniqueAuthors = () => {
+        try {
+            const authors = dataManager.getUniqueAuthors();
+            return Array.isArray(authors) ? authors : [];
+        } catch (error) {
+            console.error('Fehler beim Abrufen der Autoren:', error);
+            return [];
+        }
+    };
+
+    /**
+     * Ändert die Rolle des aktuellen Nutzers (Mockup für Demo)
+     * In Produktion würde die Rolle durch Backend-Authentifizierung gesetzt
+     * @memberOf admin_CardManager
+     */
+    const handleRoleChange = (newRole) => {
+        dataManager.setCurrentUserRole(newRole);
+        setCurrentRole(newRole);
+        alert(`Rolle wurde auf "${dataManager.getRoleInfo(newRole).label}" geändert.\n\nHINWEIS: Dies ist ein Mockup. In Produktion würde die Rolle durch Backend-Authentifizierung erfolgen.`);
+    };
+
+    /**
+     * Rendert die Kategorien-Übersicht - Hauptansicht mit allen Kategorien
+     * @memberOf admin_CardManager
+     */
+    const renderCategoriesOverview = () => (
+        &lt;div className="container mt-4">
+            &lt;div className="row">
+                &lt;div className="col-12">
+                    &lt;div className="d-flex justify-content-between align-items-center mb-4">
+                        &lt;h2>
+                            &lt;i className="fas fa-layer-group me-2">&lt;/i>
+                            Kategorien-Übersicht
+                        &lt;/h2>
+                        &lt;div className="d-flex gap-2">
+                            &lt;button
+                                className="btn btn-sm btn-outline-secondary"
+                                onClick={() => {
+                                    dataManager.reloadMockData();
+                                    loadData();
+                                }}
+                                title="Mock-Daten neu laden"
+                            >
+                                &lt;i className="fas fa-sync me-1">&lt;/i>
+                                Mock-Daten laden
+                            &lt;/button>
+                            &lt;button
+                                className="btn btn-success"
+                                onClick={() => setCurrentView('add-category')}
+                            >
+                                &lt;i className="fas fa-plus me-2">&lt;/i>
+                                Neue Kategorie
+                            &lt;/button>
+                        &lt;/div>
+                    &lt;/div>
+
+                    {/* Statusanzeige - Übersicht über vorhandene Daten */}
+                    &lt;div className="alert alert-info d-flex justify-content-between align-items-center mx-auto" style={{ maxWidth: '800px' }}>
+                        &lt;div>
+                            &lt;i className="fas fa-info-circle me-2">&lt;/i>
+                            &lt;strong>Status:&lt;/strong> {categories.length} Kategorien, {cards.length} Karten insgesamt
+                        &lt;/div>
+                        &lt;small className="text-muted">
+                            Klicken Sie auf eine Kategorie, um die zugehörigen Karten zu sehen
+                        &lt;/small>
+                    &lt;/div>
+
+                    {/* Kategorien-Grid - Responsive Darstellung aller Kategorien */}
+                    &lt;div className="row">
+                        {categories.length === 0 ? (
+                            &lt;div className="col-12">
+                                &lt;div className="alert alert-warning">
+                                    &lt;i className="fas fa-exclamation-triangle me-2">&lt;/i>
+                                    Keine Kategorien vorhanden. Erstellen Sie eine neue Kategorie, um zu beginnen.
+                                &lt;/div>
+                            &lt;/div>
+                        ) : (
+                            Array.isArray(categories) &amp;&amp; categories.map((category, index) => category &amp;&amp; (
+                                &lt;div key={category.id || `category-${index}`} className="col-xl-3 col-lg-4 col-md-6 col-sm-6 mb-4">
+                                    &lt;div
+                                        className={`card border-${category &amp;&amp; category.color ? category.color : 'primary'} h-100 category-card`}
+                                        style={{ cursor: 'pointer', maxWidth: '100%', borderRadius: '8px' }}
+                                        onClick={() => category &amp;&amp; enterCategoryView(category)}
+                                    >
+                                        &lt;div className={`card-header bg-${category &amp;&amp; category.color ? category.color : 'primary'} text-white`}>
+                                            &lt;div className="d-flex justify-content-between align-items-center">
+                                                &lt;h5 className="mb-0">
+                                                    &lt;i className={`${category &amp;&amp; category.icon ? category.icon : 'fas fa-folder'} me-2`}>&lt;/i>
+                                                    {category &amp;&amp; category.name ? category.name : 'Unbenannte Kategorie'}
+                                                &lt;/h5>
+                                                {/* FIX: Einfachere Button-Implementierung ohne Bootstrap Dropdown */}
+                                                &lt;button
+                                                    className="btn btn-sm btn-outline-light"
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        const shouldEdit = window.confirm('Möchten Sie diese Kategorie bearbeiten?');
+                                                        if (shouldEdit) {
+                                                            startEditCategory(category);
+                                                        } else if (window.confirm('Möchten Sie diese Kategorie stattdessen löschen?')) {
+                                                            deleteCategory(category.id);
+                                                        }
+                                                    }}
+                                                    title="Kategorie verwalten"
+                                                >
+                                                    &lt;i className="fas fa-cog">&lt;/i>
+                                                &lt;/button>
+                                            &lt;/div>
+                                        &lt;/div>
+                                        &lt;div className="card-body">
+                                            &lt;p className="card-text">{category &amp;&amp; category.description ? category.description : 'Keine Beschreibung verfügbar'}&lt;/p>
+                                            &lt;div className="d-flex justify-content-between align-items-center">
+                        &lt;span className="badge bg-primary">
+                          &lt;i className="fas fa-cards me-1">&lt;/i>
+                            {category &amp;&amp; category.id ? getCardCountForCategory(category.id) : 0} Karten
+                        &lt;/span>
+                                                &lt;small className="text-muted">
+                                                    &lt;i className="fas fa-user me-1">&lt;/i>
+                                                    {category &amp;&amp; category.author ? category.author : 'Unbekannt'}
+                                                &lt;/small>
+                                            &lt;/div>
+                                        &lt;/div>
+                                        &lt;div className="card-footer">
+                                            &lt;div className="d-flex justify-content-between align-items-center">
+                                                &lt;small className="text-muted">
+                                                    Erstellt: {category &amp;&amp; category.created ? new Date(category.created).toLocaleDateString() : 'Unbekannt'}
+                                                &lt;/small>
+                                                &lt;div className="btn-group btn-group-sm">
+                                                    &lt;button
+                                                        className="btn btn-outline-primary"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            if (category) {
+                                                                enterCategoryView(category);
+                                                            }
+                                                        }}
+                                                    >
+                                                        &lt;i className="fas fa-eye me-1">&lt;/i>
+                                                        Anzeigen
+                                                    &lt;/button>
+                                                    &lt;button
+                                                        className="btn btn-outline-success"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            if (category &amp;&amp; category.id) {
+                                                                // JavaScript-kompatible State-Update-Syntax
+                                                                setNewCard({
+                                                                    ...newCard,
+                                                                    categoryId: category.id
+                                                                });
+                                                                setCurrentView('add-card');
+                                                            }
+                                                        }}
+                                                    >
+                                                        &lt;i className="fas fa-plus me-1">&lt;/i>
+                                                        Karte hinzufügen
+                                                    &lt;/button>
+                                                &lt;/div>
+                                            &lt;/div>
+                                        &lt;/div>
+                                    &lt;/div>
+                                &lt;/div>
+                            ))
+                        )}
+                    &lt;/div>
+                &lt;/div>
+            &lt;/div>
+        &lt;/div>
+    );
+
+    /**
+     * Rendert die Karten einer bestimmten Kategorie - Detailansicht für spezifische Kategorie
+     * @memberOf admin_CardManager
+     */
+    const renderCategoryDetail = () => (
+        &lt;div className="container mt-4">
+            &lt;div className="row">
+                &lt;div className="col-12">
+                    &lt;div className="d-flex justify-content-between align-items-center mb-4">
+                        &lt;div>
+                            &lt;h2>
+                                &lt;i className={`${currentCategoryView &amp;&amp; currentCategoryView.icon ? currentCategoryView.icon : 'fas fa-folder'} me-2`}>&lt;/i>
+                                {currentCategoryView &amp;&amp; currentCategoryView.name ? currentCategoryView.name : 'Kategorie'}
+                            &lt;/h2>
+                            &lt;p className="text-muted mb-0">{currentCategoryView &amp;&amp; currentCategoryView.description ? currentCategoryView.description : 'Keine Beschreibung verfügbar'}&lt;/p>
+                        &lt;/div>
+                        &lt;div className="d-flex gap-2">
+                            &lt;button
+                                className="btn btn-outline-secondary"
+                                onClick={exitCategoryView}
+                            >
+                                &lt;i className="fas fa-arrow-left me-2">&lt;/i>
+                                Zurück zu Kategorien
+                            &lt;/button>
+                            &lt;button
+                                className="btn btn-primary"
+                                onClick={() => {
+                                    if (currentCategoryView &amp;&amp; currentCategoryView.id) {
+                                        // JavaScript-kompatible State-Update-Syntax
+                                        setNewCard({
+                                            ...newCard,
+                                            categoryId: currentCategoryView.id
+                                        });
+                                        setCurrentView('add-card');
+                                    }
+                                }}
+                            >
+                                &lt;i className="fas fa-plus me-2">&lt;/i>
+                                Neue Karte
+                            &lt;/button>
+                        &lt;/div>
+                    &lt;/div>
+
+                    {/* Rollenauswahl-Box - Mockup für Demo */}
+                    &lt;div className="alert alert-warning mb-4">
+                        &lt;div className="row align-items-center">
+                            &lt;div className="col-md-8">
+                                &lt;h6 className="mb-1">
+                                    &lt;i className={`${dataManager.getRoleInfo(currentRole).icon} me-2`}>&lt;/i>
+                                    Aktuelle Rolle: {dataManager.getRoleInfo(currentRole).label}
+                                &lt;/h6>
+                                &lt;small className="text-muted">
+                                    {dataManager.getRoleInfo(currentRole).description}
+                                &lt;/small>
+                                &lt;p className="mb-0 mt-2">
+                                    &lt;small>
+                                        &lt;strong>DEMO-MODUS:&lt;/strong> Ändern Sie Ihre Rolle, um die rollenbasierten Funktionen zu testen.
+                                        In Produktion wird die Rolle durch Backend-Authentifizierung bestimmt.
+                                    &lt;/small>
+                                &lt;/p>
+                            &lt;/div>
+                            &lt;div className="col-md-4">
+                                &lt;label htmlFor="roleSelector" className="form-label">
+                                    &lt;i className="fas fa-user-cog me-1">&lt;/i>
+                                    Rolle wechseln (Demo)
+                                &lt;/label>
+                                &lt;select
+                                    id="roleSelector"
+                                    className="form-select"
+                                    value={currentRole}
+                                    onChange={(e) => handleRoleChange(e.target.value)}
+                                >
+                                    {dataManager.getAvailableRoles().map((role) => (
+                                        &lt;option key={role.value} value={role.value}>
+                                            {role.label}
+                                        &lt;/option>
+                                    ))}
+                                &lt;/select>
+                            &lt;/div>
+                        &lt;/div>
+                    &lt;/div>
+
+                    {/* Erweiterte Such- und Filterbereich - Verbesserte Suche für bessere Usability */}
+                    &lt;div className="card mb-4">
+                        &lt;div className="card-header">
+                            &lt;h5 className="mb-0">
+                                &lt;i className="fas fa-search me-2">&lt;/i>
+                                Suche und Filter
+                            &lt;/h5>
+                        &lt;/div>
+                        &lt;div className="card-body">
+                            &lt;div className="row mb-3">
+                                &lt;div className="col-md-3">
+                                    &lt;label htmlFor="searchTerm" className="form-label">
+                                        Suchbegriff
+                                    &lt;/label>
+                                    &lt;input
+                                        type="text"
+                                        id="searchTerm"
+                                        className="form-control"
+                                        value={searchTerm}
+                                        onChange={(e) => setSearchTerm(e.target.value)}
+                                        placeholder="Suche in Fragen und Tags..."
+                                    />
+                                &lt;/div>
+                                &lt;div className="col-md-3">
+                                    &lt;label htmlFor="authorFilter" className="form-label">
+                                        Autor
+                                    &lt;/label>
+                                    &lt;select
+                                        id="authorFilter"
+                                        className="form-select"
+                                        value={authorFilter}
+                                        onChange={(e) => setAuthorFilter(e.target.value)}
+                                    >
+                                        &lt;option value="all">Alle Autoren&lt;/option>
+                                        {getUniqueAuthors().map((author, index) => (
+                                            &lt;option key={`author-${index}`} value={String(author)}>
+                                                {author}
+                                            &lt;/option>
+                                        ))}
+                                    &lt;/select>
+                                &lt;/div>
+                                &lt;div className="col-md-3">
+                                    &lt;label htmlFor="difficultyFilter" className="form-label">
+                                        Schwierigkeit
+                                    &lt;/label>
+                                    &lt;select
+                                        id="difficultyFilter"
+                                        className="form-select"
+                                        value={difficultyFilter}
+                                        onChange={(e) => setDifficultyFilter(e.target.value)}
+                                    >
+                                        &lt;option value="all">Alle Schwierigkeiten&lt;/option>
+                                        &lt;option value="Leicht">Leicht&lt;/option>
+                                        &lt;option value="Mittel">Mittel&lt;/option>
+                                        &lt;option value="Schwer">Schwer&lt;/option>
+                                    &lt;/select>
+                                &lt;/div>
+                                &lt;div className="col-md-3">
+                                    &lt;label htmlFor="reportedFilter" className="form-label">
+                                        Meldungen
+                                    &lt;/label>
+                                    &lt;select
+                                        id="reportedFilter"
+                                        className="form-select"
+                                        value={reportedFilter}
+                                        onChange={(e) => setReportedFilter(e.target.value)}
+                                    >
+                                        &lt;option value="all">Alle Fragen&lt;/option>
+                                        &lt;option value="reported">Nur gemeldete&lt;/option>
+                                        &lt;option value="not-reported">Nicht gemeldete&lt;/option>
+                                    &lt;/select>
+                                &lt;/div>
+                            &lt;/div>
+                            {/* Housekeeping-Filter nur für Tutor/Moderator */}
+                            {dataManager.hasPermission('moderate') &amp;&amp; (
+                                &lt;div className="row">
+                                    &lt;div className="col-md-12">
+                                        &lt;label htmlFor="statusFilter" className="form-label">
+                                            &lt;i className="fas fa-tasks me-2">&lt;/i>
+                                            Housekeeping-Status
+                                        &lt;/label>
+                                        &lt;select
+                                            id="statusFilter"
+                                            className="form-select"
+                                            value={statusFilter}
+                                            onChange={(e) => setStatusFilter(e.target.value)}
+                                        >
+                                            &lt;option value="all">Alle Status&lt;/option>
+                                            &lt;option value="active">Aktiv&lt;/option>
+                                            &lt;option value="review">Zu prüfen&lt;/option>
+                                            &lt;option value="archived">Archiviert&lt;/option>
+                                        &lt;/select>
+                                    &lt;/div>
+                                &lt;/div>
+                            )}
+                        &lt;/div>
+                    &lt;/div>
+
+                    {/* Statusanzeige - Informationen über gefilterte Ergebnisse */}
+                    &lt;div className="alert alert-info d-flex justify-content-between align-items-center mx-auto" style={{ maxWidth: '800px' }}>
+                        &lt;div>
+                            &lt;i className="fas fa-info-circle me-2">&lt;/i>
+                            &lt;strong>Karten in {currentCategoryView &amp;&amp; currentCategoryView.name ? currentCategoryView.name : 'Kategorie'}:&lt;/strong> {Array.isArray(filteredCards) ? filteredCards.length : 0} von {currentCategoryView &amp;&amp; currentCategoryView.id ? getCardCountForCategory(currentCategoryView.id) : 0} angezeigt
+                            {(() => {
+                                const reportedQuestions = JSON.parse(localStorage.getItem('reported-questions') || '[]');
+                                const reportedInCategory = cards.filter(card =>
+                                    reportedQuestions.includes(card.id) &amp;&amp;
+                                    (!currentCategoryView || card.categoryId === currentCategoryView.id)
+                                ).length;
+                                return reportedInCategory > 0 ? (
+                                    &lt;span className="badge bg-warning text-dark ms-2">
+                                        &lt;i className="fas fa-flag me-1">&lt;/i>
+                                        {reportedInCategory} gemeldet
+                                    &lt;/span>
+                                ) : null;
+                            })()}
+                        &lt;/div>
+                        &lt;small className="text-muted">
+                            Kategorie: {currentCategoryView &amp;&amp; currentCategoryView.name ? currentCategoryView.name : 'Unbekannt'} •
+                            Autor: {currentCategoryView &amp;&amp; currentCategoryView.author ? currentCategoryView.author : 'Unbekannt'}
+                        &lt;/small>
+                    &lt;/div>
+
+                    {/* Karten-Grid - Darstellung aller Karten in der aktuellen Kategorie */}
+                    &lt;div className="row">
+                        {!Array.isArray(filteredCards) || filteredCards.length === 0 ? (
+                            &lt;div className="col-12">
+                                &lt;div className="alert alert-warning">
+                                    &lt;i className="fas fa-exclamation-triangle me-2">&lt;/i>
+                                    {!currentCategoryView || !currentCategoryView.id || getCardCountForCategory(currentCategoryView.id) === 0 ?
+                                        'Keine Karten in dieser Kategorie vorhanden. Erstellen Sie eine neue Karte.' :
+                                        'Keine Karten entsprechen den aktuellen Filterkriterien.'
+                                    }
+                                &lt;/div>
+                            &lt;/div>
+                        ) : (
+                            Array.isArray(filteredCards) &amp;&amp; filteredCards.map((card, index) => card &amp;&amp; (
+                                &lt;div key={card.id || `card-${index}`} className="col-xl-4 col-lg-6 col-md-6 col-sm-12 mb-4">
+                                    &lt;div className="card h-100" style={{ maxWidth: '100%', borderRadius: '8px' }}>
+                                        &lt;div className="card-header">
+                                            &lt;div className="d-flex justify-content-between align-items-start">
+                                                &lt;div className="flex-grow-1">
+                                                    &lt;h6 className="mb-1">
+                                                        {card.question || 'Keine Frage'}
+                                                        {(() => {
+                                                            const reportedQuestions = JSON.parse(localStorage.getItem('reported-questions') || '[]');
+                                                            return reportedQuestions.includes(card.id) ? (
+                                                                &lt;span className="badge bg-warning text-dark ms-2" title="Diese Frage wurde gemeldet">
+                                                                    &lt;i className="fas fa-flag me-1">&lt;/i>
+                                                                    Gemeldet
+                                                                &lt;/span>
+                                                            ) : null;
+                                                        })()}
+                                                        {(() => {
+                                                            const cardStatus = dataManager.getCardStatus(card.id);
+                                                            if (cardStatus === 'review') {
+                                                                return (
+                                                                    &lt;span className="badge bg-info text-white ms-2" title="Frage muss überprüft werden">
+                                                                        &lt;i className="fas fa-exclamation-circle me-1">&lt;/i>
+                                                                        Zu prüfen
+                                                                    &lt;/span>
+                                                                );
+                                                            } else if (cardStatus === 'archived') {
+                                                                return (
+                                                                    &lt;span className="badge bg-secondary text-white ms-2" title="Frage wurde archiviert">
+                                                                        &lt;i className="fas fa-archive me-1">&lt;/i>
+                                                                        Archiviert
+                                                                    &lt;/span>
+                                                                );
+                                                            }
+                                                            return null;
+                                                        })()}
+                                                    &lt;/h6>
+                                                    &lt;small className="text-muted">
+                                                        &lt;i className="fas fa-tag me-1">&lt;/i>
+                                                        {card.tags &amp;&amp; Array.isArray(card.tags) &amp;&amp; card.tags.length > 0 ?
+                                                            card.tags.join(', ') : 'Keine Tags'}
+                                                    &lt;/small>
+                                                &lt;/div>
+                                                &lt;div className="btn-group btn-group-sm">
+                                                    {/* Rollenbasierte Bearbeitungs-/Lösch-Buttons */}
+                                                    {(dataManager.hasPermission('moderate') || card.author === user.name) &amp;&amp; (
+                                                        &lt;button
+                                                            className="btn btn-sm btn-outline-secondary"
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                startEditCard(card);
+                                                            }}
+                                                            title="Karte bearbeiten"
+                                                        >
+                                                            &lt;i className="fas fa-edit">&lt;/i>
+                                                        &lt;/button>
+                                                    )}
+                                                    {(dataManager.isModerator() || card.author === user.name) &amp;&amp; (
+                                                        &lt;button
+                                                            className="btn btn-sm btn-outline-danger"
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                deleteCard(card.id);
+                                                            }}
+                                                            title="Karte löschen"
+                                                        >
+                                                            &lt;i className="fas fa-trash">&lt;/i>
+                                                        &lt;/button>
+                                                    )}
+                                                    &lt;button
+                                                        className="btn btn-sm btn-outline-warning"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            const reportedQuestions = JSON.parse(localStorage.getItem('reported-questions') || '[]');
+                                                            if (!reportedQuestions.includes(card.id)) {
+                                                                if (window.confirm('Möchten Sie diese Frage als fehlerhaft oder unpassend melden?')) {
+                                                                    reportedQuestions.push(card.id);
+                                                                    localStorage.setItem('reported-questions', JSON.stringify(reportedQuestions));
+                                                                    alert('Frage wurde gemeldet.');
+                                                                    loadData();
+                                                                }
+                                                            } else {
+                                                                alert('Diese Frage wurde bereits gemeldet.');
+                                                            }
+                                                        }}
+                                                        title="Frage melden"
+                                                    >
+                                                        &lt;i className="fas fa-flag">&lt;/i>
+                                                    &lt;/button>
+                                                &lt;/div>
+                                            &lt;/div>
+                                        &lt;/div>
+                                        &lt;div className="card-body">
+                                            &lt;div className="mb-3">
+                                                {card &amp;&amp; card.answers &amp;&amp; Array.isArray(card.answers) ?
+                                                    card.answers.map((answer, answerIndex) => (
+                                                        &lt;div key={answerIndex} className={`form-check ${card.correctAnswer === answerIndex ? 'bg-success bg-opacity-10' : ''}`}>
+                                                            &lt;input
+                                                                className="form-check-input"
+                                                                type="radio"
+                                                                disabled
+                                                                checked={card.correctAnswer === answerIndex}
+                                                                readOnly
+                                                            />
+                                                            &lt;label className="form-check-label">
+                                                                {answer}
+                                                                {card.correctAnswer === answerIndex &amp;&amp; (
+                                                                    &lt;i className="fas fa-check text-success ms-2">&lt;/i>
+                                                                )}
+                                                            &lt;/label>
+                                                        &lt;/div>
+                                                    )) : (
+                                                        &lt;p className="text-muted">Keine Antworten verfügbar&lt;/p>
+                                                    )}
+                                            &lt;/div>
+                                            {card.explanation &amp;&amp; (
+                                                &lt;div className="alert alert-info">
+                                                    &lt;small>
+                                                        &lt;strong>Erklärung:&lt;/strong> {card.explanation}
+                                                    &lt;/small>
+                                                &lt;/div>
+                                            )}
+                                        &lt;/div>
+                                        &lt;div className="card-footer">
+                                            &lt;div className="d-flex justify-content-between align-items-center mb-2">
+                                                &lt;small className="text-muted">
+                                                    &lt;i className="fas fa-user me-1">&lt;/i>
+                                                    {card.author || 'Unbekannt'}
+                                                &lt;/small>
+                                                &lt;span className={`badge ${
+                                                    card.difficulty === 'Leicht' ? 'bg-success' :
+                                                        card.difficulty === 'Mittel' ? 'bg-warning text-dark' :
+                                                            'bg-danger'
+                                                }`}>
+                          {card.difficulty || 'Unbekannt'}
+                        &lt;/span>
+                                            &lt;/div>
+                                            {/* Rollenbasierte Moderation-Buttons */}
+                                            {dataManager.hasPermission('moderate') ? (
+                                                &lt;div className="btn-group w-100" role="group">
+                                                    {(() => {
+                                                        const cardStatus = dataManager.getCardStatus(card.id);
+                                                        return (
+                                                            &lt;>
+                                                                &lt;button
+                                                                    className={`btn btn-sm ${cardStatus === 'active' ? 'btn-success' : 'btn-outline-success'}`}
+                                                                    onClick={() => {
+                                                                        dataManager.reactivateCard(card.id);
+                                                                        loadData();
+                                                                    }}
+                                                                    title="Als aktiv markieren"
+                                                                >
+                                                                    &lt;i className="fas fa-check me-1">&lt;/i>
+                                                                    Aktiv
+                                                                &lt;/button>
+                                                                &lt;button
+                                                                    className={`btn btn-sm ${cardStatus === 'review' ? 'btn-info' : 'btn-outline-info'}`}
+                                                                    onClick={() => {
+                                                                        const reason = prompt('Grund für die Überprüfung (optional):');
+                                                                        dataManager.markCardForReview(card.id, reason || 'Zur Überprüfung markiert');
+                                                                        loadData();
+                                                                    }}
+                                                                    title="Zur Überprüfung markieren"
+                                                                >
+                                                                    &lt;i className="fas fa-exclamation-circle me-1">&lt;/i>
+                                                                    Prüfen
+                                                                &lt;/button>
+                                                                &lt;button
+                                                                    className={`btn btn-sm ${cardStatus === 'archived' ? 'btn-secondary' : 'btn-outline-secondary'}`}
+                                                                    onClick={() => {
+                                                                        const reason = prompt('Grund für die Archivierung (optional):');
+                                                                        dataManager.archiveCard(card.id, reason || 'Archiviert');
+                                                                        loadData();
+                                                                    }}
+                                                                    title="Archivieren"
+                                                                >
+                                                                    &lt;i className="fas fa-archive me-1">&lt;/i>
+                                                                    Archiv
+                                                                &lt;/button>
+                                                            &lt;/>
+                                                        );
+                                                    })()}
+                                                &lt;/div>
+                                            ) : (
+                                                &lt;div className="alert alert-secondary mb-0 py-2">
+                                                    &lt;small className="text-muted">
+                                                        &lt;i className="fas fa-lock me-1">&lt;/i>
+                                                        Moderationsfunktionen nur für Tutoren und Moderatoren
+                                                    &lt;/small>
+                                                &lt;/div>
+                                            )}
+                                        &lt;/div>
+                                    &lt;/div>
+                                &lt;/div>
+                            ))
+                        )}
+                    &lt;/div>
+                &lt;/div>
+            &lt;/div>
+        &lt;/div>
+    );
+
+    /**
+     * Rendert das Formular zum Hinzufügen einer neuen Kategorie - Vollständiges Eingabeformular
+     * @memberOf admin_CardManager
+     */
+    const renderAddCategory = () => (
+        &lt;div className="container mt-4">
+            &lt;div className="row">
+                &lt;div className="col-12">
+                    &lt;div className="card">
+                        &lt;div className="card-header">
+                            &lt;div className="d-flex justify-content-between align-items-center">
+                                &lt;h3 className="mb-0">
+                                    &lt;i className="fas fa-plus me-2">&lt;/i>
+                                    Neue Kategorie erstellen
+                                &lt;/h3>
+                                &lt;button
+                                    className="btn btn-outline-secondary"
+                                    onClick={() => setCurrentView('overview')}
+                                >
+                                    &lt;i className="fas fa-arrow-left me-2">&lt;/i>
+                                    Zurück
+                                &lt;/button>
+                            &lt;/div>
+                        &lt;/div>
+                        &lt;div className="card-body">
+                            &lt;form>
+                                &lt;div className="mb-3">
+                                    &lt;label htmlFor="categoryName" className="form-label">
+                                        Kategoriename *
+                                    &lt;/label>
+                                    &lt;input
+                                        type="text"
+                                        id="categoryName"
+                                        className={`form-control ${errors.categoryName ? 'is-invalid' : ''}`}
+                                        value={newCategory.name}
+                                        onChange={(e) => setNewCategory({ ...newCategory, name: e.target.value })}
+                                        placeholder="z.B. Programmierung"
+                                    />
+                                    {errors.categoryName &amp;&amp; (
+                                        &lt;div className="invalid-feedback">
+                                            {errors.categoryName}
+                                        &lt;/div>
+                                    )}
+                                &lt;/div>
+
+                                &lt;div className="mb-3">
+                                    &lt;label htmlFor="categoryDescription" className="form-label">
+                                        Beschreibung *
+                                    &lt;/label>
+                                    &lt;textarea
+                                        id="categoryDescription"
+                                        className={`form-control ${errors.categoryDescription ? 'is-invalid' : ''}`}
+                                        rows="3"
+                                        value={newCategory.description}
+                                        onChange={(e) => setNewCategory({ ...newCategory, description: e.target.value })}
+                                        placeholder="Beschreibung der Kategorie..."
+                                    />
+                                    {errors.categoryDescription &amp;&amp; (
+                                        &lt;div className="invalid-feedback">
+                                            {errors.categoryDescription}
+                                        &lt;/div>
+                                    )}
+                                &lt;/div>
+
+                                &lt;div className="row">
+                                    &lt;div className="col-md-6">
+                                        &lt;div className="mb-3">
+                                            &lt;label htmlFor="categoryIcon" className="form-label">
+                                                Icon
+                                            &lt;/label>
+                                            &lt;select
+                                                id="categoryIcon"
+                                                className="form-select"
+                                                value={newCategory.icon}
+                                                onChange={(e) => setNewCategory({ ...newCategory, icon: e.target.value })}
+                                            >
+                                                {categoryIcons.map((icon, index) => (
+                                                    &lt;option key={`icon-${index}`} value={icon.value}>
+                                                        {icon.label}
+                                                    &lt;/option>
+                                                ))}
+                                            &lt;/select>
+                                        &lt;/div>
+                                    &lt;/div>
+                                    &lt;div className="col-md-6">
+                                        &lt;div className="mb-3">
+                                            &lt;label htmlFor="categoryColor" className="form-label">
+                                                Farbe
+                                            &lt;/label>
+                                            &lt;select
+                                                id="categoryColor"
+                                                className="form-select"
+                                                value={newCategory.color}
+                                                onChange={(e) => setNewCategory({ ...newCategory, color: e.target.value })}
+                                            >
+                                                {categoryColors.map((color, index) => (
+                                                    &lt;option key={`color-${index}`} value={color.value}>
+                                                        {color.label}
+                                                    &lt;/option>
+                                                ))}
+                                            &lt;/select>
+                                        &lt;/div>
+                                    &lt;/div>
+                                &lt;/div>
+
+                                &lt;div className="mb-3 form-check">
+                                    &lt;input
+                                        type="checkbox"
+                                        id="categoryPublic"
+                                        className="form-check-input"
+                                        checked={newCategory.isPublic}
+                                        onChange={(e) => setNewCategory({ ...newCategory, isPublic: e.target.checked })}
+                                    />
+                                    &lt;label htmlFor="categoryPublic" className="form-check-label">
+                                        Öffentlich verfügbar
+                                    &lt;/label>
+                                &lt;/div>
+
+                                &lt;div className="d-grid gap-2 d-md-flex justify-content-md-end">
+                                    &lt;button
+                                        type="button"
+                                        className="btn btn-secondary me-md-2"
+                                        onClick={() => setCurrentView('overview')}
+                                    >
+                                        Abbrechen
+                                    &lt;/button>
+                                    &lt;button
+                                        type="button"
+                                        className="btn btn-success"
+                                        onClick={createCategory}
+                                    >
+                                        &lt;i className="fas fa-plus me-2">&lt;/i>
+                                        Kategorie erstellen
+                                    &lt;/button>
+                                &lt;/div>
+                            &lt;/form>
+                        &lt;/div>
+                    &lt;/div>
+                &lt;/div>
+            &lt;/div>
+        &lt;/div>
+    );
+
+    /**
+     * Rendert das Formular zum Bearbeiten einer Kategorie
+     * @memberOf admin_CardManager
+     */
+    const renderEditCategory = () => (
+        &lt;div className="container mt-4">
+            &lt;div className="row">
+                &lt;div className="col-12">
+                    &lt;div className="card">
+                        &lt;div className="card-header">
+                            &lt;div className="d-flex justify-content-between align-items-center">
+                                &lt;h3 className="mb-0">
+                                    &lt;i className="fas fa-edit me-2">&lt;/i>
+                                    Kategorie bearbeiten
+                                &lt;/h3>
+                                &lt;button
+                                    className="btn btn-outline-secondary"
+                                    onClick={() => {
+                                        setNewCategory({
+                                            name: '',
+                                            description: '',
+                                            icon: 'fas fa-folder',
+                                            color: 'primary',
+                                            isPublic: true,
+                                            collaborators: []
+                                        });
+                                        setCurrentView('overview');
+                                    }}
+                                >
+                                    &lt;i className="fas fa-arrow-left me-2">&lt;/i>
+                                    Zurück
+                                &lt;/button>
+                            &lt;/div>
+                        &lt;/div>
+                        &lt;div className="card-body">
+                            &lt;form>
+                                &lt;div className="mb-3">
+                                    &lt;label htmlFor="editCategoryName" className="form-label">
+                                        Kategoriename *
+                                    &lt;/label>
+                                    &lt;input
+                                        type="text"
+                                        id="editCategoryName"
+                                        className={`form-control ${errors.categoryName ? 'is-invalid' : ''}`}
+                                        value={newCategory.name}
+                                        onChange={(e) => setNewCategory({ ...newCategory, name: e.target.value })}
+                                        placeholder="z.B. Programmierung"
+                                    />
+                                    {errors.categoryName &amp;&amp; (
+                                        &lt;div className="invalid-feedback">
+                                            {errors.categoryName}
+                                        &lt;/div>
+                                    )}
+                                &lt;/div>
+
+                                &lt;div className="mb-3">
+                                    &lt;label htmlFor="editCategoryDescription" className="form-label">
+                                        Beschreibung *
+                                    &lt;/label>
+                                    &lt;textarea
+                                        id="editCategoryDescription"
+                                        className={`form-control ${errors.categoryDescription ? 'is-invalid' : ''}`}
+                                        rows="3"
+                                        value={newCategory.description}
+                                        onChange={(e) => setNewCategory({ ...newCategory, description: e.target.value })}
+                                        placeholder="Beschreibung der Kategorie..."
+                                    />
+                                    {errors.categoryDescription &amp;&amp; (
+                                        &lt;div className="invalid-feedback">
+                                            {errors.categoryDescription}
+                                        &lt;/div>
+                                    )}
+                                &lt;/div>
+
+                                &lt;div className="row">
+                                    &lt;div className="col-md-6">
+                                        &lt;div className="mb-3">
+                                            &lt;label htmlFor="editCategoryIcon" className="form-label">
+                                                Icon
+                                            &lt;/label>
+                                            &lt;select
+                                                id="editCategoryIcon"
+                                                className="form-select"
+                                                value={newCategory.icon}
+                                                onChange={(e) => setNewCategory({ ...newCategory, icon: e.target.value })}
+                                            >
+                                                {categoryIcons.map((icon, index) => (
+                                                    &lt;option key={`icon-${index}`} value={icon.value}>
+                                                        {icon.label}
+                                                    &lt;/option>
+                                                ))}
+                                            &lt;/select>
+                                        &lt;/div>
+                                    &lt;/div>
+                                    &lt;div className="col-md-6">
+                                        &lt;div className="mb-3">
+                                            &lt;label htmlFor="editCategoryColor" className="form-label">
+                                                Farbe
+                                            &lt;/label>
+                                            &lt;select
+                                                id="editCategoryColor"
+                                                className="form-select"
+                                                value={newCategory.color}
+                                                onChange={(e) => setNewCategory({ ...newCategory, color: e.target.value })}
+                                            >
+                                                {categoryColors.map((color, index) => (
+                                                    &lt;option key={`color-${index}`} value={color.value}>
+                                                        {color.label}
+                                                    &lt;/option>
+                                                ))}
+                                            &lt;/select>
+                                        &lt;/div>
+                                    &lt;/div>
+                                &lt;/div>
+
+                                &lt;div className="mb-3 form-check">
+                                    &lt;input
+                                        type="checkbox"
+                                        id="editCategoryPublic"
+                                        className="form-check-input"
+                                        checked={newCategory.isPublic}
+                                        onChange={(e) => setNewCategory({ ...newCategory, isPublic: e.target.checked })}
+                                    />
+                                    &lt;label htmlFor="editCategoryPublic" className="form-check-label">
+                                        Öffentlich verfügbar
+                                    &lt;/label>
+                                &lt;/div>
+
+                                &lt;div className="d-grid gap-2 d-md-flex justify-content-md-end">
+                                    &lt;button
+                                        type="button"
+                                        className="btn btn-secondary me-md-2"
+                                        onClick={() => {
+                                            setNewCategory({
+                                                name: '',
+                                                description: '',
+                                                icon: 'fas fa-folder',
+                                                color: 'primary',
+                                                isPublic: true,
+                                                collaborators: []
+                                            });
+                                            setCurrentView('overview');
+                                        }}
+                                    >
+                                        Abbrechen
+                                    &lt;/button>
+                                    &lt;button
+                                        type="button"
+                                        className="btn btn-primary"
+                                        onClick={saveEditedCategory}
+                                    >
+                                        &lt;i className="fas fa-save me-2">&lt;/i>
+                                        Änderungen speichern
+                                    &lt;/button>
+                                &lt;/div>
+                            &lt;/form>
+                        &lt;/div>
+                    &lt;/div>
+                &lt;/div>
+            &lt;/div>
+        &lt;/div>
+    );
+
+    /**
+     * Rendert das Formular zum Hinzufügen einer neuen Karte
+     * @memberOf admin_CardManager
+     */
+    const renderAddCard = () => (
+        &lt;div className="container mt-4">
+            &lt;div className="row">
+                &lt;div className="col-12">
+                    &lt;div className="card">
+                        &lt;div className="card-header">
+                            &lt;div className="d-flex justify-content-between align-items-center">
+                                &lt;h3 className="mb-0">
+                                    &lt;i className="fas fa-plus me-2">&lt;/i>
+                                    Neue Karte erstellen
+                                &lt;/h3>
+                                &lt;button
+                                    className="btn btn-outline-secondary"
+                                    onClick={() => setCurrentView('overview')}
+                                >
+                                    &lt;i className="fas fa-arrow-left me-2">&lt;/i>
+                                    Zurück
+                                &lt;/button>
+                            &lt;/div>
+                        &lt;/div>
+                        &lt;div className="card-body">
+                            &lt;form>
+                                &lt;div className="mb-3">
+                                    &lt;label htmlFor="cardCategory" className="form-label">
+                                        Kategorie *
+                                    &lt;/label>
+                                    &lt;select
+                                        id="cardCategory"
+                                        className={`form-select ${errors.categoryId ? 'is-invalid' : ''}`}
+                                        value={newCard.categoryId}
+                                        onChange={(e) => setNewCard({ ...newCard, categoryId: e.target.value })}
+                                    >
+                                        &lt;option value="">Kategorie auswählen...&lt;/option>
+                                        {categories.map((category) => (
+                                            &lt;option key={category.id} value={category.id}>
+                                                {category.name}
+                                            &lt;/option>
+                                        ))}
+                                    &lt;/select>
+                                    {errors.categoryId &amp;&amp; (
+                                        &lt;div className="invalid-feedback">
+                                            {errors.categoryId}
+                                        &lt;/div>
+                                    )}
+                                &lt;/div>
+
+                                &lt;div className="mb-3">
+                                    &lt;label htmlFor="cardQuestion" className="form-label">
+                                        Frage *
+                                    &lt;/label>
+                                    &lt;textarea
+                                        id="cardQuestion"
+                                        className={`form-control ${errors.question ? 'is-invalid' : ''}`}
+                                        rows="3"
+                                        value={newCard.question}
+                                        onChange={(e) => setNewCard({ ...newCard, question: e.target.value })}
+                                        placeholder="Geben Sie hier Ihre Frage ein..."
+                                    />
+                                    {errors.question &amp;&amp; (
+                                        &lt;div className="invalid-feedback">
+                                            {errors.question}
+                                        &lt;/div>
+                                    )}
+                                &lt;/div>
+
+                                &lt;div className="mb-3">
+                                    &lt;label className="form-label">
+                                        Antwortmöglichkeiten
+                                    &lt;/label>
+                                    {newCard.answers.map((answer, index) => (
+                                        &lt;div key={index} className="input-group mb-2">
+                          &lt;span className="input-group-text">
+                              &lt;input
+                                  className="form-check-input"
+                                  type="radio"
+                                  name="correctAnswer"
+                                  checked={newCard.correctAnswer === index}
+                                  onChange={() => {
+                                      setNewCard(prevCard => ({
+                                          ...prevCard,
+                                          correctAnswer: index
+                                      }));
+                                  }}
+                              />
+                            &lt;/span>
+                                            &lt;input
+                                                type="text"
+                                                className="form-control"
+                                                value={answer}
+                                                onChange={(e) => updateCardAnswer(index, e.target.value)}
+                                                placeholder={`Antwort ${index + 1}`}
+                                            />
+                                        &lt;/div>
+                                    ))}
+                                    {errors.answers &amp;&amp; (
+                                        &lt;div className="text-danger small">
+                                            {errors.answers}
+                                        &lt;/div>
+                                    )}
+                                    {errors.correctAnswer &amp;&amp; (
+                                        &lt;div className="text-danger small">
+                                            {errors.correctAnswer}
+                                        &lt;/div>
+                                    )}
+                                &lt;/div>
+
+                                &lt;div className="row">
+                                    &lt;div className="col-md-6">
+                                        &lt;div className="mb-3">
+                                            &lt;label htmlFor="cardDifficulty" className="form-label">
+                                                Schwierigkeit
+                                            &lt;/label>
+                                            &lt;select
+                                                id="cardDifficulty"
+                                                className="form-select"
+                                                value={newCard.difficulty}
+                                                onChange={(e) => setNewCard({ ...newCard, difficulty: e.target.value })}
+                                            >
+                                                &lt;option value="Leicht">Leicht&lt;/option>
+                                                &lt;option value="Mittel">Mittel&lt;/option>
+                                                &lt;option value="Schwer">Schwer&lt;/option>
+                                            &lt;/select>
+                                        &lt;/div>
+                                    &lt;/div>
+                                    &lt;div className="col-md-6">
+                                        &lt;div className="mb-3">
+                                            &lt;label htmlFor="cardTags" className="form-label">
+                                                Tags (kommagetrennt)
+                                            &lt;/label>
+                                            &lt;input
+                                                type="text"
+                                                id="cardTags"
+                                                className="form-control"
+                                                value={newCard.tags}
+                                                onChange={(e) => setNewCard({ ...newCard, tags: e.target.value })}
+                                                placeholder="z.B. JavaScript, React, Frontend"
+                                            />
+                                        &lt;/div>
+                                    &lt;/div>
+                                &lt;/div>
+
+                                &lt;div className="mb-3">
+                                    &lt;label htmlFor="cardExplanation" className="form-label">
+                                        Erklärung (optional)
+                                    &lt;/label>
+                                    &lt;textarea
+                                        id="cardExplanation"
+                                        className="form-control"
+                                        rows="3"
+                                        value={newCard.explanation}
+                                        onChange={(e) => setNewCard({ ...newCard, explanation: e.target.value })}
+                                        placeholder="Erklärung der korrekten Antwort..."
+                                    />
+                                &lt;/div>
+
+                                &lt;div className="mb-3 form-check">
+                                    &lt;input
+                                        type="checkbox"
+                                        id="cardPublic"
+                                        className="form-check-input"
+                                        checked={newCard.isPublic}
+                                        onChange={(e) => setNewCard({ ...newCard, isPublic: e.target.checked })}
+                                    />
+                                    &lt;label htmlFor="cardPublic" className="form-check-label">
+                                        Öffentlich verfügbar
+                                    &lt;/label>
+                                &lt;/div>
+
+                                &lt;div className="d-grid gap-2 d-md-flex justify-content-md-end">
+                                    &lt;button
+                                        type="button"
+                                        className="btn btn-secondary me-md-2"
+                                        onClick={() => setCurrentView('overview')}
+                                    >
+                                        Abbrechen
+                                    &lt;/button>
+                                    &lt;button
+                                        type="button"
+                                        className="btn btn-success"
+                                        onClick={createCard}
+                                    >
+                                        &lt;i className="fas fa-plus me-2">&lt;/i>
+                                        Karte erstellen
+                                    &lt;/button>
+                                &lt;/div>
+                            &lt;/form>
+                        &lt;/div>
+                    &lt;/div>
+                &lt;/div>
+            &lt;/div>
+        &lt;/div>
+    );
+
+    /**
+     * Rendert das Formular zum Bearbeiten einer Karte
+     * @memberOf admin_CardManager
+     */
+    const renderEditCard = () => (
+        &lt;div className="container mt-4">
+            &lt;div className="row">
+                &lt;div className="col-12">
+                    &lt;div className="card">
+                        &lt;div className="card-header">
+                            &lt;div className="d-flex justify-content-between align-items-center">
+                                &lt;h3 className="mb-0">
+                                    &lt;i className="fas fa-edit me-2">&lt;/i>
+                                    Karte bearbeiten
+                                &lt;/h3>
+                                &lt;button
+                                    className="btn btn-outline-secondary"
+                                    onClick={() => {
+                                        setEditingCard(null);
+                                        setCurrentView('overview');
+                                    }}
+                                >
+                                    &lt;i className="fas fa-arrow-left me-2">&lt;/i>
+                                    Zurück
+                                &lt;/button>
+                            &lt;/div>
+                        &lt;/div>
+                        &lt;div className="card-body">
+                            {editingCard &amp;&amp; (
+                                &lt;form>
+                                    &lt;div className="mb-3">
+                                        &lt;label htmlFor="editCardQuestion" className="form-label">
+                                            Frage *
+                                        &lt;/label>
+                                        &lt;textarea
+                                            id="editCardQuestion"
+                                            className="form-control"
+                                            rows="3"
+                                            value={editingCard.question}
+                                            onChange={(e) => setEditingCard({ ...editingCard, question: e.target.value })}
+                                        />
+                                    &lt;/div>
+
+                                    &lt;div className="mb-3">
+                                        &lt;label className="form-label">
+                                            Antwortmöglichkeiten *
+                                        &lt;/label>
+                                        {editingCard.answers.map((answer, index) => (
+                                            &lt;div key={index} className="input-group mb-2">
+                              &lt;span className="input-group-text">
+                                  &lt;input
+                                      className="form-check-input"
+                                      type="radio"
+                                      name="editCorrectAnswer"
+                                      checked={editingCard.correctAnswer === index}
+                                      onChange={() => {
+                                          // Aktualisiert correctAnswer als Zahl entsprechend dem CardState-Typ
+                                          const updatedCard = {
+                                              ...editingCard,
+                                              correctAnswer: index // Index ist eine Zahl, kompatibel mit null|number Typ
+                                          };
+                                          setEditingCard(updatedCard);
+                                      }}
+                                  />
+                                &lt;/span>
+                                                &lt;input
+                                                    type="text"
+                                                    className="form-control"
+                                                    value={answer}
+                                                    onChange={(e) => updateEditCardAnswer(index, e.target.value)}
+                                                />
+                                            &lt;/div>
+                                        ))}
+                                    &lt;/div>
+
+                                    &lt;div className="row">
+                                        &lt;div className="col-md-6">
+                                            &lt;div className="mb-3">
+                                                &lt;label htmlFor="editCardDifficulty" className="form-label">
+                                                    Schwierigkeit
+                                                &lt;/label>
+                                                &lt;select
+                                                    id="editCardDifficulty"
+                                                    className="form-select"
+                                                    value={editingCard.difficulty}
+                                                    onChange={(e) => setEditingCard({ ...editingCard, difficulty: e.target.value })}
+                                                >
+                                                    &lt;option value="Leicht">Leicht&lt;/option>
+                                                    &lt;option value="Mittel">Mittel&lt;/option>
+                                                    &lt;option value="Schwer">Schwer&lt;/option>
+                                                &lt;/select>
+                                            &lt;/div>
+                                        &lt;/div>
+                                        &lt;div className="col-md-6">
+                                            &lt;div className="mb-3">
+                                                &lt;label htmlFor="editCardTags" className="form-label">
+                                                    Tags (kommagetrennt)
+                                                &lt;/label>
+                                                &lt;input
+                                                    type="text"
+                                                    id="editCardTags"
+                                                    className="form-control"
+                                                    value={editingCard.tags}
+                                                    onChange={(e) => setEditingCard({ ...editingCard, tags: e.target.value })}
+                                                />
+                                            &lt;/div>
+                                        &lt;/div>
+                                    &lt;/div>
+
+                                    &lt;div className="mb-3">
+                                        &lt;label htmlFor="editCardExplanation" className="form-label">
+                                            Erklärung (optional)
+                                        &lt;/label>
+                                        &lt;textarea
+                                            id="editCardExplanation"
+                                            className="form-control"
+                                            rows="3"
+                                            value={editingCard.explanation || ''}
+                                            onChange={(e) => setEditingCard({ ...editingCard, explanation: e.target.value })}
+                                        />
+                                    &lt;/div>
+
+                                    &lt;div className="d-grid gap-2 d-md-flex justify-content-md-end">
+                                        &lt;button
+                                            type="button"
+                                            className="btn btn-secondary me-md-2"
+                                            onClick={() => {
+                                                setEditingCard(null);
+                                                setCurrentView('overview');
+                                            }}
+                                        >
+                                            Abbrechen
+                                        &lt;/button>
+                                        &lt;button
+                                            type="button"
+                                            className="btn btn-primary"
+                                            onClick={saveEditedCard}
+                                        >
+                                            &lt;i className="fas fa-save me-2">&lt;/i>
+                                            Speichern
+                                        &lt;/button>
+                                    &lt;/div>
+                                &lt;/form>
+                            )}
+                        &lt;/div>
+                    &lt;/div>
+                &lt;/div>
+            &lt;/div>
+        &lt;/div>
+    );
+
+    // Hauptrender-Logik
+    switch (currentView) {
+        case 'add-category':
+            return renderAddCategory();
+        case 'edit-category':
+            return renderEditCategory();
+        case 'add-card':
+            return renderAddCard();
+        case 'edit-card':
+            return renderEditCard();
+        default:
+            return viewMode === 'category-detail' ? renderCategoryDetail() : renderCategoriesOverview();
+    }
+}
+
+export default CardManager;</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.5</a> on Thu Oct 30 2025 13:18:08 GMT+0100 (Mitteleuropäische Normalzeit) using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

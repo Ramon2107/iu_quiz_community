@@ -360,7 +360,32 @@
 <a name='L295'></a><a href='#L295'>295</a>
 <a name='L296'></a><a href='#L296'>296</a>
 <a name='L297'></a><a href='#L297'>297</a>
-<a name='L298'></a><a href='#L298'>298</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L298'></a><a href='#L298'>298</a>
+<a name='L299'></a><a href='#L299'>299</a>
+<a name='L300'></a><a href='#L300'>300</a>
+<a name='L301'></a><a href='#L301'>301</a>
+<a name='L302'></a><a href='#L302'>302</a>
+<a name='L303'></a><a href='#L303'>303</a>
+<a name='L304'></a><a href='#L304'>304</a>
+<a name='L305'></a><a href='#L305'>305</a>
+<a name='L306'></a><a href='#L306'>306</a>
+<a name='L307'></a><a href='#L307'>307</a>
+<a name='L308'></a><a href='#L308'>308</a>
+<a name='L309'></a><a href='#L309'>309</a>
+<a name='L310'></a><a href='#L310'>310</a>
+<a name='L311'></a><a href='#L311'>311</a>
+<a name='L312'></a><a href='#L312'>312</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -406,30 +431,33 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -658,22 +686,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">/**
- * UserProfile-Komponente - Benutzerprofil und Einstellungen
- *
- * Diese Komponente zeigt das Benutzerprofil mit Statistiken,
- * Einstellungen und Verlauf der Quiz-Aktivitäten an.
- *
- * SICHERHEITSFEATURES:
- * - XSS-Schutz für alle Eingabefelder
- * - Validierung von Benutzereingaben
- * - Sichere Darstellung von Benutzerdaten
- *
- * UPDATE: Logout-Funktion integriert
- * UPDATE: XSS-Schutz für alle Eingabefelder implementiert
- *
+ * Benutzerprofil mit Statistiken, Bearbeitungsfunktion und XSS-Schutz.
+ * @namespace user_Profile
  * @author Projektteam IU Community Quiz
  * @version 1.2.0
- * @since 2025-07-15
  */
 &nbsp;
 import React, { useState, useEffect, useCallback } from 'react';
@@ -681,10 +697,33 @@ import dataManager from '../../data/dataManager';
 import { sanitizeInput } from '../../utils/xssUtils';
 &nbsp;
 /**
- * UserProfile-Komponente
- * @param {Object} props - Komponenteneigenschaften
+ * UserProfile - Benutzerprofil mit Statistiken und Bearbeitungsfunktion
+ *
+ * Diese Komponente zeigt das Benutzerprofil mit detaillierten Statistiken,
+ * Einstellungsmöglichkeiten und Verlauf der Quiz-Aktivitäten an.
+ *
+ * Hauptfunktionen:
+ * - Anzeige von Benutzerinformationen (Name, E-Mail, Studiengang, Semester)
+ * - Quiz-Statistiken (gespielte Quiz, Erfolgsrate, Gesamtpunkte)
+ * - Profilbearbeitung mit Validierung
+ * - Verlauf der letzten Quiz-Sessions mit Ergebnissen
+ * - Responsive Design für alle Endgeräte
+ * - Logout-Funktion mit Session-Verwaltung
+ *
+ * Implementierte Sicherheitsfeatures:
+ * - XSS-Schutz für alle Eingabefelder
+ * - Validierung von Benutzereingaben vor dem Speichern
+ * - Sichere Darstellung von Benutzerdaten
+ * - Sanitization aller Textinhalte
+ *
+ * @function UserProfile
+ * @memberOf user_Profile
+ * @param {Object} props - Component properties
  * @param {Object} props.user - Benutzerdaten
- * @param {Function} props.onLogout - UPDATE: Logout-Funktion
+ * @param {Function} props.onLogout - Callback bei Abmeldung
+ * @returns {React.ReactElement} Die gerenderte UserProfile-Komponente
+ * @example
+ * &lt;UserProfile user={currentUser} onLogout={handleLogout} /&gt;
  */
 function <span class="fstat-no" title="function not covered" >UserProfile(</span>{ user, onLogout }) {
   const [stats, setStats] = <span class="cstat-no" title="statement not covered" >useState({</span>
@@ -702,6 +741,7 @@ function <span class="fstat-no" title="function not covered" >UserProfile(</span
 &nbsp;
   /**
    * Lädt Benutzerstatistiken
+   * @memberOf user_Profile
    */
   const loadUserStats = <span class="cstat-no" title="statement not covered" >useCallback(<span class="fstat-no" title="function not covered" >()</span> =&gt; {</span>
     // Simuliere Statistiken basierend auf Benutzerdaten
@@ -723,6 +763,7 @@ function <span class="fstat-no" title="function not covered" >UserProfile(</span
 &nbsp;
   /**
    * Behandelt Profil-Änderungen
+   * @memberOf user_Profile
    */
   const handleProfileUpdate = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >()</span> =&gt; {</span>
     // In echter App würde dies über API erfolgen
@@ -730,7 +771,8 @@ function <span class="fstat-no" title="function not covered" >UserProfile(</span
   };
 &nbsp;
   /**
-   * UPDATE: Behandelt Logout mit Bestätigung
+   * Behandelt Logout mit Bestätigung
+   * @memberOf user_Profile
    */
   const handleLogout = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >()</span> =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >    if (window.confirm('Möchten Sie sich wirklich abmelden?')) {</span>
@@ -961,7 +1003,7 @@ export default UserProfile;</pre></td></tr></table></pre>
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-10-22T20:17:11.410Z
+                at 2025-10-30T11:25:17.527Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

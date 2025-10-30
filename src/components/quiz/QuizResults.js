@@ -45,6 +45,7 @@ import simulatedPlayersService from '../../services/SimulatedPlayersService'; //
  *   category={selectedCategory}
  *   user={currentUser}
  *   onRestart={handleRestart}
+ *   onBackToCategorySelection={handleBack}
  * />
  */
 function QuizResults({

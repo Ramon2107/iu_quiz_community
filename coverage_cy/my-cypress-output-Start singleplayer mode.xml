@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuites name="Mocha Tests" time="3.130" tests="1" failures="0">
-  <testsuite name="Root Suite" timestamp="2025-10-28T19:20:16" tests="0" file="cypress\e2e\singelplayer.cy.js" time="0.000" failures="0">
+<testsuites name="Mocha Tests" time="12.037" tests="1" failures="0">
+  <testsuite name="Root Suite" timestamp="2025-10-30T11:23:25" tests="0" file="cypress\e2e\singelplayer.cy.js" time="0.000" failures="0">
   </testsuite>
-  <testsuite name="Start singleplayer mode" timestamp="2025-10-28T19:20:16" tests="1" time="3.092" failures="0">
-    <testcase name="Start singleplayer mode passes" time="2.815" classname="passes">
+  <testsuite name="Start singleplayer mode" timestamp="2025-10-30T11:23:25" tests="1" time="11.760" failures="0">
+    <testcase name="Start singleplayer mode passes" time="11.338" classname="passes">
     </testcase>
   </testsuite>
 </testsuites>

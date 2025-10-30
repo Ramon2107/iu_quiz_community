@@ -8,7 +8,7 @@
   "opts": {
     "template": "node_modules/minami",
     "encoding": "utf8",
-    "destination": "./docs/",
+    "destination": "./public/docs/",
     "recurse": true,
     "readme": "README.md"
   },
@@ -19,7 +19,8 @@
       "outputSourceFiles": true,
       "includeDate": true,
       "staticFiles": {
-        "include": ["./jsdoc-template-custom.css"]
+        "include": ["./public/jsdoc-template-custom.css"],
+        "paths": ["./public"]
       }
     },
     "applicationName": "IU Quiz Community - Dokumentation",

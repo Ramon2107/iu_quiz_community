@@ -590,7 +590,15 @@ function QuizQuestion({
                 <div className="card-body p-1 flex-grow-1" style={{ overflowY: 'auto' }}>
                     {chatMessages.length === 0 ? (
                         <div className="text-center text-muted h-100 d-flex align-items-center justify-content-center">
-                            <div>
+                                        <div className="d-flex align-items-center">
+                                            {onBackToCategorySelection && (
+                                                <button 
+                                                    className="btn btn-sm btn-light me-3"
+                                                    onClick={onBackToCategorySelection}
+                                                >
+                                                    <i className="fas fa-arrow-left"></i>
+                                                </button>
+                                            )}
                                 <i className="fas fa-comments fa-2x mb-2"></i>
                                 <p className="fs-6">Noch keine Nachrichten...</p>
                                 <small>Starten Sie eine Unterhaltung!</small>

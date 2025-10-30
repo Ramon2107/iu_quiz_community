@@ -258,32 +258,32 @@ function HomePage({ user, onNavigate }) {
                                 </div>
                             </div>
                             <div className="row mt-3">
-                                <div className="col-12">
+                                <div className="col-md-6">
                                     <h6><i className="fas fa-code me-2 text-info"></i>Verfügbare NPM-Skripte</h6>
-                                    <div className="table-responsive">
-                                        <table className="table table-sm table-striped">
-                                            <thead className="table-dark">
-                                                <tr>
-                                                    <th>Befehl</th>
-                                                    <th>Beschreibung</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr><td><code>npm start</code></td><td>Entwicklungsserver starten</td></tr>
-                                                <tr><td><code>npm test</code></td><td>Tests ausführen</td></tr>
-                                                <tr><td><code>npm run jsdoc</code></td><td>JSDoc-Dokumentation generieren</td></tr>
-                                                <tr><td><code>npm run docs:serve</code></td><td>Dokumentation im Browser öffnen</td></tr>
-                                                <tr><td><code>npm run cy:open-e2e</code></td><td>Cypress E2E Tests öffnen</td></tr>
-                                                <tr><td><code>npm run lint</code></td><td>Code-Qualität prüfen</td></tr>
-                                            </tbody>
-                                        </table>
+                                    <div className="row g-2">
+                                        <div className="col-12">
+                                            <div className="d-flex align-items-center p-2 bg-light rounded">
+                                                <code className="text-primary me-2">npm start</code>
+                                                <span className="text-muted small">Entwicklungsserver starten</span>
+                                            </div>
+                                        </div>
+                                        <div className="col-12">
+                                            <div className="d-flex align-items-center p-2 bg-light rounded">
+                                                <code className="text-primary me-2">npm test</code>
+                                                <span className="text-muted small">Tests ausführen</span>
+                                            </div>
+                                        </div>
+                                        <div className="col-12">
+                                            <div className="d-flex align-items-center p-2 bg-light rounded">
+                                                <code className="text-primary me-2">npm run docs:serve</code>
+                                                <span className="text-muted small">Dokumentation öffnen</span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div className="row mt-3">
                                 <div className="col-md-6">
                                     <h6><i className="fas fa-book-open me-2 text-primary"></i>Dokumentation</h6>
-                                    <p className="mb-2">Die vollständige JSDoc-Dokumentation finden Sie hier:</p>
+                                    <p className="mb-3">Die vollständige JSDoc-Dokumentation mit Details zu allen Komponenten und Services:</p>
                                     <a
                                         href="/docs/index.html"
                                         target="_blank"
@@ -294,11 +294,6 @@ function HomePage({ user, onNavigate }) {
                                         JSDoc Dokumentation öffnen
                                     </a>
                                 </div>
-                                <div className="col-md-6">
-                                    <h6><i className="fas fa-user-lock me-2 text-warning"></i>Demo-Login-Daten</h6>
-                                    <p className="mb-1"><strong>Student:</strong> max.mustermann@iu-study.org / StudiumIU2024!</p>
-                                    <p className="mb-0"><strong>Admin:</strong> admin@iu-study.org / AdminIU2024!</p>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -307,24 +302,46 @@ function HomePage({ user, onNavigate }) {
                 {/* Aktueller Benutzer */}
                 <div className="col-12">
                     <div className="card">
-                        <div className="card-header">
+                        <div className="card-header bg-primary text-white">
                             <h5 className="mb-0">
                                 <i className="fas fa-user-circle me-2"></i>
                                 Ihr Profil
                             </h5>
                         </div>
                         <div className="card-body">
-                            <div className="row">
-                                <div className="col-md-8">
-                                    <p><strong>Name:</strong> {user.name}</p>
-                                    <p><strong>E-Mail:</strong> {user.email}</p>
-                                    <p><strong>Studiengang:</strong> {user.studyProgram}</p>
-                                    <p><strong>Semester:</strong> {user.semester}</p>
-                                    <p className="mb-0"><strong>Dabei seit:</strong> {new Date(user.joinDate).toLocaleDateString('de-DE')}</p>
+                            <div className="row align-items-center">
+                                <div className="col-md-3 text-center mb-3 mb-md-0">
+                                    <div className="bg-light rounded-circle d-inline-flex align-items-center justify-content-center" style={{width: '100px', height: '100px'}}>
+                                        <i className="fas fa-user fa-3x text-primary"></i>
+                                    </div>
                                 </div>
-                                <div className="col-md-4 text-end">
+                                <div className="col-md-6">
+                                    <div className="row g-2">
+                                        <div className="col-sm-6">
+                                            <small className="text-muted d-block">Name</small>
+                                            <strong>{user.name}</strong>
+                                        </div>
+                                        <div className="col-sm-6">
+                                            <small className="text-muted d-block">E-Mail</small>
+                                            <strong>{user.email}</strong>
+                                        </div>
+                                        <div className="col-sm-6">
+                                            <small className="text-muted d-block">Studiengang</small>
+                                            <strong>{user.studyProgram}</strong>
+                                        </div>
+                                        <div className="col-sm-6">
+                                            <small className="text-muted d-block">Semester</small>
+                                            <strong>{user.semester}</strong>
+                                        </div>
+                                        <div className="col-12">
+                                            <small className="text-muted d-block">Dabei seit</small>
+                                            <strong>{new Date(user.joinDate).toLocaleDateString('de-DE', { year: 'numeric', month: 'long', day: 'numeric' })}</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="col-md-3 text-center text-md-end mt-3 mt-md-0">
                                     <button
-                                        className="btn btn-outline-primary"
+                                        className="btn btn-primary w-100"
                                         onClick={() => onNavigate('profile')}
                                     >
                                         <i className="fas fa-edit me-2"></i>

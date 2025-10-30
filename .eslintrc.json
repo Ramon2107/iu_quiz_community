@@ -1,4 +1,4 @@
 {
   "extends": "react-app",
-  "ignorePatterns": [ "public/**/*", ".idea/**/*", "docs/**/*"]
+  "ignorePatterns": [ "public/**/*", ".idea/**/*", "docs/**/*", "cypress/**/*"]
 }

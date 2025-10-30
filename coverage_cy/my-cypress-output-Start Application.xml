@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuites name="Mocha Tests" time="1.307" tests="1" failures="0">
-  <testsuite name="Root Suite" timestamp="2025-10-28T19:20:00" tests="0" file="cypress\e2e\app-startup.cy.js" time="0.000" failures="0">
+<testsuites name="Mocha Tests" time="2.637" tests="1" failures="0">
+  <testsuite name="Root Suite" timestamp="2025-10-30T11:22:30" tests="0" file="cypress\e2e\app-startup.cy.js" time="0.000" failures="0">
   </testsuite>
-  <testsuite name="Start Application" timestamp="2025-10-28T19:20:00" tests="1" time="1.263" failures="0">
-    <testcase name="Start Application passes" time="0.685" classname="passes">
+  <testsuite name="Start Application" timestamp="2025-10-30T11:22:30" tests="1" time="2.571" failures="0">
+    <testcase name="Start Application passes" time="1.406" classname="passes">
     </testcase>
   </testsuite>
 </testsuites>

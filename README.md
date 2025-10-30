@@ -204,21 +204,6 @@ iu_quiz_community/
 - Frageneditor mit Kategorisierung
 - Rollenbasierte Zugriffskontrolle
 
-## 🧪 Testing
-
-Das Projekt verwendet Cypress für E2E- und Component-Tests sowie Jest/React Testing Library für Unit-Tests.
-
-```bash
-# Alle Tests ausführen
-npm test
-
-# Mit Coverage-Report
-npm run test_ci
-
-# Cypress Tests interaktiv
-npm run cy:open-e2e
-```
-
 ## 📝 Lizenz
 
 Dieses Projekt wurde im Rahmen eines Studienprojekts an der IU Internationale Hochschule entwickelt.

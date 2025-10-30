@@ -87,6 +87,35 @@ function App() {
         }
     }, []);
 
+    // Browser-Zurück-Button Handler für Hauptnavigation
+    useEffect(() => {
+        const handlePopState = () => {
+            // Von allen anderen Views zurück zur Startseite
+            if (currentView !== 'home' && user) {
+                setCurrentView('home');
+            } else if (!user) {
+                // Wenn nicht eingeloggt, zur Login-Seite
+                setCurrentView('login');
+            }
+        };
+
+        // Event Listener hinzufügen
+        window.addEventListener('popstate', handlePopState);
+
+        // Cleanup beim Unmount
+        return () => {
+            window.removeEventListener('popstate', handlePopState);
+        };
+    }, [currentView, user]);
+
+    // History-Einträge beim View-Wechsel hinzufügen
+    useEffect(() => {
+        if (currentView && user) {
+            // Neuen History-Eintrag hinzufügen
+            window.history.pushState({ view: currentView }, '', window.location.href);
+        }
+    }, [currentView, user]);
+
     /**
      * Handler für erfolgreiche Benutzeranmeldung
      *

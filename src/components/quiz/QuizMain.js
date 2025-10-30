@@ -9,6 +9,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import QuizQuestion from './QuizQuestion';
 import QuizResults from './QuizResults';
 import QuizCategorySelector from './QuizCategorySelector';
+import CooperativeLobby from './CooperativeLobby';
 import dataManager from '../../data/dataManager';
 import simulatedPlayersService from '../../services/SimulatedPlayersService';
 
@@ -27,12 +28,20 @@ import simulatedPlayersService from '../../services/SimulatedPlayersService';
  * - Live-Chat für kooperativen Modus mit persistenten Nachrichten
  * - Punktesystem für alle Spieler mit Echtzeitaktualisierung
  * - Timer-basierte Fragenanzeige mit korrekter Initialisierung
+ * - Browser-Zurück-Button Integration für alle Quiz-Schritte
+ * - History-Management für nahtlose Navigation
+ * - Zurück-zum-Hauptmenü-Button in der Spielmodus-Auswahl
  * - Responsive Benutzeroberfläche für alle Endgeräte
  *
  * Spielmodi:
  * - cooperative: Kooperatives Lernen mit anderen Studierenden und Live-Chat
  * - competitive: Wettbewerbsmodus mit Zeitdruck ohne Chat
  * - single-player: Individuelles Lernen ohne Zeitdruck
+ *
+ * Navigation:
+ * - Browser-Zurück unterstützt in allen Quiz-Schritten
+ * - Zurück-Buttons in allen Komponenten verfügbar
+ * - History-Einträge für jeden Schrittwechsel
  *
  * @function QuizMain
  * @memberOf quiz_Main
@@ -69,6 +78,80 @@ function QuizMain({ user }) {
         setAvailableCategories(dataManager.getCategoriesForQuiz());
     }, []);
 
+    // Browser-Zurück-Button Handler
+    useEffect(() => {
+        const handlePopState = () => {
+            // Je nach aktuellem Schritt zurücknavigieren
+            if (currentStep === 'quiz' && !showResults) {
+                // Zurück zur Kategorieauswahl
+                setCurrentStep('category');
+                setSelectedCategory(null);
+                setQuestions([]);
+                setCurrentQuestionIndex(0);
+                setAnswers([]);
+                setShowResults(false);
+                setIsLoading(false);
+                setChatMessages([]);
+            } else if (currentStep === 'category') {
+                // Zurück zur Fragenanzahl-Auswahl
+                setCurrentStep('question-count');
+            } else if (currentStep === 'question-count') {
+                // Zurück zur Spielmodus-Auswahl
+                setCurrentStep('mode');
+                setGameMode(null);
+                setSelectedCategory(null);
+                setQuestionCount(10);
+                setQuestions([]);
+                setCurrentQuestionIndex(0);
+                setAnswers([]);
+                setShowResults(false);
+                setIsLoading(false);
+                setChatMessages([]);
+                simulatedPlayersService.reset();
+                setMultiplayerData({ players: [], currentPlayerAnswers: [], isMultiplayer: false });
+            } else if (currentStep === 'lobby') {
+                // Zurück zur Kategorieauswahl
+                setCurrentStep('category');
+                setMultiplayerData(prev => ({
+                    players: [],
+                    currentPlayerAnswers: [],
+                    isMultiplayer: prev.isMultiplayer
+                }));
+                setChatMessages([]);
+            } else if (showResults) {
+                // Zurück zur Spielmodus-Auswahl
+                setCurrentStep('mode');
+                setGameMode(null);
+                setSelectedCategory(null);
+                setQuestionCount(10);
+                setQuestions([]);
+                setCurrentQuestionIndex(0);
+                setAnswers([]);
+                setShowResults(false);
+                setIsLoading(false);
+                setChatMessages([]);
+                simulatedPlayersService.reset();
+                setMultiplayerData({ players: [], currentPlayerAnswers: [], isMultiplayer: false });
+            }
+        };
+
+        // Event Listener hinzufügen
+        window.addEventListener('popstate', handlePopState);
+
+        // Cleanup beim Unmount
+        return () => {
+            window.removeEventListener('popstate', handlePopState);
+        };
+    }, [currentStep, showResults]);
+
+    // History-Einträge beim Schrittwechsel hinzufügen
+    useEffect(() => {
+        if (currentStep) {
+            // Neuen History-Eintrag hinzufügen
+            window.history.pushState({ step: currentStep }, '', window.location.href);
+        }
+    }, [currentStep]);
+
     const calculateEstimatedTime = () => {
         let timePerQuestion = 1;
         switch (gameMode) {
@@ -98,6 +181,7 @@ function QuizMain({ user }) {
         setCurrentQuestionIndex(0);
         setAnswers([]);
         setShowResults(false);
+
         if (multiplayerData.isMultiplayer) {
             const players = simulatedPlayersService.initializePlayers(gameMode, category.name, 3);
             setMultiplayerData({
@@ -107,8 +191,12 @@ function QuizMain({ user }) {
             if (gameMode === 'cooperative') {
                 generateWelcomeMessages(players);
             }
+            // Zeige Lobby für Multiplayer-Modi
+            setCurrentStep('lobby');
+        } else {
+            // Einzelspieler startet direkt
+            setCurrentStep('quiz');
         }
-        setCurrentStep('quiz');
     };
 
     const generateWelcomeMessages = (players) => {
@@ -160,6 +248,21 @@ function QuizMain({ user }) {
         setSelectedCategory(null);
         resetQuizState();
     };
+
+    const handleBackFromLobby = () => {
+        setCurrentStep('category');
+        setMultiplayerData({
+            players: [],
+            currentPlayerAnswers: [],
+            isMultiplayer: multiplayerData.isMultiplayer
+        });
+        setChatMessages([]);
+    };
+
+    const handleStartGameFromLobby = () => {
+        setCurrentStep('quiz');
+    };
+
 
     const handleAnswer = useCallback(async (answerData) => {
         setAnswers(prev => [...prev, answerData]);
@@ -228,7 +331,19 @@ function QuizMain({ user }) {
         );
     }
 
-    // Quiz State
+        // Lobby State
+    if (currentStep === 'lobby' && multiplayerData.isMultiplayer) {
+        return (
+            <CooperativeLobby
+               players={multiplayerData.players}
+               user={user}
+               onStartGame={handleStartGameFromLobby}
+               onBack={handleBackFromLobby}
+            />
+        );
+    }
+
+        // Quiz State
     if (currentStep === 'quiz' && questions.length > 0) {
         return (
             <QuizQuestion
@@ -337,10 +452,19 @@ function QuizMain({ user }) {
                 <div className="col-12">
                     <div className="card shadow-lg" style={{ minHeight: '500px' }}>
                         <div className="card-header bg-primary text-white py-2">
-                            <h5 className="mb-0 text-center">
-                                <i className="fas fa-play-circle me-2"></i>
-                                Spielmodus auswählen
-                            </h5>
+                            <div className="d-flex align-items-center">
+                                <button 
+                                    className="btn btn-sm btn-light me-3"
+                                    onClick={() => window.history.back()}
+                                    title="Zurück zum Hauptmenü"
+                                >
+                                    <i className="fas fa-home"></i>
+                                </button>
+                                <h5 className="mb-0 flex-grow-1 text-center">
+                                    <i className="fas fa-play-circle me-2"></i>
+                                    Spielmodus auswählen
+                                </h5>
+                            </div>
                         </div>
                         <div className="card-body p-3 p-lg-4 d-flex flex-column" style={{ minHeight: '450px' }}>
                             <div className="row g-3 flex-grow-1">

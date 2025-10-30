@@ -23,5 +23,10 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-/docs/scripts/
-/docs/fonts/
+
+# Windows reservierte Dateinamen
+nul
+NUL
+CON
+PRN
+AUX
