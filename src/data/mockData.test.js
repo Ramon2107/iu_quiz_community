@@ -1,4 +1,4 @@
-import {getCategoriesWithCardCount, getCategoryById, getQuestionById, getQuestionsByCategory, mockCategories, mockQuestions} from './mockData';
+import {getCategoriesWithCardCount, getCategoryById, getQuestionById, getQuestionsByCategory} from './mockData';
 
 test('mockData - getCategoriesWithCardCount works', () => {
   const mockCategories = getCategoriesWithCardCount();

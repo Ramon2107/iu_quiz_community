@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuites name="Mocha Tests" time="4.186" tests="1" failures="0">
-  <testsuite name="Root Suite" timestamp="2025-10-30T11:22:35" tests="0" file="cypress\e2e\changecards.cy.js" time="0.000" failures="0">
+<testsuites name="Mocha Tests" time="4.306" tests="1" failures="0">
+  <testsuite name="Root Suite" timestamp="2025-10-30T15:07:10" tests="0" file="cypress\e2e\changecards.cy.js" time="0.000" failures="0">
   </testsuite>
-  <testsuite name="Open card inventory" timestamp="2025-10-30T11:22:35" tests="1" time="4.117" failures="0">
-    <testcase name="Open card inventory passes" time="3.438" classname="passes">
+  <testsuite name="Open card inventory" timestamp="2025-10-30T15:07:10" tests="1" time="4.223" failures="0">
+    <testcase name="Open card inventory passes" time="3.754" classname="passes">
     </testcase>
   </testsuite>
 </testsuites>

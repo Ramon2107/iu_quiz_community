@@ -1,4 +1,36 @@
 {
   "extends": "react-app",
-  "ignorePatterns": [ "public/**/*", ".idea/**/*", "docs/**/*", "cypress/**/*"]
+  "ignorePatterns": [
+    "public/**/*",
+    ".idea/**/*",
+    "docs/**/*",
+    "cypress/**/*",
+    "build/**/*",
+    "coverage/**/*",
+    "coverage_cy/**/*",
+    "node_modules/**/*"
+  ],
+  "rules": {
+    "no-unused-vars": ["warn", {
+      "vars": "all",
+      "args": "after-used",
+      "ignoreRestSiblings": true,
+      "argsIgnorePattern": "^_",
+      "varsIgnorePattern": "^_"
+    }],
+    "react-hooks/exhaustive-deps": "warn",
+    "no-console": "off",
+    "no-debugger": "warn",
+    "react/prop-types": "off",
+    "react/display-name": "off",
+    "react/no-unescaped-entities": "off",
+    "jsx-a11y/anchor-is-valid": "off",
+    "jsx-a11y/click-events-have-key-events": "off",
+    "jsx-a11y/no-static-element-interactions": "off",
+    "jsx-a11y/alt-text": "warn",
+    "no-var": "warn",
+    "prefer-const": "warn",
+    "eqeqeq": "off",
+    "no-mixed-operators": "off"
+  }
 }

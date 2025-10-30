@@ -49,7 +49,7 @@ function QuizCategorySelector({
                                   onBack,
                                   gameMode,
                                   questionCount,
-                                  user // Für zukünftige Personalisierung vorgesehen
+                                  _user // Für zukünftige Personalisierung vorgesehen
                               }) {
     const [searchTerm, setSearchTerm] = useState('');
 

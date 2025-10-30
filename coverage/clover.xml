@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1761823517773" clover="3.2.0">
-  <project timestamp="1761823517773" name="All files">
+<coverage generated="1761836596932" clover="3.2.0">
+  <project timestamp="1761836596933" name="All files">
     <metrics statements="1413" coveredstatements="111" conditionals="1095" coveredconditionals="27" methods="466" coveredmethods="32" elements="2974" coveredelements="170" complexity="0" loc="1413" ncloc="1413" packages="11" files="24" classes="24"/>
     <package name="src">
       <metrics statements="69" coveredstatements="26" conditionals="30" coveredconditionals="9" methods="13" coveredmethods="5"/>
@@ -607,7 +607,7 @@
         <line num="147" count="0" type="stmt"/>
         <line num="178" count="0" type="stmt"/>
         <line num="209" count="0" type="stmt"/>
-        <line num="328" count="0" type="stmt"/>
+        <line num="345" count="0" type="stmt"/>
       </file>
     </package>
     <package name="src.components.quiz">
